@@ -28,11 +28,9 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en">
-      <body className={`${jost.variable} antialiased bg-background text-black`}>
-        <header className="sticky top-0 z-50 px-12 h-20 flex items-center justify-between">
-          <SiteLogo>Trade School</SiteLogo>
-          <Nav />
-        </header>
+      <body
+        className={`${jost.variable} antialiased bg-background text-black px-12`}
+      >
         {children}
       </body>
     </html>

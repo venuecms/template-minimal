@@ -3,16 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
   --foreground: #171717;
+
+  --background: 0, 0, 100%;
+  --text-highlight: 130, 99%, 42%;
+  --text-1: 50, 1%, 10%;
+  --text-2: 0, 0%, 25%;
+  --text-3: 0, 0%, 60%;
+  --text-nav: 0, 0%, 25%;
+  --button-background: 0, 0%, 80%;
+  --error: 0, 100%, 41%;
+  --black: 0, 0%, 13%;
+  --overlay: 0, 0%, 84%;
+  --footer-background: 129, 5%, 50%;
+  --panel-background: 0, 0%, 100%;
+  --panel-background-2: 50, 4%, 79%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* @media (prefers-color-scheme: dark) { */
+/* :root { */
+/* --background: #0a0a0a; */
+/* --foreground: #ededed; */
+/* } */
+/* } */
 
 body {
   color: var(--foreground);

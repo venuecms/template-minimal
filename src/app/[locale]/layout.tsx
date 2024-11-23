@@ -16,7 +16,10 @@ const jost = Jost({
 // TODO: generate metadata
 
 // Initialize the Venue SDK with your API key and siteKey
-initClient({ siteKey: "fylkingen", apiKey: "1234" });
+initClient({
+  siteKey: process.env.VENUE_SITE_KEY as string,
+  apiKey: process.env.VENUE_API_KEY as string,
+});
 
 const RootLayout = async ({
   children,

@@ -23,6 +23,9 @@ export default {
         "panel-background": "hsl(var(--panel-background))",
         "panel-background-2": "hsl(var(--panel-background-2) / 0.2)",
       },
+      fontFamily: {
+        base: ["var(--font-ibm-plex-mono)", "system-ui", "sans-serif"],
+      },
       fontSize: {
         sm: ["1rem", "1.5rem"],
         md: ["1rem", "1.5rem"],

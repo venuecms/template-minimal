@@ -3,21 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --foreground: #171717;
+  --background: 0, 0, 100%, 1;
+  --highlight: 130, 99%, 42%, 1;
+  --primary: 50, 1%, 10%, 1;
+  --secondary: 0, 0%, 25%, 1;
+  --text-3: 0, 0%, 60%, 1;
+  --nav: 0, 0%, 25%, 1;
+  --button-background: 0, 0%, 80%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 0, 0%, 84%, 0.8;
+  --footer-background: 129, 5%, 50%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 50, 4%, 79%, 0.2;
+}
 
-  --background: 0, 0, 100%;
-  --text-highlight: 130, 99%, 42%;
-  --text-1: 50, 1%, 10%;
-  --text-2: 0, 0%, 25%;
-  --text-3: 0, 0%, 60%;
-  --text-nav: 0, 0%, 25%;
-  --button-background: 0, 0%, 80%;
-  --error: 0, 100%, 41%;
-  --black: 0, 0%, 13%;
-  --overlay: 0, 0%, 84%;
-  --footer-background: 129, 5%, 50%;
-  --panel-background: 0, 0%, 100%;
-  --panel-background-2: 50, 4%, 79%;
+html.larry {
+  --background: 42, 100%, 90%, 1;
+  --highlight: 91, 100%, 90%, 1;
+  --primary: 298, 100%, 25%, 1;
+  --secondary: 298, 100%, 48%, 1;
+  --text-3: 298, 100%, 25%, 0.6;
+  --nav: 298, 100%, 48%, 1;
+  --button-background: 298, 100%, 48%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 298, 100%, 48%, 0.4;
+  --footer-background: 0, 0%, 100%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 0, 0%, 100%, 1;
 }
 
 /* @media (prefers-color-scheme: dark) { */
@@ -26,9 +40,3 @@
 /* --foreground: #ededed; */
 /* } */
 /* } */
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}

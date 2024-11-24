@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { getSite, initClient } from "@venuecms/sdk";
 import { routing } from "@/lib/i18n";
 import { notFound } from "next/navigation";
+import { ThemeProvider } from "next-themes";
 
 const jost = Jost({
   subsets: ["latin"],
@@ -27,11 +28,9 @@ initClient({
 
 // TODO: generate metadata
 export const generateMetadata = async () => {
-  const { data: site } = await getSite({
-    path: { siteKey: "fylkingen" },
-  });
+  const { data: site } = await getSite();
 
-  const { name, image } = site?.records ?? {};
+  const { name } = site?.records ?? {};
 
   return {
     title: name,
@@ -54,13 +53,15 @@ const RootLayout = async ({
   const messages = await getMessages();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-black px-12 font-base`}
+        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-12 font-base`}
       >
         <NextIntlClientProvider messages={messages}>
-          <SiteHeader />
-          {children}
+          <ThemeProvider attribute="class" forcedTheme="larry">
+            <SiteHeader />
+            {children}
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

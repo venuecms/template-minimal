@@ -1,19 +1,26 @@
 import { EventsListing } from "@/components/EventListing";
-import { getEvents } from "@venuecms/sdk";
+import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
+import { getEvents, getSite } from "@venuecms/sdk";
 
 const Home = async () => {
-  const [{ data: events }, { data: featuredEvents }] = await Promise.all([
-    getEvents({ limit: 6 }),
-    getEvents({ limit: 6, featured: true }),
-  ]);
+  const [{ data: site }, { data: events }, { data: featuredEvents }] =
+    await Promise.all([
+      getSite(),
+      getEvents({ limit: 6 }),
+      getEvents({ limit: 6, featured: true }),
+    ]);
 
   return (
-    <main className="py-24 flex flex-col">
-      <div className="flex flex-col w-full"></div>
-      <div className="flex flex-col gap-12 w-full min-w-[32rem]">
-        {events?.records.length ? <EventsListing events={events} /> : null}
-      </div>
-    </main>
+    <TwoColumnLayout>
+      <ColumnLeft className="text-sm text-secondary">
+        <p>{site?.records?.description}</p>
+      </ColumnLeft>
+      <ColumnRight>
+        {events?.records.length ? (
+          <EventsListing events={events.records} />
+        ) : null}
+      </ColumnRight>
+    </TwoColumnLayout>
   );
 };
 

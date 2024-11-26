@@ -30,7 +30,7 @@ initClient({
 export const generateMetadata = async () => {
   const { data: site } = await getSite();
 
-  const { name } = site?.records ?? {};
+  const { name } = site ?? {};
 
   return {
     title: name,

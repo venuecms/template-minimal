@@ -13,7 +13,7 @@ const Home = async () => {
   return (
     <TwoColumnLayout>
       <ColumnLeft className="text-sm text-secondary">
-        <p>{site?.records?.description}</p>
+        <p>{site?.description}</p>
       </ColumnLeft>
       <ColumnRight>
         {events?.records.length ? (

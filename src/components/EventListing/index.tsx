@@ -1,6 +1,7 @@
 import { Event, getLocalizedContent } from "@venuecms/sdk";
 import { formatDate } from "../utils";
 import { useLocale } from "next-intl";
+import { Link } from "@/lib/i18n";
 
 export const EventsListing = ({ events }: { events: Array<Event> }) => {
   return (
@@ -26,7 +27,9 @@ const ListEvent = ({ event }: { event: Event }) => {
       {event.startDate ? (
         <div className="text-secondary">{formatDate(event.startDate)}</div>
       ) : null}
-      <div>{content.title}</div>
+      <div>
+        <Link href={`/events/${event.slug}`}>{content.title}</Link>
+      </div>
       {event.location ? (
         <div className="text-secondary">{locationContent.title}</div>
       ) : null}

@@ -58,7 +58,7 @@ const RootLayout = async ({
         className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base`}
       >
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" forcedTheme="larry">
+          <ThemeProvider attribute="class">
             <SiteHeader />
             {children}
           </ThemeProvider>

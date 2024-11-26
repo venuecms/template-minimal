@@ -18,9 +18,11 @@ export const Event = ({ event }: { event: VenueEvent }) => {
       <ColumnLeft>
         <div className="flex flex-col gap-12">
           <div>
-            <div>{formatDate(event.startDate)}</div>
+            <div className="text-secondary">{formatDate(event.startDate)}</div>
             <div>{content.title}</div>
-            {location ? <div>{locationContent.title}</div> : null}
+            {location ? (
+              <div className="text-secondary">{locationContent.title}</div>
+            ) : null}
           </div>
           <div className="flex gap-8">
             <div>$25 at the door</div>

@@ -2,7 +2,7 @@ import { SearchIcon } from "lucide-react";
 
 export const Nav = () => {
   return (
-    <nav className="flex w-full gap-44 justify-between">
+    <nav className="flex w-full items-center justify-between">
       <ol className="flex items-center gap-8 text-text-nav text-sm font-light">
         <li>upcoming events</li>
         <li>archive</li>

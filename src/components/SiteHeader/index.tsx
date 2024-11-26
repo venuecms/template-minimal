@@ -1,6 +1,7 @@
 import { getSite } from "@venuecms/sdk";
 import { SiteLogo, Nav } from "@/components";
 import { notFound } from "next/navigation";
+import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 
 export const SiteHeader = async () => {
   const { data: site } = await getSite();
@@ -10,9 +11,15 @@ export const SiteHeader = async () => {
   }
 
   return (
-    <header className="sticky top-0 h-20 flex items-center gap-40 text-nav">
-      <SiteLogo site={site} className="w-[32rem]" />
-      <Nav />
+    <header className="top-0 h-20 flex items-center lg:gap-40 text-nav">
+      <TwoColumnLayout className="py-0 md:py-0 lg:items-center">
+        <ColumnLeft>
+          <SiteLogo site={site} />
+        </ColumnLeft>
+        <ColumnRight>
+          <Nav />
+        </ColumnRight>
+      </TwoColumnLayout>
     </header>
   );
 };

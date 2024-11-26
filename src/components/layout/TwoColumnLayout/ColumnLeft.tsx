@@ -5,6 +5,6 @@ export const ColumnLeft = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <div className={cn("flex flex-col w-[32rem]", className)} {...props} />
+    <div className={cn("flex flex-col min-w-[32rem]", className)} {...props} />
   );
 };

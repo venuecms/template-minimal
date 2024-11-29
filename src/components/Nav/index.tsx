@@ -1,7 +1,7 @@
 import { getPages } from "@venuecms/sdk";
 import { SearchIcon } from "lucide-react";
 
-export const Nav = () => {
+export const Nav = async () => {
   const { data: pages } = await getPages();
 
   return (

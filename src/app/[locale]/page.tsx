@@ -1,6 +1,6 @@
 import { EventsListing } from "@/components/EventListing";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
-import { getEvents, getSite } from "@venuecms/sdk";
+import { getEvents, getPages, getSite } from "@venuecms/sdk";
 
 const Home = async () => {
   const [{ data: site }, { data: events }, { data: featuredEvents }] =

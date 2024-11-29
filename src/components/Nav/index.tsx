@@ -1,6 +1,9 @@
+import { getPages } from "@venuecms/sdk";
 import { SearchIcon } from "lucide-react";
 
 export const Nav = () => {
+  const { data: pages } = await getPages();
+
   return (
     <nav className="flex w-full items-center justify-between">
       <ol className="flex items-center gap-8 text-text-nav text-sm font-light">

@@ -10,7 +10,10 @@ export const Event = ({ event }: { event: VenueEvent }) => {
   const locale = useLocale();
   const { location, artists } = event;
 
-  const { content } = getLocalizedContent(event?.localizedContent, locale);
+  const { content, toHTML } = getLocalizedContent(
+    event?.localizedContent,
+    locale,
+  );
   const { content: locationContent } = getLocalizedContent(
     location?.localizedContent,
     locale,
@@ -33,7 +36,10 @@ export const Event = ({ event }: { event: VenueEvent }) => {
       </ColumnLeft>
 
       <ColumnRight>
-        <p className="max-w-[42rem] text-sm">{content.content}</p>
+        <div
+          className="max-w-[42rem] text-sm"
+          dangerouslySetInnerHTML={{ __html: toHTML(content.content) }}
+        />
       </ColumnRight>
     </TwoColumnLayout>
   );

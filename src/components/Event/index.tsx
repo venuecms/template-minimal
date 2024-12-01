@@ -1,9 +1,10 @@
 import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
-import { formatDate } from "../utils";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+
 import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
+import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+import { formatDate } from "../utils";
 
 export const Event = ({ event }: { event: VenueEvent }) => {
   const locale = useLocale();

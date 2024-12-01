@@ -1,7 +1,9 @@
 import { Event, getLocalizedContent } from "@venuecms/sdk";
-import { formatDate } from "../utils";
 import { useLocale } from "next-intl";
+
 import { Link } from "@/lib/i18n";
+
+import { formatDate } from "../utils";
 
 export const EventsList = ({ events }: { events: Array<Event> }) => {
   return (

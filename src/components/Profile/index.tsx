@@ -3,6 +3,7 @@ import {
   getLocalizedContent,
 } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
+
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {

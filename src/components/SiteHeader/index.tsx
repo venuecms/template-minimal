@@ -1,6 +1,7 @@
+import { Nav, SiteLogo } from "@/components";
 import { getSite } from "@venuecms/sdk";
-import { SiteLogo, Nav } from "@/components";
 import { notFound } from "next/navigation";
+
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 
 export const SiteHeader = async () => {

@@ -1,5 +1,6 @@
 import { type Page as VenuePage, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
+
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 
 export const Page = ({ page }: { page: VenuePage }) => {

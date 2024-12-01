@@ -1,5 +1,6 @@
-import { getPublicImage } from "../utils";
 import Image from "next/image";
+
+import { getPublicImage } from "../utils";
 
 export const VenueImage = ({
   className,

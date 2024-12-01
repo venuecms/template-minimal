@@ -1,5 +1,6 @@
-import { getPublicImage } from "@/components/utils";
 import { getLocalizedContent } from "@venuecms/sdk";
+
+import { getPublicImage } from "@/components/utils";
 
 export const getLocalizedMetadata = (
   {

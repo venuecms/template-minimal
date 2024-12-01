@@ -1,12 +1,15 @@
-import { Jost, IBM_Plex_Mono } from "next/font/google";
+import { getSite, initClient } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import "../globals.css";
-import { SiteHeader } from "@/components/SiteHeader";
-import { getSite, initClient } from "@venuecms/sdk";
-import { routing } from "@/lib/i18n";
-import { notFound } from "next/navigation";
 import { ThemeProvider } from "next-themes";
+import { IBM_Plex_Mono, Jost } from "next/font/google";
+import { notFound } from "next/navigation";
+
+import { routing } from "@/lib/i18n";
+
+import { SiteHeader } from "@/components/SiteHeader";
+
+import "../globals.css";
 
 const jost = Jost({
   subsets: ["latin"],
@@ -58,7 +61,7 @@ const RootLayout = async ({
         className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base`}
       >
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" forcedTheme="darkGold">
+          <ThemeProvider attribute="class" forcedTheme="larry">
             <SiteHeader />
             {children}
           </ThemeProvider>

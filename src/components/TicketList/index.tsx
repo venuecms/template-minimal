@@ -1,5 +1,6 @@
-import { Link } from "@/lib/i18n";
 import { TicketOnEvent } from "@venuecms/sdk";
+
+import { Link } from "@/lib/i18n";
 
 export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
   return (

@@ -1,5 +1,5 @@
-import { defineRouting } from "next-intl/routing";
 import { createNavigation } from "next-intl/navigation";
+import { defineRouting } from "next-intl/routing";
 import { AnchorHTMLAttributes, PropsWithChildren } from "react";
 
 export const routing = defineRouting({

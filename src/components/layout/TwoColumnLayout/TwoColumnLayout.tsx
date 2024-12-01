@@ -18,5 +18,3 @@ export const TwoColumnLayout = ({
     </div>
   );
 };
-
-// <div className="py-6 sm:py-24 flex flex-col sm:flex-row justify-between w-full gap-40">

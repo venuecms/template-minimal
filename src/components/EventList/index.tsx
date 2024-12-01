@@ -3,11 +3,11 @@ import { formatDate } from "../utils";
 import { useLocale } from "next-intl";
 import { Link } from "@/lib/i18n";
 
-export const EventsListing = ({ events }: { events: Array<Event> }) => {
+export const EventsList = ({ events }: { events: Array<Event> }) => {
   return (
     <div className="flex flex-col gap-8 text-sm">
       {events.map((event) => (
-        <ListEvent event={event} />
+        <ListEvent key={event.id} event={event} />
       ))}
     </div>
   );

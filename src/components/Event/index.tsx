@@ -2,6 +2,8 @@ import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 import { formatDate } from "../utils";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+import { TicketList } from "../TicketList";
+import { VenueImage } from "../VenueImage";
 
 export const Event = ({ event }: { event: VenueEvent }) => {
   const locale = useLocale();
@@ -24,11 +26,8 @@ export const Event = ({ event }: { event: VenueEvent }) => {
               <div className="text-secondary">{locationContent.title}</div>
             ) : null}
           </div>
-          <div className="flex gap-8">
-            <div>$25 at the door</div>
-            <div>$20 adv</div>
-            <div>$10 members</div>
-          </div>
+          {event.tickets ? <TicketList tickets={event.tickets} /> : null}
+          <VenueImage image={event.image} />
         </div>
       </ColumnLeft>
 

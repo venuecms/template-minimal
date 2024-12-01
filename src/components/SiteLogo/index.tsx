@@ -1,8 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Site } from "@venuecms/sdk";
-import { getPublicImage } from "../utils";
-import Image from "next/image";
 import { Link } from "@/lib/i18n";
+import { VenueImage } from "../VenueImage";
 
 export const SiteLogo = ({
   className,
@@ -13,27 +12,11 @@ export const SiteLogo = ({
 }) => {
   const { name, image } = site;
 
-  if (image) {
-    const imageUrl = getPublicImage(image);
+  const headerImage = image ? <VenueImage image={image} /> : null;
 
-    if (imageUrl) {
-      const { metadata } = image;
-      const { width, height, altText } = metadata ?? {};
-      return (
-        <Link href="/">
-          <Image
-            src={imageUrl}
-            alt={altText ?? name}
-            width={width as number}
-            height={height as number}
-            className="w-[32rem]"
-          />
-        </Link>
-      );
-    }
-  }
-
-  return (
+  return headerImage ? (
+    <Link href="/">{headerImage}</Link>
+  ) : (
     <h1 className={cn("text-xl", className)}>
       <Link href="/">{name}</Link>
     </h1>

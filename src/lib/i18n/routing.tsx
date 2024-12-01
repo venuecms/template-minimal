@@ -1,6 +1,6 @@
 import { defineRouting } from "next-intl/routing";
 import { createNavigation } from "next-intl/navigation";
-import { PropsWithChildren } from "react";
+import { AnchorHTMLAttributes, PropsWithChildren } from "react";
 
 export const routing = defineRouting({
   // A list of all locales that are supported
@@ -19,7 +19,10 @@ const {
   useRouter,
 } = createNavigation(routing);
 
-const Link = ({ children, ...props }: PropsWithChildren) => {
+const Link = ({
+  children,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement>) => {
   return (
     // @ts-ignore
     <NavLink {...props} prefetch={true}>

@@ -14,7 +14,9 @@ export const SiteLogo = ({
 }) => {
   const { name, image } = site;
 
-  const headerImage = image ? <VenueImage image={image} /> : null;
+  const headerImage = image ? (
+    <VenueImage image={image} className="sm:max-w-[32rem] w-full" />
+  ) : null;
 
   return headerImage ? (
     <Link href="/">{headerImage}</Link>

@@ -18,6 +18,22 @@
   --panel-background-2: 50, 4%, 79%, 0.2;
 }
 
+html.space {
+  --background: c
+  --primary: 300, 15%, 88%, 1;
+  --secondary: 300, 3%, 74%, 1;
+  --muted: 300, 15%, 88%, 0.6;
+  --nav: 310, 97%, 64%, 1;
+  --highlight: 91, 100%, 90%, 1;
+  --button-background: 300, 4%, 12%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 300, 15%, 88%, 0.4;
+  --footer-background: 300, 4%, 12%, 1;
+  --panel-background: 300, 4%, 12%, 1;
+  --panel-background-2: 300, 4%, 12%, 1;
+}
+
 html.larry {
   --background: 42, 100%, 90%, 1;
   --primary: 298, 100%, 25%, 1;

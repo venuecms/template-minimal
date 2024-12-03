@@ -27,13 +27,13 @@ export default {
         base: ["var(--font-ibm-plex-mono)", "system-ui", "sans-serif"],
       },
       fontSize: {
-        sm: ["1rem", "1.5rem"],
-        md: ["1rem", "1.5rem"],
+        sm: ["1rem", "1.3rem"],
+        md: ["1rem", "1.3rem"],
         xl: ["2rem", "2.5rem"],
       },
       fontWeight: {
         light: "300",
-        regular: "300",
+        regular: "400",
       },
     },
   },

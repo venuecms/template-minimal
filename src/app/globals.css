@@ -34,7 +34,7 @@ html.larry {
   --panel-background-2: 0, 0%, 100%, 1;
 }
 
-html.darkGold {
+html.textGlow {
   --background: 149, 38%, 4%, 1;
   --primary: 149, 100%, 92%, 1;
   --secondary: 149, 14%, 77%, 1;
@@ -48,6 +48,30 @@ html.darkGold {
   --footer-background: 51, 11%, 35%, 1;
   --panel-background: 51, 11%, 35%, 1;
   --panel-background-2: 0, 0%, 30%, 0.2;
+}
+
+html.lightDefault {
+  --background: 48, 14%, 93%, 1;
+  --primary: 50, 1%, 10%, 1;
+  --secondary: 0, 0%, 25%, 1;
+  --muted: 0, 0%, 60%, 1;
+  --nav: 0, 0%, 25%, 1;
+}
+
+html.darkCRTblue {
+  --background: 300, 1%, 5%, 1;
+  --primary: 175, 50%, 90%, 1;
+  --secondary: 175, 20%, 75%, 1;
+  --muted: 175, 29%, 90%, 0.6;
+  --nav: 175, 50%, 80%, 1;
+}
+
+html.darkCRTgreen {
+  --background: 300, 1%, 5%, 1;
+  --primary: 120, 50%, 90%, 1;
+  --secondary: 120, 20%, 75%, 1;
+  --muted: 120, 29%, 90%, 0.6;
+  --nav: 120, 50%, 80%, 1;
 }
 
 @media (prefers-color-scheme: dark) {

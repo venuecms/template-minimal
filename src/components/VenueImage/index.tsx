@@ -1,3 +1,4 @@
+import { MediaItem } from "@venuecms/sdk";
 import Image from "next/image";
 
 import { getPublicImage } from "../utils";
@@ -7,7 +8,7 @@ export const VenueImage = ({
   image,
 }: {
   className?: string;
-  image: any;
+  image?: Partial<MediaItem>;
 }) => {
   if (image) {
     const imageUrl = getPublicImage(image);

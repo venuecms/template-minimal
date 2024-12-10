@@ -1,19 +1,19 @@
 import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
+import { ContentRender } from "@/lib/utils/renderer";
+
 import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { formatDate } from "../utils";
+import { defaultStyles } from "../utils/defaultStyles";
 
 export const Event = ({ event }: { event: VenueEvent }) => {
   const locale = useLocale();
   const { location, artists } = event;
 
-  const { content, toHTML } = getLocalizedContent(
-    event?.localizedContent,
-    locale,
-  );
+  const { content } = getLocalizedContent(event?.localizedContent, locale);
   const { content: locationContent } = getLocalizedContent(
     location?.localizedContent,
     locale,
@@ -36,10 +36,14 @@ export const Event = ({ event }: { event: VenueEvent }) => {
       </ColumnLeft>
 
       <ColumnRight>
-        <div
-          className="max-w-[42rem] text-sm"
-          dangerouslySetInnerHTML={{ __html: toHTML(content.content) }}
-        />
+        {content.contentJSON?.content.map((node) => (
+          <ContentRender classes={defaultStyles} node={node} />
+        ))}
+        <div className="grid-cols-2 grid gap-4">
+          {artists.map((artist) => (
+            <div>artist</div>
+          ))}
+        </div>
       </ColumnRight>
     </TwoColumnLayout>
   );

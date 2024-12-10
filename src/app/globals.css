@@ -83,3 +83,15 @@ html.darkGold {
     --panel-background-2: 0, 0%, 40%, 0.2;
   }
 }
+
+.venue-bold {
+  @apply font-bold;
+}
+
+.venue-strike {
+  @apply line-through;
+}
+
+.venue-strike {
+  @apply line-through;
+}

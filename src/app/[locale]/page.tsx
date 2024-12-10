@@ -7,8 +7,8 @@ const Home = async () => {
   const [{ data: site }, { data: events, error }, { data: featuredEvents }] =
     await Promise.all([
       getSite(),
-      getEvents({ limit: 6, dir: "asc", upcoming: true }),
-      getEvents({ limit: 6, featured: true, dir: "asc" }),
+      getEvents({ limit: 6, upcoming: true }),
+      getEvents({ limit: 6, featured: true }),
     ]);
 
   return (

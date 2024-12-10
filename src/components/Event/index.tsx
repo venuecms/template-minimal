@@ -7,7 +7,7 @@ import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { formatDate } from "../utils";
-import { defaultStyles } from "../utils/defaultStyles";
+import { renderedStyles } from "../utils/styles";
 
 export const Event = ({ event }: { event: VenueEvent }) => {
   const locale = useLocale();
@@ -36,9 +36,11 @@ export const Event = ({ event }: { event: VenueEvent }) => {
       </ColumnLeft>
 
       <ColumnRight>
-        {content.contentJSON?.content.map((node) => (
-          <ContentRender classes={defaultStyles} node={node} />
-        ))}
+        <div className="flex flex-col gap-6">
+          {content.contentJSON?.content.map((node) => (
+            <ContentRender classes={renderedStyles} node={node} />
+          ))}
+        </div>
         <div className="grid-cols-2 grid gap-4">
           {artists.map((artist) => (
             <div>artist</div>

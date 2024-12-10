@@ -19,12 +19,19 @@ type ElementClasses = {
   h3?: string;
 };
 
+const marks = {
+  bold: "font-bold",
+  italic: "italic",
+  underline: "underline",
+  strike: "line-through",
+} as const;
+
 const getDefaultHandlers = (classes: ElementClasses = {}) => {
   const defaultHandlers: NodeHandlers = {
     text: (props) => {
       if (props.node.marks) {
         const className = props.node.marks.reduce((accum, mark) => {
-          return `venue-${mark.type} ${accum}`;
+          return `${marks[mark.type]} ${accum}`;
         }, "");
 
         return <span className={`${className}`}>{props.node.text}</span>;
@@ -69,6 +76,24 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
             },
           }}
         />
+      );
+    },
+    youtube: (props) => {
+      //@ts-ignore
+      const { src, start } = props.node.attrs;
+      const key = src.split("v=")[1];
+
+      return (
+        <iframe
+          src={`https://www.youtube.com/embed/${key}?modestbranding=1${start ? `&amp;start=${start}` : ""}`}
+          frameBorder="0"
+          allowFullScreen={true}
+          width="100%"
+          height="auto"
+          style={{
+            aspectRatio: "4 / 3",
+          }}
+        ></iframe>
       );
     },
     iframe: (props) => {

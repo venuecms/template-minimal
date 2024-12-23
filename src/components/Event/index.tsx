@@ -3,6 +3,7 @@ import { useLocale } from "next-intl";
 
 import { ContentRender } from "@/lib/utils/renderer";
 
+import { ProfileCompact } from "../ProfileCompact";
 import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
@@ -36,14 +37,14 @@ export const Event = ({ event }: { event: VenueEvent }) => {
       </ColumnLeft>
 
       <ColumnRight>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 pr-32">
           {content.contentJSON?.content.map((node) => (
             <ContentRender classes={renderedStyles} node={node} />
           ))}
         </div>
-        <div className="grid-cols-2 grid gap-4">
-          {artists.map((artist) => (
-            <div>artist</div>
+        <div className="grid-cols-2 grid gap-24">
+          {artists.map(({ profile }) => (
+            <ProfileCompact key={profile.slug} profile={profile} />
           ))}
         </div>
       </ColumnRight>

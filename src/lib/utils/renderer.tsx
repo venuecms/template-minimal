@@ -4,6 +4,8 @@
  */
 import { VenueImage } from "@/components";
 
+import { getPublicImage } from "@/components/utils";
+
 type ElementClasses = {
   text?: string;
   p?: string;
@@ -12,7 +14,9 @@ type ElementClasses = {
   li?: string;
   code?: string;
   heading?: string;
+  hardBreak?: string;
   img?: string;
+  image?: string;
   iframe?: string;
   h1?: string;
   h2?: string;
@@ -64,19 +68,28 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           return <>{props.children}</>;
       }
     },
+    hardBreak: () => <p></p>,
+    image: (props) => {
+      const { src, alt } = props.node.attrs;
+
+      const image = {
+        url: src.split(/^\/media\//).join(""),
+        metadata: {
+          altText: alt,
+        },
+      };
+
+      return <VenueImage className={classes.image} image={image} />;
+    },
     img: (props) => {
       const { src, alt } = props.node;
-      return (
-        <VenueImage
-          className={classes.img}
-          image={{
-            url: src,
-            metadata: {
-              altText: alt,
-            },
-          }}
-        />
-      );
+      const image = {
+        url: src.split(/^\/media\//).join(""),
+        metadata: {
+          altText: alt,
+        },
+      };
+      return <VenueImage className={classes.img} image={image} />;
     },
     youtube: (props) => {
       //@ts-ignore

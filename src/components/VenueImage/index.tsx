@@ -20,7 +20,7 @@ export const VenueImage = ({
       return (
         <Image
           src={imageUrl}
-          alt={altText as string}
+          alt={(altText as string) ?? "image"}
           width={(width as number) ?? 2048}
           height={(height as number) ?? 2048}
           className={className}

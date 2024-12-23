@@ -1,4 +1,4 @@
-import { getSite, initClient } from "@venuecms/sdk";
+import { getSite } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
@@ -24,10 +24,11 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 // Initialize the Venue SDK with your API key and siteKey
-initClient({
-  siteKey: process.env.VENUE_SITE_KEY as string,
-  apiKey: process.env.VENUE_API_KEY as string,
-});
+console.log(
+  "INIT CLIENT",
+  process.env.VENUE_SITE_KEY,
+  process.env.VENUE_API_KEY,
+);
 
 // TODO: generate metadata
 export const generateMetadata = async () => {

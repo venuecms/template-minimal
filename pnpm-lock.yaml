@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@venuecms/sdk':
+        specifier: ^0.0.0
+        version: 0.0.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -141,6 +144,9 @@ packages:
 
   '@formatjs/intl-localematcher@0.5.8':
     resolution: {integrity: sha512-I+WDNWWJFZie+jkfkiK5Mp4hEDyRSEvmyfYadflOno/mmKJKcB17fEpEH0oJu/OWhhCJ8kJBDz2YMd/6cDl7Mg==}
+
+  '@hey-api/client-fetch@0.4.4':
+    resolution: {integrity: sha512-ebh1JjUdMAqes/Rg8OvbjDqGWGNhgHgmPtHlkIOUtj3y2mUXqX2g9sVoI/rSKW/FdADPng/90k5AL7bwT8W2lA==}
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -362,6 +368,9 @@ packages:
 
   '@types/react@18.3.12':
     resolution: {integrity: sha512-D2wOSq/d6Agt28q7rSI3jhU7G6aiuzljDGZ2hTZHIkrTLUI+AF3WMeKkEZ9nN2fkBAlcktT6vcZjDFiIhMYEQw==}
+
+  '@venuecms/sdk@0.0.0':
+    resolution: {integrity: sha512-Oq7e0R6afnVBAzTslJrIfnDmOAp2DYC5aO5bQ+8CafBW/rh2D+X40SX8z0ZGulHGNSyJ6n2kx7NWiU5uLsPvNw==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -932,6 +941,9 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -1041,6 +1053,8 @@ snapshots:
   '@formatjs/intl-localematcher@0.5.8':
     dependencies:
       tslib: 2.8.1
+
+  '@hey-api/client-fetch@0.4.4': {}
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
@@ -1216,6 +1230,11 @@ snapshots:
     dependencies:
       '@types/prop-types': 15.7.13
       csstype: 3.1.3
+
+  '@venuecms/sdk@0.0.0':
+    dependencies:
+      '@hey-api/client-fetch': 0.4.4
+      zod: 3.24.1
 
   ansi-regex@5.0.1: {}
 
@@ -1756,3 +1775,5 @@ snapshots:
       strip-ansi: 7.1.0
 
   yaml@2.6.1: {}
+
+  zod@3.24.1: {}

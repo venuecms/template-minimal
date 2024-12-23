@@ -4,6 +4,9 @@ import {
 } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
+import { ContentRender } from "@/lib/utils/renderer";
+
+import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {
@@ -18,11 +21,16 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           <div>
             <div>{content.title}</div>
           </div>
+          <VenueImage image={profile.image} />
         </div>
       </ColumnLeft>
 
       <ColumnRight>
-        <p className="max-w-[42rem] text-sm">{content.content}</p>
+        <div className="flex flex-col gap-6 pr-32">
+          {content.contentJSON?.content.map((node) => (
+            <ContentRender node={node} />
+          ))}
+        </div>
       </ColumnRight>
     </TwoColumnLayout>
   );

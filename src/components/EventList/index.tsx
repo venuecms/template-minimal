@@ -7,7 +7,7 @@ import { formatDate } from "../utils";
 
 export const EventsList = ({ events }: { events: Array<Event> }) => {
   return (
-    <div className="flex flex-col gap-8 text-sm">
+    <div className="flex flex-col text-sm">
       {events.map((event) => (
         <ListEvent key={event.id} event={event} />
       ))}
@@ -25,7 +25,7 @@ const ListEvent = ({ event }: { event: Event }) => {
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pb-8">
       {event.startDate ? (
         <div className="text-secondary">{formatDate(event.startDate)}</div>
       ) : null}

@@ -4,8 +4,6 @@
  */
 import { VenueImage } from "@/components";
 
-import { getPublicImage } from "@/components/utils";
-
 type ElementClasses = {
   text?: string;
   p?: string;
@@ -35,7 +33,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
     text: (props) => {
       if (props.node.marks) {
         const className = props.node.marks.reduce((accum, mark) => {
-          return `${marks[mark.type]} ${accum}`;
+          return `${marks[mark.type as keyof typeof marks]} ${accum}`;
         }, "");
 
         return <span className={`${className}`}>{props.node.text}</span>;
@@ -70,7 +68,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
     },
     hardBreak: () => <p></p>,
     image: (props) => {
-      const { src, alt } = props.node.attrs;
+      const { src, alt } = props.node.attrs ?? {};
 
       const image = {
         url: src.split(/^\/media\//).join(""),

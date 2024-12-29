@@ -1,7 +1,7 @@
 import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
-import { ContentRender } from "@/lib/utils/renderer";
+import { ContentRender, RenderNode } from "@/lib/utils/renderer";
 
 import { ProfileCompact } from "../ProfileCompact";
 import { TicketList } from "../TicketList";
@@ -38,7 +38,7 @@ export const Event = ({ event }: { event: VenueEvent }) => {
 
       <ColumnRight>
         <div className="flex flex-col gap-6 pr-32">
-          {content.contentJSON?.content.map((node) => (
+          {(content.contentJSON?.content as Array<RenderNode>).map((node) => (
             <ContentRender classes={renderedStyles} node={node} />
           ))}
         </div>

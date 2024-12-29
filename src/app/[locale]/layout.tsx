@@ -23,13 +23,6 @@ const IBMPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
 });
 
-// Initialize the Venue SDK with your API key and siteKey
-console.log(
-  "INIT CLIENT",
-  process.env.VENUE_SITE_KEY,
-  process.env.VENUE_API_KEY,
-);
-
 // TODO: generate metadata
 export const generateMetadata = async () => {
   const { data: site } = await getSite();
@@ -39,6 +32,18 @@ export const generateMetadata = async () => {
   return {
     title: name,
   };
+};
+
+export const generateStaticParams = async () => {
+  const { data: site, error } = await getSite();
+
+  if (error) {
+    notFound();
+  }
+  // @ts-ignore
+  const supportedLocales = site.settings.locale.supported as Array<string>;
+
+  return supportedLocales.map((locale) => ({ locale }));
 };
 
 const RootLayout = async ({
@@ -57,7 +62,7 @@ const RootLayout = async ({
   const messages = await getMessages();
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base`}
       >

@@ -1,6 +1,6 @@
 import { createNavigation } from "next-intl/navigation";
 import { defineRouting } from "next-intl/routing";
-import { AnchorHTMLAttributes, PropsWithChildren } from "react";
+import { AnchorHTMLAttributes } from "react";
 
 export const routing = defineRouting({
   // A list of all locales that are supported

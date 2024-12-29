@@ -25,10 +25,11 @@ export const getLocalizedMetadata = (
     keywords,
   } = content;
 
-  const getOpenGraphFromLocalizedContent = (item) => {
+  // TODO: fix typing
+  const getOpenGraphFromLocalizedContent = (item: any) => {
     const imageUrl = item?.image && getPublicImage(item.image);
 
-    const trimDescription = description.split("\n")[0];
+    const trimDescription = description?.split("\n")[0];
     return {
       title: metaTitle || title,
       description: metaDescription || shortContent || trimDescription,

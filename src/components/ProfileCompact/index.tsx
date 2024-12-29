@@ -5,7 +5,7 @@ import {
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
-import { ContentRender } from "@/lib/utils/renderer";
+import { ContentRender, RenderNode } from "@/lib/utils/renderer";
 
 export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
   const locale = useLocale();
@@ -20,7 +20,7 @@ export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
         <Link href={`/artists/${profile.slug}`}>{content.title}</Link>
       </div>
 
-      {content.contentJSON?.content.map((node) => (
+      {(content.contentJSON?.content as Array<RenderNode>).map((node) => (
         <ContentRender node={node} />
       ))}
     </div>

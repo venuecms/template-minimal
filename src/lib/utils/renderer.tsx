@@ -144,13 +144,15 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
   return defaultHandlers;
 };
 
-export function ContentRender(props: {
+type ContentStyles = Partial<
+  Record<keyof ReturnType<typeof getDefaultHandlers>, string>
+>;
+
+export const ContentRender = (props: {
   node: RenderNode;
   handlers?: NodeHandlers;
-  classes?: Partial<
-    Record<keyof ReturnType<typeof getDefaultHandlers>, string>
-  >;
-}): JSX.Element {
+  classes?: ContentStyles;
+}): JSX.Element => {
   const { node, handlers: handlerOverrides = {} } = props;
   const handlers = {
     ...getDefaultHandlers(props.classes),
@@ -178,7 +180,25 @@ export function ContentRender(props: {
   // render the handler for this type
   const Handler = handlers[node.type];
   return <Handler node={node}>{children}</Handler>;
-}
+};
+
+export const VenueContent = ({
+  content,
+  contentStyles,
+  className,
+}: {
+  content: Array<RenderNode>;
+  contentStyles?: ContentStyles;
+  className?: string;
+}) => {
+  return (
+    <div className={className}>
+      {content.map((node) => (
+        <ContentRender classes={contentStyles} node={node} />
+      ))}
+    </div>
+  );
+};
 
 interface Attrs {
   readonly [attr: string]: any;

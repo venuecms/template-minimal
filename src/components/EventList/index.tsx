@@ -3,19 +3,32 @@ import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
 
+import { VenueImage } from "../VenueImage";
 import { formatDate } from "../utils";
 
-export const EventsList = ({ events }: { events: Array<Event> }) => {
+export const EventsList = ({
+  events,
+  withImage,
+}: {
+  events: Array<Event>;
+  withImage?: boolean;
+}) => {
   return (
     <div className="flex flex-col text-sm">
       {events.map((event) => (
-        <ListEvent key={event.id} event={event} />
+        <ListEvent key={event.id} event={event} withImage={withImage} />
       ))}
     </div>
   );
 };
 
-const ListEvent = ({ event }: { event: Event }) => {
+const ListEvent = ({
+  event,
+  withImage,
+}: {
+  event: Event;
+  withImage?: boolean;
+}) => {
   const locale = useLocale();
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
@@ -25,9 +38,20 @@ const ListEvent = ({ event }: { event: Event }) => {
   );
 
   return (
-    <div className="flex flex-col pb-8">
+    <div className="flex flex-col pb-8 break-inside-avoid">
+      {withImage ? (
+        <div className="max-w-60 pb-3">
+          <Link href={`/events/${event.slug}`}>
+            <VenueImage image={event.image} />
+          </Link>
+        </div>
+      ) : null}
       {event.startDate ? (
-        <div className="text-secondary">{formatDate(event.startDate)}</div>
+        <div className="text-secondary">
+          <Link href={`/events/${event.slug}`}>
+            {formatDate(event.startDate)}
+          </Link>
+        </div>
       ) : null}
       <div>
         <Link href={`/events/${event.slug}`}>{content.title}</Link>

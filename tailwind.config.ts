@@ -34,8 +34,7 @@ export default {
       },
       fontWeight: {
         light: "300",
-        regular: "300",
-        medium: "500",
+        regular: "500",
       },
     },
   },

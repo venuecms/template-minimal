@@ -1,7 +1,7 @@
 import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
-import { ContentRender, RenderNode, VenueContent } from "@/lib/utils/renderer";
+import { RenderNode, VenueContent } from "@/lib/utils/renderer";
 
 import { ProfileCompact } from "../ProfileCompact";
 import { TicketList } from "../TicketList";

@@ -1,4 +1,4 @@
-import { getEvents, getSite } from "@venuecms/sdk";
+import { getEvents } from "@venuecms/sdk";
 
 import { EventsList } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";

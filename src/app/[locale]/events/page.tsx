@@ -12,7 +12,7 @@ const Home = async () => {
         <p className="text-primary font-medium">Upcoming Events</p>
       </ColumnLeft>
       <ColumnRight>
-        <div className="columns-2 gap-x-8">
+        <div className="sm:columns-2 gap-x-8">
           {events?.records.length ? (
             <EventsList events={events.records} withImage />
           ) : (

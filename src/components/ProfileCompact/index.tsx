@@ -5,7 +5,7 @@ import {
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
-import { RenderNode, VenueContent } from "@/lib/utils/renderer";
+import { VenueContent } from "@/lib/utils/renderer";
 
 import { renderedStyles } from "../utils";
 
@@ -22,7 +22,7 @@ export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
 
       <VenueContent
         className="flex flex-col gap-6 pr-32"
-        content={content.contentJSON?.content as Array<RenderNode>}
+        content={content}
         contentStyles={renderedStyles}
       />
     </div>

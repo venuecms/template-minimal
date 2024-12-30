@@ -4,7 +4,8 @@ import { EventsList } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
 const Home = async () => {
-  const [{ data: events }] = await Promise.all([getEvents({ limit: 60 })]);
+  // const { data: events } = await getEvents({ limit: 60, dir: "asc" });
+  const { data: events } = await getEvents({ limit: 60 });
 
   return (
     <TwoColumnLayout>
@@ -12,7 +13,7 @@ const Home = async () => {
         <p className="text-primary font-medium">Past Events</p>
       </ColumnLeft>
       <ColumnRight>
-        <div className="columns-2 gap-x-8">
+        <div className="sm:columns-2 gap-x-8">
           {events?.records.length ? (
             <EventsList events={events.records} />
           ) : (

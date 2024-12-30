@@ -3,6 +3,7 @@
  * Adapted from tiptap-react-render: https://github.com/troop-dev/tiptap-react-render
  */
 import { VenueImage } from "@/components";
+import { LocalizedContent } from "@venuecms/sdk";
 
 type ElementClasses = {
   text?: string;
@@ -187,17 +188,27 @@ export const VenueContent = ({
   contentStyles,
   className,
 }: {
-  content: Array<RenderNode>;
+  content: LocalizedContent;
   contentStyles?: ContentStyles;
   className?: string;
 }) => {
-  return (
-    <div className={className}>
-      {content.map((node) => (
-        <ContentRender classes={contentStyles} node={node} />
-      ))}
-    </div>
-  );
+  const { contentJSON } = content;
+
+  if (contentJSON) {
+    return (
+      <div className={className}>
+        {(contentJSON.content as Array<RenderNode>).map((node) => (
+          <ContentRender classes={contentStyles} node={node} />
+        ))}
+      </div>
+    );
+  }
+
+  if (content.content) {
+    <div className={className}>{content.content}</div>;
+  }
+
+  return null;
 };
 
 interface Attrs {

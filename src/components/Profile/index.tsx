@@ -4,10 +4,11 @@ import {
 } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
-import { ContentRender, RenderNode } from "@/lib/utils/renderer";
+import { VenueContent } from "@/lib/utils/renderer";
 
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+import { renderedStyles } from "../utils";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {
   const locale = useLocale();
@@ -26,11 +27,11 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
       </ColumnLeft>
 
       <ColumnRight>
-        <div className="flex flex-col gap-6 pr-32">
-          {(content.contentJSON?.content as Array<RenderNode>).map((node) => (
-            <ContentRender node={node} />
-          ))}
-        </div>
+        <VenueContent
+          className="flex flex-col gap-6 pr-32"
+          content={content}
+          contentStyles={renderedStyles}
+        />
       </ColumnRight>
     </TwoColumnLayout>
   );

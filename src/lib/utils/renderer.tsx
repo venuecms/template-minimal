@@ -6,6 +6,7 @@ import { VenueImage } from "@/components";
 import { LocalizedContent } from "@venuecms/sdk";
 import Markdown from "markdown-to-jsx";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 import { cn } from "../utils";
 
@@ -177,7 +178,7 @@ const getMarkdownHandlers = (classes: ElementClasses = {}) => {
         {props.children}
       </Link>
     ),
-    span: ({ children }) => <span>{children}</span>, // strip out custom colors and all that (since they are usually pasted in accidentally)
+    span: ({ children }: { children: ReactNode }) => <span>{children}</span>, // strip out custom colors and all that (since they are usually pasted in accidentally)
   };
 };
 

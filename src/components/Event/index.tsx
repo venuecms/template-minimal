@@ -23,7 +23,7 @@ export const Event = ({ event }: { event: VenueEvent }) => {
   return (
     <TwoColumnLayout>
       <ColumnLeft>
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-8 pb-8">
           <div>
             <div className="text-secondary">{formatDate(event.startDate)}</div>
             <div>{content.title}</div>
@@ -38,7 +38,7 @@ export const Event = ({ event }: { event: VenueEvent }) => {
 
       <ColumnRight>
         <VenueContent
-          className="flex flex-col gap-6 pr-32"
+          className="flex flex-col gap-6 pr-4"
           content={content}
           contentStyles={renderedStyles}
         />

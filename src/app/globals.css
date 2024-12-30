@@ -83,3 +83,9 @@ html.darkGold {
     --panel-background-2: 0, 0%, 40%, 0.2;
   }
 }
+
+@media (prefers-color-scheme: light) {
+  header img {
+    @apply invert;
+  }
+}

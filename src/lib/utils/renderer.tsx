@@ -4,6 +4,7 @@
  */
 import { VenueImage } from "@/components";
 import { LocalizedContent } from "@venuecms/sdk";
+import Markdown from "markdown-to-jsx";
 
 type ElementClasses = {
   text?: string;
@@ -205,7 +206,11 @@ export const VenueContent = ({
   }
 
   if (content.content) {
-    <div className={className}>{content.content}</div>;
+    return (
+      <div className={className}>
+        <Markdown>{content.content}</Markdown>
+      </div>
+    );
   }
 
   return null;

@@ -21,7 +21,7 @@ export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
       </div>
 
       <VenueContent
-        className="flex flex-col gap-6 pr-32"
+        className="flex flex-col gap-6 pr-4"
         content={content}
         contentStyles={renderedStyles}
       />

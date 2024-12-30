@@ -5,6 +5,9 @@
 import { VenueImage } from "@/components";
 import { LocalizedContent } from "@venuecms/sdk";
 import Markdown from "markdown-to-jsx";
+import Link from "next/link";
+
+import { cn } from "../utils";
 
 type ElementClasses = {
   text?: string;
@@ -21,6 +24,7 @@ type ElementClasses = {
   h1?: string;
   h2?: string;
   h3?: string;
+  a?: string;
 };
 
 const marks = {
@@ -146,6 +150,37 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
   return defaultHandlers;
 };
 
+const getMarkdownHandlers = (classes: ElementClasses = {}) => {
+  const handlers = getDefaultHandlers(classes);
+  // the markdown renderer uses a more standard format for overriding styles, so we map it here
+  return {
+    ...handlers,
+    p: handlers.paragraph,
+    ul: handlers.bulletList,
+    ol: handlers.orderedList,
+    li: handlers.listItem,
+    code: handlers.codeBlock,
+    h1: (props: any) =>
+      handlers.heading({ ...props, node: { attrs: { level: 1 } } }),
+    h2: (props: any) =>
+      handlers.heading({ ...props, node: { attrs: { level: 2 } } }),
+    h3: (props: any) =>
+      handlers.heading({ ...props, node: { attrs: { level: 3 } } }),
+    img: (props: any) =>
+      handlers.image({
+        ...props,
+        node: { attrs: { src: props.src, alt: props.alt } },
+      }),
+    hr: (props: any) => <hr {...props} />,
+    a: (props: any) => (
+      <Link href={props.href} className={classes.a}>
+        {props.children}
+      </Link>
+    ),
+    span: ({ children }) => <span>{children}</span>, // strip out custom colors and all that (since they are usually pasted in accidentally)
+  };
+};
+
 type ContentStyles = Partial<
   Record<keyof ReturnType<typeof getDefaultHandlers>, string>
 >;
@@ -207,9 +242,19 @@ export const VenueContent = ({
 
   if (content.content) {
     return (
-      <div className={className}>
-        <Markdown>{content.content}</Markdown>
-      </div>
+      <Markdown
+        className={cn(className)}
+        options={{
+          overrides: {
+            ...getMarkdownHandlers(contentStyles),
+          },
+        }}
+      >
+        {content.content.replaceAll(
+          /(?:\n|\r\n)\*\*\*(?:\n|\r\n)/g,
+          "\n\n***\n\n",
+        )}
+      </Markdown>
     );
   }
 

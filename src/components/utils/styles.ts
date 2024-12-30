@@ -5,4 +5,5 @@ export const renderedStyles = {
   h3: "text-sm text-secondary",
   ol: "list-decimal pl-8",
   ul: "list-disc pl-4",
+  a: "underline text-primary text-sm font-medium",
 };

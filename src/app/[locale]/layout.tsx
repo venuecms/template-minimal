@@ -23,6 +23,9 @@ const IBMPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
 });
 
+// const THEME = "darkGold";
+const THEME: string | undefined = undefined;
+
 // TODO: generate metadata
 export const generateMetadata = async () => {
   const { data: site } = await getSite();
@@ -67,7 +70,7 @@ const RootLayout = async ({
         className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base`}
       >
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" forcedTheme="darkGold">
+          <ThemeProvider attribute="class" forcedTheme={THEME}>
             <SiteHeader />
             {children}
           </ThemeProvider>

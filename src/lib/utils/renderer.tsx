@@ -251,10 +251,13 @@ export const VenueContent = ({
           },
         }}
       >
-        {content.content.replaceAll(
-          /(?:\n|\r\n)\*\*\*(?:\n|\r\n)/g,
-          "\n\n***\n\n",
-        )}
+        {
+          /* There are issues with <hr> tags in the parsing so we fix that with a regex */
+          content.content.replaceAll(
+            /(?:\n|\r\n)\*\*\*(?:\n|\r\n)/g,
+            "\n\n***\n\n",
+          )
+        }
       </Markdown>
     );
   }

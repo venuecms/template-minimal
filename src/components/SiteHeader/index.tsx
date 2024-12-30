@@ -12,12 +12,12 @@ export const SiteHeader = async () => {
   }
 
   return (
-    <header className="top-0 h-20 flex items-center lg:gap-40 text-nav">
-      <TwoColumnLayout className="py-0 md:py-0 lg:items-center">
+    <header className="top-0 min-h-20 flex items-center lg:gap-40 text-nav">
+      <TwoColumnLayout className="py-0 md:py-0 lg:items-center pt-7 md:pt-7 lg:pt-7">
         <ColumnLeft>
           <SiteLogo site={site} />
         </ColumnLeft>
-        <ColumnRight>
+        <ColumnRight className="items-center">
           <Nav />
         </ColumnRight>
       </TwoColumnLayout>

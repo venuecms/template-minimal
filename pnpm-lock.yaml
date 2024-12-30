@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@venuecms/sdk':
-        specifier: ^0.0.3
-        version: 0.0.3
+        specifier: ^0.0.4
+        version: 0.0.4
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -145,8 +145,8 @@ packages:
   '@formatjs/intl-localematcher@0.5.8':
     resolution: {integrity: sha512-I+WDNWWJFZie+jkfkiK5Mp4hEDyRSEvmyfYadflOno/mmKJKcB17fEpEH0oJu/OWhhCJ8kJBDz2YMd/6cDl7Mg==}
 
-  '@hey-api/client-fetch@0.4.4':
-    resolution: {integrity: sha512-ebh1JjUdMAqes/Rg8OvbjDqGWGNhgHgmPtHlkIOUtj3y2mUXqX2g9sVoI/rSKW/FdADPng/90k5AL7bwT8W2lA==}
+  '@hey-api/client-fetch@0.5.7':
+    resolution: {integrity: sha512-hLpID6NCs8+stbz935UyvyGOXY44oLBSOy7ZEpwXxj977A/0U41iihDQllDoCJrxtbe06DnDgwPOn6/xnRJ71w==}
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -369,8 +369,8 @@ packages:
   '@types/react@18.3.12':
     resolution: {integrity: sha512-D2wOSq/d6Agt28q7rSI3jhU7G6aiuzljDGZ2hTZHIkrTLUI+AF3WMeKkEZ9nN2fkBAlcktT6vcZjDFiIhMYEQw==}
 
-  '@venuecms/sdk@0.0.3':
-    resolution: {integrity: sha512-zm7CcrI+osrDALitsOMG9tgJ4nBJoCC0gbad4tMf0+89zbF/sBwrIAZhbEwwODUzLHxQuOxVn2mKanq/q06Y6A==}
+  '@venuecms/sdk@0.0.4':
+    resolution: {integrity: sha512-mFYVeghpUKX3ncoB5Mqc6CkE0MExGQzXKiPa+qciJ9ct/01zeZnMA+/ea8S4lXjXnNGHqdPWesRDtDO7bcbl3g==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1054,7 +1054,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@hey-api/client-fetch@0.4.4': {}
+  '@hey-api/client-fetch@0.5.7': {}
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
@@ -1231,9 +1231,9 @@ snapshots:
       '@types/prop-types': 15.7.13
       csstype: 3.1.3
 
-  '@venuecms/sdk@0.0.3':
+  '@venuecms/sdk@0.0.4':
     dependencies:
-      '@hey-api/client-fetch': 0.4.4
+      '@hey-api/client-fetch': 0.5.7
       zod: 3.24.1
 
   ansi-regex@5.0.1: {}

@@ -1,7 +1,7 @@
 import { type Page as VenuePage, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
-import { ContentRender, RenderNode } from "@/lib/utils/renderer";
+import { VenueContent } from "@/lib/utils/renderer";
 
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
@@ -22,11 +22,11 @@ export const Page = ({ page }: { page: VenuePage }) => {
       </ColumnLeft>
 
       <ColumnRight>
-        <div className="max-w-[42rem] text-sm">
-          {(content.contentJSON?.content as Array<RenderNode>).map((node) => (
-            <ContentRender classes={renderedStyles} node={node} />
-          ))}
-        </div>
+        <VenueContent
+          className="max-w-[42rem] text-sm"
+          content={content}
+          contentStyles={renderedStyles}
+        />
       </ColumnRight>
     </TwoColumnLayout>
   );

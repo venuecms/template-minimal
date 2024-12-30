@@ -19,7 +19,8 @@
 }
 
 html.space {
-  --background: c --primary: 300, 15%, 88%, 1;
+  /* --background: c; */
+  --primary: 300, 15%, 88%, 1;
   --secondary: 300, 3%, 74%, 1;
   --muted: 300, 15%, 88%, 0.6;
   --nav: 310, 97%, 64%, 1;

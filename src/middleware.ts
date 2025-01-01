@@ -5,6 +5,10 @@ import { routing } from "./lib/i18n";
 
 export default async function middleware(request: NextRequest) {
   const url = new URL(request.url);
+  const host = request.headers.get("host");
+  if (!host) {
+    return NextResponse.rewrite(new URL("/not-found", request.url));
+  }
 
   request.headers.set("Authorization", `Bearer ${process.env.API_KEY}`);
 
@@ -28,9 +32,18 @@ export default async function middleware(request: NextRequest) {
 
   const handleI18nRouting = createMiddleware(routing);
 
-  const response = handleI18nRouting(request);
+  // TODO: use this response?
+  handleI18nRouting(request);
 
-  return response;
+  // check the subdomain which we'll use as a the sitekey
+  // Use the sample site by default so we can render without a sitekey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
+  const subdomain = host.split(".")[0] ?? "sample";
+
+  // rewrite with the sitekey as part of the path for caching and to give access to all sub pages
+  const localizedURL = new URL(request.url);
+  localizedURL.pathname = `${subdomain}${localizedURL.pathname}`;
+
+  return NextResponse.rewrite(localizedURL);
 }
 
 export const config = {

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@venuecms/sdk':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: 0.0.5
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -372,8 +372,8 @@ packages:
   '@types/react@18.3.12':
     resolution: {integrity: sha512-D2wOSq/d6Agt28q7rSI3jhU7G6aiuzljDGZ2hTZHIkrTLUI+AF3WMeKkEZ9nN2fkBAlcktT6vcZjDFiIhMYEQw==}
 
-  '@venuecms/sdk@0.0.4':
-    resolution: {integrity: sha512-mFYVeghpUKX3ncoB5Mqc6CkE0MExGQzXKiPa+qciJ9ct/01zeZnMA+/ea8S4lXjXnNGHqdPWesRDtDO7bcbl3g==}
+  '@venuecms/sdk@0.0.5':
+    resolution: {integrity: sha512-wiJQFhROTZWaCKTBzSdsBGXTf/sOtVm1hkSgYAzfJ1AZ27zvTohbV1DT9ygUP3ZTXJF875tCGMZCwdEKdYJbnA==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1240,7 +1240,7 @@ snapshots:
       '@types/prop-types': 15.7.13
       csstype: 3.1.3
 
-  '@venuecms/sdk@0.0.4':
+  '@venuecms/sdk@0.0.5':
     dependencies:
       '@hey-api/client-fetch': 0.5.7
       zod: 3.24.1

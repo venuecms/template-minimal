@@ -1,4 +1,5 @@
-import { getSite } from "@venuecms/sdk";
+import { Params } from "@/types";
+import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
@@ -9,7 +10,7 @@ import { routing } from "@/lib/i18n";
 
 import { SiteHeader } from "@/components/SiteHeader";
 
-import "../globals.css";
+import "../../globals.css";
 
 const jost = Jost({
   subsets: ["latin"],
@@ -27,7 +28,10 @@ const IBMPlexMono = IBM_Plex_Mono({
 const THEME: string | undefined = undefined;
 
 // TODO: generate metadata
-export const generateMetadata = async () => {
+export const generateMetadata = async ({ params }: { params: Params }) => {
+  const { siteKey } = await params;
+  setConfig({ siteKey });
+
   const { data: site } = await getSite();
 
   const { name } = site ?? {};
@@ -54,7 +58,7 @@ const RootLayout = async ({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: Params;
 }>) => {
   const { locale } = await params;
 

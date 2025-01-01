@@ -32,19 +32,30 @@ export default async function middleware(request: NextRequest) {
     });
   }
 
-  const handleI18nRouting = createMiddleware(routing);
+  const pathname = request.nextUrl.pathname;
+  const pathnameIsMissingLocale = ["en", "es", "sv"].every(
+    (locale) =>
+      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
+  );
 
-  // TODO: use this response?
-  handleI18nRouting(request);
+  // only reroute if locale is missing. Otherwise we want to use the domain routing
+  if (pathnameIsMissingLocale) {
+    const handleI18nRouting = createMiddleware(routing);
+
+    const response = handleI18nRouting(request);
+    console.log("redirected", response.redirected);
+
+    return response;
+  }
 
   // check the subdomain which we'll use as a the sitekey
   const subdomain = host.split(".")[0];
 
+  // Use the sample site by default so we can render without a sitekey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
   const siteKey =
     subdomain === "localhost" || subdomain === "venuecms"
       ? "sample"
       : subdomain;
-  // Use the sample site by default so we can render without a sitekey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
 
   // rewrite with the sitekey as part of the path for caching and to give access to all sub pages
   const localizedURL = new URL(request.url);
@@ -52,6 +63,7 @@ export default async function middleware(request: NextRequest) {
 
   console.log("SITEKEY", siteKey);
   console.log("REWRITE", localizedURL);
+
   return NextResponse.rewrite(localizedURL);
 }
 

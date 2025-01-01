@@ -1,13 +1,16 @@
 import { Profile } from "@/components";
-import { getProfile } from "@venuecms/sdk";
+import { Params } from "@/types";
+import { getProfile, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 const ArtistPage = async ({
   params,
 }: {
-  params: Promise<{ slug: string; locale: string }>;
+  params: Promise<{ slug: string } & Params>;
 }) => {
-  const { slug } = await params;
+  const { slug, siteKey } = await params;
+  setConfig({ siteKey });
+
   const { data: profile } = await getProfile({ slug });
 
   if (!profile) {

@@ -1,1 +1,1 @@
-export type Params = Promise<{ locale: string; siteKey: string }>;
+export type Params = { locale: string; siteKey: string };

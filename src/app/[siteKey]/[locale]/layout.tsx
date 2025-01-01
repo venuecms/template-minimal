@@ -41,26 +41,27 @@ export const generateMetadata = async ({ params }: { params: Params }) => {
   };
 };
 
-export const generateStaticParams = async () => {
-  const { data: site, error } = await getSite();
+// export const generateStaticParams = async () => {
+// const { data: site, error } = await getSite();
 
-  if (error) {
-    notFound();
-  }
-  // @ts-ignore
-  const supportedLocales = site.settings.locale.supported as Array<string>;
+// if (error) {
+// notFound();
+// }
+// // @ts-ignore
+// const supportedLocales = site.settings.locale.supported as Array<string>;
 
-  return supportedLocales.map((locale) => ({ locale }));
-};
+// return supportedLocales.map((locale) => ({ locale }));
+// };
 
 const RootLayout = async ({
   children,
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Params;
+  params: Promise<Params>;
 }>) => {
-  const { locale } = await params;
+  const { locale, siteKey } = await params;
+  setConfig({ siteKey });
 
   if (!routing.locales.includes(locale as any)) {
     notFound();

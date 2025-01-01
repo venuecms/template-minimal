@@ -1,13 +1,16 @@
 import { Page } from "@/components";
-import { getPage } from "@venuecms/sdk";
+import { Params } from "@/types";
+import { getPage, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 const PagePage = async ({
   params,
 }: {
-  params: Promise<{ slug: string; locale: string }>;
+  params: Promise<{ slug: string } & Params>;
 }) => {
-  const { slug } = await params;
+  const { slug, siteKey } = await params;
+  setConfig({ siteKey });
+
   const { data: page } = await getPage({ slug });
 
   if (!page) {

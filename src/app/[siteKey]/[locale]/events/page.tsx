@@ -1,9 +1,13 @@
-import { getEvents } from "@venuecms/sdk";
+import { Params } from "@/types";
+import { getEvents, setConfig } from "@venuecms/sdk";
 
 import { EventsList } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-const Home = async () => {
+const Home = async ({ params }: { params: Promise<Params> }) => {
+  const { siteKey } = await params;
+  setConfig({ siteKey });
+
   const { data: events } = await getEvents({ limit: 60, upcoming: true });
 
   return (

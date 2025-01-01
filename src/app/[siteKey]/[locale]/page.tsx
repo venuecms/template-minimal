@@ -1,4 +1,5 @@
-import { LocalizedContent, getEvents, getSite } from "@venuecms/sdk";
+import { Params } from "@/types";
+import { LocalizedContent, getEvents, getSite, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 import { VenueContent } from "@/lib/utils/renderer";
@@ -7,7 +8,10 @@ import { EventsList } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles } from "@/components/utils";
 
-const Home = async () => {
+const Home = async ({ params }: { params: Promise<Params> }) => {
+  const { siteKey } = await params;
+  setConfig({ siteKey });
+
   const [{ data: site }, { data: events, error }, { data: featuredEvents }] =
     await Promise.all([
       getSite(),

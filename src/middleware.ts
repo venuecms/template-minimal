@@ -51,6 +51,7 @@ export default async function middleware(request: NextRequest) {
   localizedURL.pathname = `${siteKey}${localizedURL.pathname}`;
 
   console.log("SITEKEY", siteKey);
+  console.log("REWRITE", localizedURL);
   return NextResponse.rewrite(localizedURL);
 }
 

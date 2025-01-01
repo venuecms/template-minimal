@@ -59,10 +59,11 @@ export default async function middleware(request: NextRequest) {
 
   // rewrite with the sitekey as part of the path for caching and to give access to all sub pages
   const localizedURL = new URL(request.url);
-  localizedURL.pathname = `${siteKey}${localizedURL.pathname}`;
+  // localizedURL.pathname = `${siteKey}${localizedURL.pathname}`;
+  localizedURL.pathname = `tradeschool${localizedURL.pathname}`;
 
-  console.log("SITEKEY", siteKey);
-  console.log("REWRITE", localizedURL);
+  console.log("SITEKEY", subdomain, siteKey);
+  console.log("REWRITE", localizedURL.toString());
 
   return NextResponse.rewrite(localizedURL);
 }

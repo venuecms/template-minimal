@@ -9,6 +9,7 @@ const RootLayout = async ({
   params: Params;
 }) => {
   const { siteKey } = await params;
+  console.log("RSC SITEKEY", siteKey);
   setConfig({ siteKey });
 
   return (

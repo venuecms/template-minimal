@@ -7,7 +7,6 @@ export default async function middleware(request: NextRequest) {
   const url = new URL(request.url);
   const host = request.headers.get("host");
 
-  console.log("HOST", host);
   if (!host) {
     return NextResponse.rewrite(new URL("/not-found", request.url));
   }
@@ -33,6 +32,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   const pathname = request.nextUrl.pathname;
+  // TODO: Do not hardcode this
   const pathnameIsMissingLocale = ["en", "es", "sv"].every(
     (locale) =>
       !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
@@ -43,7 +43,6 @@ export default async function middleware(request: NextRequest) {
     const handleI18nRouting = createMiddleware(routing);
 
     const response = handleI18nRouting(request);
-    console.log("redirected", response.redirected);
 
     return response;
   }
@@ -52,17 +51,17 @@ export default async function middleware(request: NextRequest) {
   const subdomain = host.split(".")[0];
 
   // Use the sample site by default so we can render without a sitekey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
+  // TODO: Here we will resolve custom hostnames. For now a test with a hardcoded hostname.
   const siteKey =
-    subdomain === "localhost" || subdomain === "venuecms"
-      ? "sample"
-      : subdomain;
+    host === "www.gototradeschool.org"
+      ? "tradeschool"
+      : subdomain === "localhost" || subdomain === "venuecms"
+        ? "sample"
+        : subdomain;
 
   // rewrite with the sitekey as part of the path for caching and to give access to all sub pages
   const localizedURL = new URL(request.url);
   localizedURL.pathname = `${siteKey}${localizedURL.pathname}`;
-
-  console.log("SITEKEY", subdomain, siteKey);
-  console.log("REWRITE", localizedURL.toString());
 
   return NextResponse.rewrite(localizedURL);
 }

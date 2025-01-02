@@ -1,12 +1,26 @@
-import { getLocalizedContent, getPages } from "@venuecms/sdk";
-import { SearchIcon } from "lucide-react";
+import {
+  LocalizedContent,
+  Page,
+  getLocalizedContent,
+  getPages,
+} from "@venuecms/sdk";
 import { getLocale } from "next-intl/server";
+import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
 
+import { NavMenuDesktop } from "./NavMenuDesktop";
+import { NavMenuMobile } from "./NavMenuMobile";
+
 const StaticSlugs = ["events", "archive"];
 
-export const Nav = async () => {
+export type RootPageContent = {
+  page: Page;
+  content: LocalizedContent;
+  isStatic: boolean;
+};
+
+export const Nav = async ({ logo }: { logo: ReactNode }) => {
   const locale = await getLocale();
   const { data: pages } = await getPages();
 
@@ -17,27 +31,24 @@ export const Nav = async () => {
   const rootPageContents = rootPages?.map((page) => ({
     page,
     content: getLocalizedContent(page.localizedContent, locale).content,
+    isStatic: StaticSlugs.includes(page.slug),
   }));
 
-  // Render the menu
+  const menuItems = rootPageContents
+    ? rootPageContents.map(({ page, content, isStatic }) => (
+        <li key={page.slug}>
+          <Link href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
+            {content.title}
+          </Link>
+        </li>
+      ))
+    : null;
+
+  // Render the menu for desktop and mobile
   return (
-    <nav className="flex w-full items-center justify-between">
-      <ol className="flex items-center gap-8 text-text-nav text-sm font-light">
-        {rootPageContents
-          ? rootPageContents.map(({ page, content }) => (
-              <li key={page.slug}>
-                <Link
-                  href={`${StaticSlugs.includes(page.slug) ? "/" : "/p/"}${page.slug}`}
-                >
-                  {content.title}
-                </Link>
-              </li>
-            ))
-          : null}
-      </ol>
-      <div className="gap-8">
-        <SearchIcon className="w-6 h-6" />
-      </div>
-    </nav>
+    <>
+      <NavMenuDesktop>{menuItems}</NavMenuDesktop>
+      <NavMenuMobile logo={logo}>{menuItems}</NavMenuMobile>
+    </>
   );
 };

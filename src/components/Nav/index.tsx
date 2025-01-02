@@ -1,6 +1,7 @@
 import {
   LocalizedContent,
   Page,
+  Site,
   getLocalizedContent,
   getPages,
 } from "@venuecms/sdk";
@@ -8,7 +9,9 @@ import { getLocale } from "next-intl/server";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
+import { VenueContent } from "@/lib/utils/renderer";
 
+import { renderedStyles } from "../utils";
 import { NavMenuDesktop } from "./NavMenuDesktop";
 import { NavMenuMobile } from "./NavMenuMobile";
 
@@ -20,7 +23,7 @@ export type RootPageContent = {
   isStatic: boolean;
 };
 
-export const Nav = async ({ logo }: { logo: ReactNode }) => {
+export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const locale = await getLocale();
   const { data: pages } = await getPages();
 
@@ -48,7 +51,19 @@ export const Nav = async ({ logo }: { logo: ReactNode }) => {
   return (
     <>
       <NavMenuDesktop>{menuItems}</NavMenuDesktop>
-      <NavMenuMobile logo={logo}>{menuItems}</NavMenuMobile>
+      <NavMenuMobile
+        logo={logo}
+        footer={
+          site.description ? (
+            <VenueContent
+              content={{ content: site.description } as LocalizedContent}
+              contentStyles={renderedStyles}
+            />
+          ) : null
+        }
+      >
+        {menuItems}
+      </NavMenuMobile>
     </>
   );
 };

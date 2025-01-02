@@ -243,22 +243,23 @@ export const VenueContent = ({
 
   if (content.content) {
     return (
-      <Markdown
-        className={cn(className)}
-        options={{
-          overrides: {
-            ...getMarkdownHandlers(contentStyles),
-          },
-        }}
-      >
-        {
-          /* There are issues with <hr> tags in the parsing so we fix that with a regex */
-          content.content.replaceAll(
-            /(?:\n|\r\n)\*\*\*(?:\n|\r\n)/g,
-            "\n\n***\n\n",
-          )
-        }
-      </Markdown>
+      <div className={className}>
+        <Markdown
+          options={{
+            overrides: {
+              ...getMarkdownHandlers(contentStyles),
+            },
+          }}
+        >
+          {
+            /* There are issues with <hr> tags in the parsing so we fix that with a regex */
+            content.content.replaceAll(
+              /(?:\n|\r\n)\*\*\*(?:\n|\r\n)/g,
+              "\n\n***\n\n",
+            )
+          }
+        </Markdown>
+      </div>
     );
   }
 

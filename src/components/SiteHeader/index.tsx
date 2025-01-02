@@ -14,7 +14,7 @@ export const SiteHeader = async () => {
   }
 
   const logo = <SiteLogo site={site} />;
-  const nav = <Nav logo={logo} />;
+  const nav = <Nav logo={logo} site={site} />;
 
   return (
     <>

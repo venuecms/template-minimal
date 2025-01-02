@@ -26,7 +26,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
 
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary">
+      <ColumnLeft className="hidden sm:flex text-sm text-secondary">
         {site.description ? (
           <VenueContent
             className="flex flex-col gap-6 pr-32"
@@ -40,12 +40,21 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
           <section className="flex flex-col gap-3">
             <EventsList events={events.records} />
             <Link
-              className="flex flex-row-reverse sm:flex-row sm:relative sm:left-1/2 w-full"
+              className="flex sm:flex-row sm:relative sm:left-1/2 w-full"
               href="/events"
             >
               → see all upcoming events
             </Link>
           </section>
+        ) : null}
+        {site.description ? (
+          <div className="sm:hidden flex">
+            <VenueContent
+              className="flex flex-col gap-6 pr-32"
+              content={{ content: site.description } as LocalizedContent}
+              contentStyles={renderedStyles}
+            />
+          </div>
         ) : null}
       </ColumnRight>
     </TwoColumnLayout>

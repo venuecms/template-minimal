@@ -7,9 +7,11 @@ import { ReactNode, useState } from "react";
 export const NavMenuMobile = ({
   logo,
   children,
+  footer,
 }: {
   logo: ReactNode;
   children: ReactNode;
+  footer?: ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -27,7 +29,7 @@ export const NavMenuMobile = ({
               <Dialog.Content className="p-6 w-full flex flex-col">
                 <Dialog.Title className="hidden">Menu</Dialog.Title>
 
-                <header className="flex justify-between pb-6">
+                <header className="text-nav flex justify-between items-center pb-6">
                   {logo}
                   <div className="flex flex-row gap-8">
                     <SearchIcon className="size-6" />
@@ -37,13 +39,14 @@ export const NavMenuMobile = ({
                   </div>
                 </header>
 
-                <div className="flex flex-col justify-between pt-6 pb-8">
+                <div className="flex flex-col justify-between pt-6 pb-8 h-full">
                   <ol
                     className="flex flex-col gap-8 text-text-nav text-sm font-light"
                     onClick={() => setOpen(false)}
                   >
                     {children}
                   </ol>
+                  <footer>{footer}</footer>
                 </div>
               </Dialog.Content>
             </Dialog.Overlay>

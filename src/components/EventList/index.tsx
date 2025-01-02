@@ -40,9 +40,9 @@ const ListEvent = ({
   return (
     <div className="flex flex-col pb-8 break-inside-avoid">
       {withImage ? (
-        <div className="max-w-60 pb-3">
+        <div className="w-60 pb-3">
           <Link href={`/events/${event.slug}`}>
-            <VenueImage image={event.image} />
+            <VenueImage image={event.image} aspect="video" />
           </Link>
         </div>
       ) : null}

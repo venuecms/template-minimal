@@ -29,7 +29,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       <ColumnLeft className="hidden sm:flex text-sm text-secondary">
         {site.description ? (
           <VenueContent
-            className="flex flex-col gap-6 pr-32"
+            className="flex flex-col gap-6"
             content={{ content: site.description } as LocalizedContent}
             contentStyles={renderedStyles}
           />
@@ -50,7 +50,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         {site.description ? (
           <div className="sm:hidden flex">
             <VenueContent
-              className="flex flex-col gap-6 pr-32"
+              className="flex flex-col gap-6"
               content={{ content: site.description } as LocalizedContent}
               contentStyles={renderedStyles}
             />

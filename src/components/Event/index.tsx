@@ -36,13 +36,13 @@ export const Event = ({ event }: { event: VenueEvent }) => {
         </div>
       </ColumnLeft>
 
-      <ColumnRight>
+      <ColumnRight className="max-w-4xl">
         <VenueContent
-          className="flex flex-col gap-6 pr-32"
+          className="flex flex-col gap-6 sm:pr-32"
           content={content}
           contentStyles={renderedStyles}
         />
-        <div className="grid-cols-2 grid gap-24">
+        <div className="grid gap-24 max-w-fit sm:grid-cols-[repeat(2,minmax(16rem,32rem))] sm:[&>div]:max-w-96">
           {artists.map(({ profile }) => (
             <ProfileCompact key={profile.slug} profile={profile} />
           ))}

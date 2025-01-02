@@ -72,7 +72,7 @@ const RootLayout = async ({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base`}
+        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base sm:max-w-[96rem] m-auto`}
       >
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" forcedTheme={THEME}>

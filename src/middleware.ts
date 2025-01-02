@@ -38,6 +38,8 @@ export default async function middleware(request: NextRequest) {
       !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
   );
 
+  // I18n ROUTING
+
   // only reroute if locale is missing. Otherwise we want to use the domain routing
   if (pathnameIsMissingLocale) {
     const handleI18nRouting = createMiddleware(routing);
@@ -47,10 +49,12 @@ export default async function middleware(request: NextRequest) {
     return response;
   }
 
+  // SUBDOMAIN ROUTING
+
   // check the subdomain which we'll use as a the sitekey
   const subdomain = host.split(".")[0];
 
-  // Use the sample site by default so we can render without a sitekey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
+  // Use the sample site by default so we can render without a siteKey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
   // TODO: Here we will resolve custom hostnames. For now a test with a hardcoded hostname.
   const siteKey =
     host === "www.gototradeschool.org"

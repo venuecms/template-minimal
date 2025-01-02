@@ -2,6 +2,7 @@ import { Params } from "@/types";
 import { LocalizedContent, getEvents, getSite, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
+import { Link } from "@/lib/i18n";
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { EventsList } from "@/components/EventList";
@@ -35,7 +36,17 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         ) : null}
       </ColumnLeft>
       <ColumnRight>
-        {events?.records.length ? <EventsList events={events.records} /> : null}
+        {events?.records.length ? (
+          <section className="flex flex-col gap-3">
+            <EventsList events={events.records} />
+            <Link
+              className="flex flex-row-reverse sm:flex-row sm:relative sm:left-1/2 w-full"
+              href="/events"
+            >
+              → see all upcoming events
+            </Link>
+          </section>
+        ) : null}
       </ColumnRight>
     </TwoColumnLayout>
   );

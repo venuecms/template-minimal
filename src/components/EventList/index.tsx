@@ -38,27 +38,29 @@ const ListEvent = ({
   );
 
   return (
-    <div className="flex flex-col pb-8 break-inside-avoid">
+    <div className="flex flex-col gap-8 sm:gap-0 pb-8 break-inside-avoid">
       {withImage ? (
-        <div className="w-60 pb-3">
+        <div className="w-full sm:w-60 pb-3">
           <Link href={`/events/${event.slug}`}>
             <VenueImage image={event.image} aspect="video" />
           </Link>
         </div>
       ) : null}
-      {event.startDate ? (
-        <div className="text-secondary">
-          <Link href={`/events/${event.slug}`}>
-            {formatDate(event.startDate)}
-          </Link>
+      <div className="flex flex-col">
+        {event.startDate ? (
+          <div className="text-secondary">
+            <Link href={`/events/${event.slug}`}>
+              {formatDate(event.startDate)}
+            </Link>
+          </div>
+        ) : null}
+        <div>
+          <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
-      ) : null}
-      <div>
-        <Link href={`/events/${event.slug}`}>{content.title}</Link>
+        {event.location ? (
+          <div className="text-secondary">{locationContent.title}</div>
+        ) : null}
       </div>
-      {event.location ? (
-        <div className="text-secondary">{locationContent.title}</div>
-      ) : null}
     </div>
   );
 };

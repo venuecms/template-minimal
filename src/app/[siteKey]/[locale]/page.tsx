@@ -6,7 +6,7 @@ import { Link } from "@/lib/i18n";
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { EventFeatured } from "@/components/EventFeatured";
-import { EventsList } from "@/components/EventList";
+import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles } from "@/components/utils";
 
@@ -54,7 +54,11 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         <ColumnRight>
           {events?.records.length ? (
             <section className="flex flex-col gap-3">
-              <EventsList events={events.records} site={site} />
+              <EventsList>
+                {events.records.map((event) => (
+                  <ListEvent key={event.id} event={event} site={site} />
+                ))}
+              </EventsList>
               <Link
                 className="flex sm:flex-row sm:relative sm:left-1/2 w-full"
                 href="/events"

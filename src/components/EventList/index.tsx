@@ -1,42 +1,44 @@
 import { type Event, type Site, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
+import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 import { VenueImage } from "../VenueImage";
 import { formatDate } from "../utils";
 
 export const EventsList = ({
-  events,
-  site,
-  withImage,
+  children,
+  className,
 }: {
-  events: Array<Event>;
-  site: Site;
-  withImage?: boolean;
+  children: ReactNode;
+  className?: string;
 }) => {
   return (
-    <div className="flex flex-col text-sm">
-      {events.map((event) => (
-        <ListEvent
-          key={event.id}
-          event={event}
-          site={site}
-          withImage={withImage}
-        />
-      ))}
+    <div
+      className={cn(
+        "flex flex-col sm:grid sm:grid-cols-2 sm:grid-flow-row gap-x-8 text-sm",
+        className,
+      )}
+    >
+      {children}
     </div>
   );
 };
 
-const ListEvent = ({
+export const ListEvent = ({
   event,
   site,
   withImage,
+  highlight,
+  className,
 }: {
   event: Event;
   site: Site;
   withImage?: boolean;
+  highlight?: boolean;
+  className?: string;
 }) => {
   const locale = useLocale();
 
@@ -47,9 +49,19 @@ const ListEvent = ({
   );
 
   return (
-    <div className="flex flex-col gap-8 sm:gap-0 pb-8 break-inside-avoid">
+    <div
+      className={cn(
+        "flex flex-col gap-8 sm:gap-0 pb-8 break-inside-avoid",
+        className,
+      )}
+    >
       {withImage ? (
-        <div className="w-full sm:w-60 pb-3">
+        <div
+          className={cn(
+            "w-full sm:w-60 pb-3",
+            highlight && "sm:w-80 sm:max-w-full",
+          )}
+        >
           <Link href={`/events/${event.slug}`}>
             <VenueImage image={event.image} aspect="video" />
           </Link>

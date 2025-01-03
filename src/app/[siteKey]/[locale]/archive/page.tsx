@@ -8,7 +8,7 @@ import {
 } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
-import { EventsList } from "@/components/EventList";
+import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
 const Home = async ({ params }: { params: Promise<Params> }) => {
@@ -36,13 +36,15 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         <p className="text-primary font-medium">{pageTitle}</p>
       </ColumnLeft>
       <ColumnRight>
-        <div className="sm:columns-2 gap-x-8">
-          {events?.records.length ? (
-            <EventsList events={events.records} site={site} />
-          ) : (
-            "No events found"
-          )}
-        </div>
+        {events?.records.length ? (
+          <EventsList>
+            {events.records.map((event) => (
+              <ListEvent key={event.id} event={event} site={site} />
+            ))}
+          </EventsList>
+        ) : (
+          "No events found"
+        )}
       </ColumnRight>
     </TwoColumnLayout>
   );

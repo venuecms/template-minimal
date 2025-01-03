@@ -16,7 +16,7 @@ export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="text-secondary font-regular">
+      <div className="text-secondary">
         <Link href={`/artists/${profile.slug}`}>{content.title}</Link>
       </div>
 

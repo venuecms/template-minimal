@@ -19,7 +19,7 @@ const jost = Jost({
 });
 const IBMPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  weight: "300",
+  weight: ["300", "500"],
   display: "swap",
   variable: "--font-ibm-plex-mono",
 });
@@ -28,7 +28,11 @@ const IBMPlexMono = IBM_Plex_Mono({
 const THEME: string | undefined = undefined;
 
 // TODO: generate metadata
-export const generateMetadata = async ({ params }: { params: Params }) => {
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<Params>;
+}) => {
   const { siteKey } = await params;
   setConfig({ siteKey });
 
@@ -72,7 +76,7 @@ const RootLayout = async ({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base sm:max-w-[96rem] m-auto`}
+        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base sm:max-w-[96rem] m-auto font-regular`}
       >
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" forcedTheme={THEME}>

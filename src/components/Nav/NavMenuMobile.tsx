@@ -18,7 +18,7 @@ export const NavMenuMobile = ({
   return (
     <nav className="sm:hidden flex w-auto items-center justify-between">
       <div className="flex gap-8">
-        <SearchIcon className="size-6" />
+        {/* <SearchIcon className="size-6" /> */}
         <Dialog.Root open={open} onOpenChange={setOpen}>
           <Dialog.Trigger>
             <MenuIcon className="size-6" />
@@ -32,7 +32,7 @@ export const NavMenuMobile = ({
                 <header className="text-nav flex justify-between items-center pb-6">
                   {logo}
                   <div className="flex flex-row gap-8">
-                    <SearchIcon className="size-6" />
+                    {/* <SearchIcon className="size-6" /> */}
                     <Dialog.Close>
                       <X className="size-6" />
                     </Dialog.Close>
@@ -41,7 +41,7 @@ export const NavMenuMobile = ({
 
                 <div className="flex flex-col justify-between pt-6 pb-8 h-full">
                   <ol
-                    className="flex flex-col gap-8 text-text-nav text-sm font-light"
+                    className="flex flex-col gap-8 text-nav text-sm"
                     onClick={() => setOpen(false)}
                   >
                     {children}

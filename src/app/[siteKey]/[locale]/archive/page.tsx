@@ -15,7 +15,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
 
   // const { data: events } = await getEvents({ limit: 60, dir: "asc" });
   const [{ data: events }, { data: page }] = await Promise.all([
-    getEvents({ limit: 60 }),
+    getEvents({ limit: 60, lt: new Date().getTime() }),
     getPage({ slug: "archive" }),
   ]);
 

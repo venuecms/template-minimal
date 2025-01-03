@@ -54,7 +54,7 @@ const ListEvent = ({
             </Link>
           </div>
         ) : null}
-        <div>
+        <div className="text-primary">
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
         {event.location ? (

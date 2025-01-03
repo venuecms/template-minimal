@@ -65,16 +65,24 @@ export const EventFeatured = ({
         <div className="flex flex-col gap-8">
           <div>
             <div className="text-secondary">
-              {formatDate(event.startDate, event.site.timeZone!)}
+              <Link href={`/events/${event.slug}`}>
+                {formatDate(event.startDate, event.site.timeZone!)}
+              </Link>
             </div>
             {location ? (
               <div className="text-secondary">{locationContent.title}</div>
             ) : null}
           </div>
-          <div className="text-xl">{content.title}</div>
-          <VenueImage image={event.image} />
           <div className="text-xl">
-            <VenueContent content={content} contentStyles={renderedStyles} />
+            <Link href={`/events/${event.slug}`}>{content.title}</Link>
+          </div>
+          <Link href={`/events/${event.slug}`}>
+            <VenueImage image={event.image} />
+          </Link>
+          <div className="text-xl">
+            <Link href={`/events/${event.slug}`}>
+              <VenueContent content={content} contentStyles={renderedStyles} />
+            </Link>
           </div>
         </div>
       </div>

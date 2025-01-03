@@ -25,7 +25,9 @@ export const Event = ({ event }: { event: VenueEvent }) => {
       <ColumnLeft>
         <div className="flex flex-col gap-12">
           <div>
-            <div className="text-secondary">{formatDate(event.startDate)}</div>
+            <div className="text-secondary">
+              {formatDate(event.startDate, event.site.timeZone!)}
+            </div>
             <div>{content.title}</div>
             {location ? (
               <div className="text-secondary">{locationContent.title}</div>

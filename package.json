@@ -9,6 +9,7 @@
     "lint": "prettier . --write"
   },
   "dependencies": {
+    "@date-fns/tz": "^1.2.0",
     "@radix-ui/react-dialog": "^1.1.4",
     "@venuecms/sdk": "^0.0.5",
     "clsx": "^2.1.1",

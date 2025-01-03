@@ -12,6 +12,7 @@ const EventsPage = async ({
   setConfig({ siteKey });
 
   const { data: event } = await getEvent({ slug });
+
   if (!event) {
     notFound();
   }

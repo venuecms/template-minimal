@@ -50,7 +50,7 @@ const ListEvent = ({
         {event.startDate ? (
           <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
-              {formatDate(event.startDate)}
+              {formatDate(event.startDate, event.site.timeZone!)}
             </Link>
           </div>
         ) : null}

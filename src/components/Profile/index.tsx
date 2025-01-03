@@ -26,9 +26,9 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
         </div>
       </ColumnLeft>
 
-      <ColumnRight className="max-w-5xl">
+      <ColumnRight className="sm:max-w-5xl">
         <VenueContent
-          className="flex flex-col gap-6 pr-32"
+          className="flex flex-col gap-6 sm:pr-32"
           content={content}
           contentStyles={renderedStyles}
         />

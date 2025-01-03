@@ -1,6 +1,7 @@
 import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
+import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { VenueContent } from "@/lib/utils/renderer";
 
@@ -30,14 +31,20 @@ export const EventFeatured = ({
     <>
       <TwoColumnLayout className={cn(className, "hidden")}>
         <ColumnLeft>
-          <VenueImage image={event.image} />
+          <Link href={`/events/${event.slug}`}>
+            <VenueImage image={event.image} />
+          </Link>
         </ColumnLeft>
 
         <ColumnRight className="max-w-4xl gap-16">
           <div className="text-secondary">
-            {formatDate(event.startDate, event.site.timeZone!)}
+            <Link href={`/events/${event.slug}`}>
+              {formatDate(event.startDate, event.site.timeZone!)}
+            </Link>
           </div>
-          <div className="text-primary text-xl">{content.title}</div>
+          <div className="text-primary text-xl">
+            <Link href={`/events/${event.slug}`}>{content.title}</Link>
+          </div>
           {location ? (
             <div className="text-secondary text-2xl">
               {locationContent.title}
@@ -45,11 +52,13 @@ export const EventFeatured = ({
           ) : null}
 
           {event.tickets ? <TicketList tickets={event.tickets} /> : null}
-          <VenueContent
-            className="flex flex-col gap-6 sm:pr-32"
-            content={content}
-            contentStyles={renderedStyles}
-          />
+          <Link href={`/events/${event.slug}`}>
+            <VenueContent
+              className="flex flex-col gap-6 max-w-xl"
+              content={content}
+              contentStyles={renderedStyles}
+            />
+          </Link>
         </ColumnRight>
       </TwoColumnLayout>
       <div className="sm:hidden flex">

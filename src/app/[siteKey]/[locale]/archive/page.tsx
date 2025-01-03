@@ -3,8 +3,10 @@ import {
   getEvents,
   getLocalizedContent,
   getPage,
+  getSite,
   setConfig,
 } from "@venuecms/sdk";
+import { notFound } from "next/navigation";
 
 import { EventsList } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
@@ -14,10 +16,15 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   setConfig({ siteKey });
 
   // const { data: events } = await getEvents({ limit: 60, dir: "asc" });
-  const [{ data: events }, { data: page }] = await Promise.all([
+  const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
     getEvents({ limit: 60, lt: new Date().getTime() }),
     getPage({ slug: "archive" }),
+    getSite(),
   ]);
+
+  if (!site) {
+    notFound();
+  }
 
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
@@ -31,7 +38,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       <ColumnRight>
         <div className="sm:columns-2 gap-x-8">
           {events?.records.length ? (
-            <EventsList events={events.records} />
+            <EventsList events={events.records} site={site} />
           ) : (
             "No events found"
           )}

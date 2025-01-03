@@ -1,4 +1,8 @@
-import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
+import {
+  type Site,
+  type Event as VenueEvent,
+  getLocalizedContent,
+} from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
@@ -13,9 +17,11 @@ import { renderedStyles } from "../utils/styles";
 
 export const EventFeatured = ({
   event,
+  site,
   className,
 }: {
   event: VenueEvent;
+  site: Site;
   className?: string;
 }) => {
   const locale = useLocale();
@@ -39,7 +45,7 @@ export const EventFeatured = ({
         <ColumnRight className="max-w-4xl gap-16">
           <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
-              {formatDate(event.startDate, event.site.timeZone!)}
+              {formatDate(event.startDate, site.timeZone!)}
             </Link>
           </div>
           <div className="text-primary text-xl">
@@ -66,7 +72,7 @@ export const EventFeatured = ({
           <div>
             <div className="text-secondary">
               <Link href={`/events/${event.slug}`}>
-                {formatDate(event.startDate, event.site.timeZone!)}
+                {formatDate(event.startDate, site.timeZone!)}
               </Link>
             </div>
             {location ? (

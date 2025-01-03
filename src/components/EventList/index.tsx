@@ -1,4 +1,4 @@
-import { Event, getLocalizedContent } from "@venuecms/sdk";
+import { type Event, type Site, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
@@ -8,15 +8,22 @@ import { formatDate } from "../utils";
 
 export const EventsList = ({
   events,
+  site,
   withImage,
 }: {
   events: Array<Event>;
+  site: Site;
   withImage?: boolean;
 }) => {
   return (
     <div className="flex flex-col text-sm">
       {events.map((event) => (
-        <ListEvent key={event.id} event={event} withImage={withImage} />
+        <ListEvent
+          key={event.id}
+          event={event}
+          site={site}
+          withImage={withImage}
+        />
       ))}
     </div>
   );
@@ -24,9 +31,11 @@ export const EventsList = ({
 
 const ListEvent = ({
   event,
+  site,
   withImage,
 }: {
   event: Event;
+  site: Site;
   withImage?: boolean;
 }) => {
   const locale = useLocale();
@@ -50,7 +59,7 @@ const ListEvent = ({
         {event.startDate ? (
           <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
-              {formatDate(event.startDate, event.site.timeZone!)}
+              {formatDate(event.startDate, site.timeZone!)}
             </Link>
           </div>
         ) : null}

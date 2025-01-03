@@ -30,7 +30,12 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       {featuredEvents?.records.length ? (
         <div className="flex flex-col pb-16 ">
           {featuredEvents?.records.map((event) => (
-            <EventFeatured key={event.id} event={event} className="lg:pb-64" />
+            <EventFeatured
+              key={event.id}
+              event={event}
+              site={site}
+              className="lg:pb-64"
+            />
           ))}
         </div>
       ) : null}
@@ -49,7 +54,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         <ColumnRight>
           {events?.records.length ? (
             <section className="flex flex-col gap-3">
-              <EventsList events={events.records} />
+              <EventsList events={events.records} site={site} />
               <Link
                 className="flex sm:flex-row sm:relative sm:left-1/2 w-full"
                 href="/events"

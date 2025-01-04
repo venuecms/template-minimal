@@ -36,7 +36,7 @@ export const generateMetadata = async ({
   params: Promise<Params>;
 }) => {
   const { siteKey } = await params;
-  setConfig({ siteKey, options: { cache: "force-cache" } });
+  setConfig({ siteKey, options: { next: { revalidate: 60 } } });
 
   const { data: site } = await getSite();
 
@@ -67,7 +67,10 @@ const RootLayout = async ({
   params: Promise<Params>;
 }>) => {
   const { locale, siteKey } = await params;
-  setConfig({ siteKey });
+  setConfig({
+    siteKey,
+    options: { next: { revalidate: 60 } },
+  });
 
   if (!routing.locales.includes(locale as any)) {
     notFound();

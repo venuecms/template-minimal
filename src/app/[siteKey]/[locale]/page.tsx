@@ -1,3 +1,4 @@
+import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
 import { LocalizedContent, getEvents, getSite, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
@@ -10,11 +11,35 @@ import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles } from "@/components/utils";
 
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<Params>;
+}) => {
+  const { siteKey, locale } = await params;
+  setConfig({ siteKey });
+
+  const { data: site } = await getSite();
+  if (!site) {
+    return {};
+  }
+
+  const metadata = getLocalizedMetadata({
+    locale,
+    site,
+    overrides: {
+      content: site.description ?? undefined,
+    },
+  });
+
+  return metadata;
+};
+
 const Home = async ({ params }: { params: Promise<Params> }) => {
   const { siteKey } = await params;
   setConfig({ siteKey });
 
-  const [{ data: site }, { data: events, error }, { data: featuredEvents }] =
+  const [{ data: site }, { data: events }, { data: featuredEvents }] =
     await Promise.all([
       getSite(),
       getEvents({ limit: 6, upcoming: true }),

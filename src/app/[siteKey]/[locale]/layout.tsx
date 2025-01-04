@@ -1,5 +1,5 @@
 import { Params } from "@/types";
-import { getSite, setConfig } from "@venuecms/sdk";
+import { setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
@@ -26,26 +26,7 @@ const IBMPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
 });
 
-// const THEME = "darkGold";
 const THEME: string | undefined = undefined;
-
-// TODO: generate metadata
-export const generateMetadata = async ({
-  params,
-}: {
-  params: Promise<Params>;
-}) => {
-  const { siteKey } = await params;
-  setConfig({ siteKey, options: { next: { revalidate: 60 } } });
-
-  const { data: site } = await getSite();
-
-  const { name } = site ?? {};
-
-  return {
-    title: name,
-  };
-};
 
 // export const generateStaticParams = async () => {
 // const { data: site, error } = await getSite();

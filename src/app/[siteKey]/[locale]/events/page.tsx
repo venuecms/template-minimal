@@ -1,3 +1,4 @@
+import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import {
   getEvents,
@@ -8,12 +9,14 @@ import {
 } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
-import { cn } from "@/lib/utils";
-
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-const Home = async ({ params }: { params: Promise<Params> }) => {
+export const generateMetadata = getGenerateMetadata(() =>
+  getPage({ slug: "events" }),
+);
+
+const EventsPage = async ({ params }: { params: Promise<Params> }) => {
   const { siteKey, locale } = await params;
   setConfig({ siteKey });
 
@@ -57,4 +60,4 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   );
 };
 
-export default Home;
+export default EventsPage;

@@ -1,8 +1,11 @@
+import { Params } from "@/types";
 import {
   type LocalizedContent,
   MediaItem,
   type Site,
   getLocalizedContent,
+  getSite,
+  setConfig,
 } from "@venuecms/sdk";
 
 import { getPublicImage } from "@/components/utils";
@@ -83,9 +86,39 @@ export const getLocalizedMetadata = ({
 
   return {
     title: `${site.name}${title ? ` - ${title}` : ""}`,
-    description,
+    description: metaDescription || shortContent || description,
     keywords: keywords?.split(", "),
     openGraph: getOpenGraphFromLocalizedContent(item),
     ...overrides,
   };
 };
+
+// Gets metadata for a single item that is queried by a slug.
+// When a getItem is not passed, it will simply use the overrides passed
+export const getGenerateMetadata =
+  (getItem: (params: { slug: string }) => Promise<{ data: any }>) =>
+  async ({ params }: { params: Promise<Params & { slug: string }> }) => {
+    try {
+      const { siteKey, slug, locale } = await params;
+      setConfig({ siteKey });
+
+      const [{ data: site }, { data: item }] = await Promise.all([
+        getSite(),
+        getItem({ slug }),
+      ]);
+
+      if (!site || !item) {
+        return {};
+      }
+
+      const metadata = getLocalizedMetadata({
+        locale,
+        item,
+        site,
+      });
+
+      return metadata;
+    } catch (e) {
+      return {};
+    }
+  };

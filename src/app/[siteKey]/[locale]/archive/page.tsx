@@ -1,3 +1,4 @@
+import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import {
   getEvents,
@@ -11,7 +12,11 @@ import { notFound } from "next/navigation";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-const Home = async ({ params }: { params: Promise<Params> }) => {
+export const generateMetadata = getGenerateMetadata(() =>
+  getPage({ slug: "archive" }),
+);
+
+const ArchivePage = async ({ params }: { params: Promise<Params> }) => {
   const { siteKey, locale } = await params;
   setConfig({ siteKey });
 
@@ -50,4 +55,4 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   );
 };
 
-export default Home;
+export default ArchivePage;

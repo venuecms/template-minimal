@@ -12,6 +12,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 import "../../globals.css";
 
+export const runtime = "edge";
+
 const jost = Jost({
   subsets: ["latin"],
   display: "swap",
@@ -34,7 +36,7 @@ export const generateMetadata = async ({
   params: Promise<Params>;
 }) => {
   const { siteKey } = await params;
-  setConfig({ siteKey });
+  setConfig({ siteKey, options: { cache: "force-cache" } });
 
   const { data: site } = await getSite();
 

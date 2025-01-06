@@ -26,3 +26,15 @@ export const ProfileEventList = async ({
     </div>
   ) : null;
 };
+
+export const ProfileEventListSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="h-4 bg-primary opacity-[3%] w-1/4" />
+      <EventsList>
+        <div className="h-16 bg-primary opacity-[3%] w-[90%]" />
+        <div className="h-16 bg-primary opacity-[3%] w-[90%]" />
+      </EventsList>
+    </div>
+  );
+};

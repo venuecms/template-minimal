@@ -10,7 +10,7 @@ import { VenueContent } from "@/lib/utils/renderer";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
-import { ProfileEventList } from "./ProfileEventList";
+import { ProfileEventList, ProfileEventListSkeleton } from "./ProfileEventList";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {
   const locale = useLocale();
@@ -34,7 +34,7 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           content={content}
           contentStyles={renderedStyles}
         />
-        <Suspense fallback={null}>
+        <Suspense fallback={<ProfileEventListSkeleton />}>
           <ProfileEventList
             header="Upcoming Events"
             slug={profile.slug}
@@ -42,7 +42,7 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
             filter={{ upcoming: true }}
           />
         </Suspense>
-        <Suspense fallback={null}>
+        <Suspense fallback={<ProfileEventListSkeleton />}>
           <ProfileEventList
             header="Past Events"
             slug={profile.slug}

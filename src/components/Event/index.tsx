@@ -23,7 +23,7 @@ export const Event = ({ event }: { event: VenueEvent }) => {
   return (
     <TwoColumnLayout>
       <ColumnLeft>
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-14">
           <div className="flex flex-col gap-10">
             <div>
               <div className="text-secondary">

@@ -1,4 +1,5 @@
 import { Location as VenueLocation, getLocalizedContent } from "@venuecms/sdk";
+import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
@@ -21,9 +22,9 @@ export const LocationLink = ({
     <a
       href={mapLink}
       target="_blank"
-      className={cn("block text-secondary", className)}
+      className={cn("flex gap-2 items-center text-secondary", className)}
     >
-      {locationContent.title}
+      {locationContent.title} <MapPin className="size-4" />
     </a>
   ) : (
     <div className={cn("text-secondary", className)}>

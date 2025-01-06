@@ -15,7 +15,7 @@ export const ProfileEventList = async ({
 }) => {
   const { data: events } = await getProfileEvents({ slug, ...filter });
 
-  return events ? (
+  return events?.records.length ? (
     <div className="flex flex-col gap-6">
       <h2 className="text-primary text-sm py-0 m-0">{header}</h2>
       <EventsList>

@@ -27,13 +27,18 @@ export const ProfileEventList = async ({
   ) : null;
 };
 
-export const ProfileEventListSkeleton = () => {
+export const ProfileEventListSkeleton = ({
+  numElements = 2,
+}: {
+  numElements?: number;
+}) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="h-4 bg-primary opacity-[3%] w-1/4" />
       <EventsList>
-        <div className="h-16 bg-primary opacity-[3%] w-[90%]" />
-        <div className="h-16 bg-primary opacity-[3%] w-[90%]" />
+        {Array.from({ length: numElements }).map((_, index) => (
+          <div key={index} className="h-16 bg-primary opacity-[3%] w-[90%]" />
+        ))}
       </EventsList>
     </div>
   );

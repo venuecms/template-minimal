@@ -34,7 +34,7 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           content={content}
           contentStyles={renderedStyles}
         />
-        <Suspense fallback={<ProfileEventListSkeleton />}>
+        <Suspense fallback={<ProfileEventListSkeleton numElements={1} />}>
           <ProfileEventList
             header="Upcoming Events"
             slug={profile.slug}
@@ -42,7 +42,7 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
             filter={{ upcoming: true }}
           />
         </Suspense>
-        <Suspense fallback={<ProfileEventListSkeleton />}>
+        <Suspense fallback={null}>
           <ProfileEventList
             header="Past Events"
             slug={profile.slug}

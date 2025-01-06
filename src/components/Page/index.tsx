@@ -3,11 +3,18 @@ import { useLocale } from "next-intl";
 
 import { VenueContent } from "@/lib/utils/renderer";
 
+import { PageTree } from "../PageTree";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
 
-export const Page = ({ page }: { page: VenuePage }) => {
+export const Page = ({
+  page,
+  pages,
+}: {
+  page: VenuePage;
+  pages: Array<VenuePage & { parent?: VenuePage }>;
+}) => {
   const locale = useLocale();
 
   const { content } = getLocalizedContent(page?.localizedContent, locale);
@@ -20,6 +27,7 @@ export const Page = ({ page }: { page: VenuePage }) => {
             <div>{content.title}</div>
           </div>
           <VenueImage image={page.image} />
+          <PageTree pages={pages} />
         </div>
       </ColumnLeft>
 

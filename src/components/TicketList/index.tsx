@@ -14,7 +14,7 @@ export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
 
         return ticket.externalLink ? (
           <Link key={ticket.name} href={ticket.externalLink}>
-            {ticketText}
+            {ticketText} {ticket.name.toLowerCase()}
           </Link>
         ) : (
           <div>{ticketText}</div>

@@ -24,16 +24,18 @@ export const Event = ({ event }: { event: VenueEvent }) => {
     <TwoColumnLayout>
       <ColumnLeft>
         <div className="flex flex-col gap-12">
-          <div>
-            <div className="text-secondary">
-              {formatDate(event.startDate, event.site.timeZone!)}
+          <div className="flex flex-col gap-10">
+            <div>
+              <div className="text-secondary">
+                {formatDate(event.startDate, event.site.timeZone!)}
+              </div>
+              <div>{content.title}</div>
+              {location ? (
+                <div className="text-secondary">{locationContent.title}</div>
+              ) : null}
             </div>
-            <div>{content.title}</div>
-            {location ? (
-              <div className="text-secondary">{locationContent.title}</div>
-            ) : null}
+            {event.tickets ? <TicketList tickets={event.tickets} /> : null}
           </div>
-          {event.tickets ? <TicketList tickets={event.tickets} /> : null}
           <VenueImage image={event.image} />
         </div>
       </ColumnLeft>

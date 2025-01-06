@@ -8,12 +8,7 @@ import { Suspense } from "react";
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { VenueImage } from "../VenueImage";
-import {
-  ColumnLeft,
-  ColumnRight,
-  TwoColumnLayout,
-  TwoSubColumnLayout,
-} from "../layout";
+import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
 import { ProfileEventList } from "./ProfileEventList";
 
@@ -40,7 +35,20 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           contentStyles={renderedStyles}
         />
         <Suspense fallback={null}>
-          <ProfileEventList slug={profile.slug} site={profile.site} />
+          <ProfileEventList
+            header="Upcoming Events"
+            slug={profile.slug}
+            site={profile.site}
+            filter={{ upcoming: true }}
+          />
+        </Suspense>
+        <Suspense fallback={null}>
+          <ProfileEventList
+            header="Past Events"
+            slug={profile.slug}
+            site={profile.site}
+            filter={{ lt: Date.now() }}
+          />
         </Suspense>
       </ColumnRight>
     </TwoColumnLayout>

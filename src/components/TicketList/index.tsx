@@ -17,7 +17,7 @@ export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
             {ticketText} {ticket.name.toLowerCase()}
           </Link>
         ) : (
-          <div>{ticketText}</div>
+          <div key={ticket.name}>{ticketText}</div>
         );
       })}
     </div>

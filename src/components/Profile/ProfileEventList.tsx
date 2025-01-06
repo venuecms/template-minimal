@@ -3,16 +3,21 @@ import { Site, getProfileEvents } from "@venuecms/sdk";
 import { EventsList, ListEvent } from "@/components/EventList";
 
 export const ProfileEventList = async ({
+  header,
   slug,
   site,
+  filter,
 }: {
+  header: string;
   slug: string;
   site: Site;
+  filter?: { upcoming?: boolean; lt?: number };
 }) => {
-  const { data: events } = await getProfileEvents({ slug });
+  const { data: events } = await getProfileEvents({ slug, ...filter });
+
   return events ? (
     <div className="flex flex-col gap-6">
-      <h2 className="text-primary text-sm py-0 m-0">Events</h2>
+      <h2 className="text-primary text-sm py-0 m-0">{header}</h2>
       <EventsList>
         {events.records.map((event) => (
           <ListEvent key={event.id} event={event} site={site} />

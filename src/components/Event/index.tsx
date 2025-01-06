@@ -3,6 +3,7 @@ import { useLocale } from "next-intl";
 
 import { VenueContent } from "@/lib/utils/renderer";
 
+import { LocationLink } from "../LocationLink";
 import { ProfileCompact } from "../ProfileCompact";
 import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
@@ -20,10 +21,6 @@ export const Event = ({ event }: { event: VenueEvent }) => {
   const { location, artists } = event;
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
-  const { content: locationContent } = getLocalizedContent(
-    location?.localizedContent,
-    locale,
-  );
 
   return (
     <TwoColumnLayout>
@@ -35,9 +32,7 @@ export const Event = ({ event }: { event: VenueEvent }) => {
                 {formatDate(event.startDate, event.site.timeZone!)}
               </div>
               <div>{content.title}</div>
-              {location ? (
-                <div className="text-secondary">{locationContent.title}</div>
-              ) : null}
+              {location ? <LocationLink location={location} /> : null}
             </div>
             {event.tickets ? <TicketList tickets={event.tickets} /> : null}
           </div>

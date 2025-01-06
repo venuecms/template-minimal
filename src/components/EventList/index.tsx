@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+import { LocationLink } from "../LocationLink";
 import { VenueImage } from "../VenueImage";
 import { formatDate } from "../utils";
 
@@ -41,10 +42,6 @@ export const ListEvent = ({
   const locale = useLocale();
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
-  const { content: locationContent } = getLocalizedContent(
-    event?.location?.localizedContent,
-    locale,
-  );
 
   return (
     <div
@@ -71,9 +68,7 @@ export const ListEvent = ({
         <div className="text-primary">
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
-        {event.location ? (
-          <div className="text-secondary">{locationContent.title}</div>
-        ) : null}
+        {event.location ? <LocationLink location={event.location} /> : null}
       </div>
     </div>
   );

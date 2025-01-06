@@ -11,7 +11,7 @@
   "dependencies": {
     "@date-fns/tz": "^1.2.0",
     "@radix-ui/react-dialog": "^1.1.4",
-    "@venuecms/sdk": "^0.0.8",
+    "@venuecms/sdk": "^0.0.9",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.460.0",

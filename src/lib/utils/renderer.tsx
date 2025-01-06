@@ -234,8 +234,8 @@ export const VenueContent = ({
   if (contentJSON) {
     return (
       <div className={className}>
-        {(contentJSON.content as Array<RenderNode>).map((node) => (
-          <ContentRender classes={contentStyles} node={node} />
+        {(contentJSON.content as Array<RenderNode>).map((node, i) => (
+          <ContentRender key={i} classes={contentStyles} node={node} />
         ))}
       </div>
     );

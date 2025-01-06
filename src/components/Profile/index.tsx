@@ -3,12 +3,19 @@ import {
   getLocalizedContent,
 } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
+import { Suspense } from "react";
 
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { VenueImage } from "../VenueImage";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+import {
+  ColumnLeft,
+  ColumnRight,
+  TwoColumnLayout,
+  TwoSubColumnLayout,
+} from "../layout";
 import { renderedStyles } from "../utils";
+import { ProfileEventList } from "./ProfileEventList";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {
   const locale = useLocale();
@@ -32,6 +39,9 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           content={content}
           contentStyles={renderedStyles}
         />
+        <Suspense fallback={null}>
+          <ProfileEventList slug={profile.slug} site={profile.site} />
+        </Suspense>
       </ColumnRight>
     </TwoColumnLayout>
   );

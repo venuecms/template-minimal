@@ -6,7 +6,12 @@ import { VenueContent } from "@/lib/utils/renderer";
 import { ProfileCompact } from "../ProfileCompact";
 import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+import {
+  ColumnLeft,
+  ColumnRight,
+  TwoColumnLayout,
+  TwoSubColumnLayout,
+} from "../layout";
 import { formatDate } from "../utils";
 import { renderedStyles } from "../utils/styles";
 
@@ -46,11 +51,11 @@ export const Event = ({ event }: { event: VenueEvent }) => {
           content={content}
           contentStyles={renderedStyles}
         />
-        <div className="grid gap-24 max-w-fit sm:grid-cols-[repeat(2,minmax(16rem,32rem))] sm:[&>div]:max-w-96">
+        <TwoSubColumnLayout>
           {artists.map(({ profile }) => (
             <ProfileCompact key={profile.slug} profile={profile} />
           ))}
-        </div>
+        </TwoSubColumnLayout>
       </ColumnRight>
     </TwoColumnLayout>
   );

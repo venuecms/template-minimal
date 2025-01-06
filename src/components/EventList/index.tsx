@@ -31,13 +31,11 @@ export const ListEvent = ({
   event,
   site,
   withImage,
-  highlight,
   className,
 }: {
   event: Event;
   site: Site;
   withImage?: boolean;
-  highlight?: boolean;
   className?: string;
 }) => {
   const locale = useLocale();
@@ -56,12 +54,7 @@ export const ListEvent = ({
       )}
     >
       {withImage ? (
-        <div
-          className={cn(
-            "w-full sm:w-60 pb-3",
-            highlight && "sm:w-80 sm:max-w-full",
-          )}
-        >
+        <div className={cn("w-full sm:w-80 sm:max-w-full pb-3")}>
           <Link href={`/events/${event.slug}`}>
             <VenueImage image={event.image} aspect="video" />
           </Link>

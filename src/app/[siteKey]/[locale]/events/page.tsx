@@ -42,14 +42,8 @@ const EventsPage = async ({ params }: { params: Promise<Params> }) => {
       <ColumnRight>
         {events?.records.length ? (
           <EventsList className="gap-y-12">
-            {events.records.map((event, i) => (
-              <ListEvent
-                key={event.id}
-                event={event}
-                site={site}
-                withImage
-                highlight={i < 2}
-              />
+            {events.records.map((event) => (
+              <ListEvent key={event.id} event={event} site={site} withImage />
             ))}
           </EventsList>
         ) : (

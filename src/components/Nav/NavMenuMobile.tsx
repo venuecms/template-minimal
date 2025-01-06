@@ -39,7 +39,7 @@ export const NavMenuMobile = ({
                   </div>
                 </header>
 
-                <div className="flex flex-col justify-between pt-6 pb-8 h-full">
+                <div className="flex flex-col justify-between pt-6 pb-16 h-full">
                   <ol
                     className="flex flex-col gap-8 text-nav text-sm"
                     onClick={() => setOpen(false)}

@@ -7,6 +7,7 @@ import {
   getSite,
   setConfig,
 } from "@venuecms/sdk";
+import removeMarkdown from "remove-markdown";
 
 import { getPublicImage } from "@/components/utils";
 
@@ -54,7 +55,9 @@ export const getLocalizedMetadata = ({
     const imageUrl = item?.image && getPublicImage(item.image);
     const siteImageUrl = site.image && getPublicImage(site.image);
 
-    const trimDescription = description?.split("\n")[0];
+    const trimDescription = description
+      ? removeMarkdown(description).split("\n")[0]
+      : undefined;
     return {
       title: metaTitle || title,
       description: metaDescription || shortContent || trimDescription,
@@ -86,7 +89,10 @@ export const getLocalizedMetadata = ({
 
   return {
     title: `${site.name}${title ? ` - ${title}` : ""}`,
-    description: metaDescription || shortContent || description,
+    description:
+      metaDescription ||
+      shortContent ||
+      (description ? removeMarkdown(description) : undefined),
     keywords: keywords?.split(", "),
     openGraph: getOpenGraphFromLocalizedContent(item),
     ...overrides,

@@ -34,7 +34,7 @@ const marks = {
 } as const;
 
 const elMarks = {
-  link: (props) => <a {...props} />,
+  link: (props: any): ReactNode => <a {...props} />,
 } as const;
 
 const getDefaultHandlers = (classes: ElementClasses = {}) => {
@@ -49,7 +49,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
         const elWrappers = props.node.marks.reduce((accum, mark) => {
           if (mark.type in elMarks) {
             hasWrappers = true;
-            const el = elMarks[mark.type];
+            const el = elMarks[mark.type as keyof typeof elMarks];
 
             return el({ ...mark.attrs, className, children: accum });
           }

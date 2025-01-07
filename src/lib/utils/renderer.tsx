@@ -128,6 +128,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           height="auto"
           style={{
             aspectRatio: "4 / 3",
+            maxWidth: "100%",
           }}
         ></iframe>
       );
@@ -153,14 +154,49 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
               ?.split(";")
               .reduce((accum: Record<string, string>, style: string) => {
                 const [key, value] = style.split(":");
-                return { ...accum, [key]: value };
+                if (value !== undefined) {
+                  return { ...accum, [key]: value.trim() };
+                }
+                return accum;
               }, {})
           : style;
+
+      // TODO: We need iframely. A hack for now to check and iron out some common quirks
+      const isVideo = (() => {
+        return !!(src.match(/youtube.com/) || src.match(/vimeo.com/));
+      })();
+
+      const isBandcamp = (() => {
+        return !!src.match(/bandcamp.com/);
+      })();
+
+      const isVimeo = (() => {
+        return !!src.match(/vimeo.com/);
+      })();
+
+      if (isVimeo) {
+        console.log("PROPS", styles, src, rest);
+      }
 
       return (
         <iframe
           src={src}
-          style={styles}
+          style={{
+            ...styles,
+            ...(isVideo
+              ? { maxWidth: "100%", aspectRatio: "4 / 3", height: "auto" }
+              : {}),
+            ...(isBandcamp && !styles?.height
+              ? { width: "100%", maxWidth: "700px", height: "42px" }
+              : {}),
+
+            ...(isVimeo && !styles?.height
+              ? {
+                  width: "100%",
+                  aspectRatio: (rest as any).width / (rest as any).height,
+                }
+              : {}),
+          }}
           frameBorder={frameborder}
           allowFullScreen={allowfullscreen}
           referrerPolicy={referrerpolicy}
@@ -226,7 +262,7 @@ export const ContentRender = (props: {
         <ContentRender
           node={child}
           handlers={handlers}
-          key={`${child.type}-${ix}`}
+          key={`${child.type}- ${ix} `}
         />,
       );
     });

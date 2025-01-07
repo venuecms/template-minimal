@@ -30,7 +30,7 @@ const marks = {
   italic: "italic",
   underline: "underline",
   strike: "line-through",
-  link: "hover:underline",
+  link: "underline underline-offset-[3px] cursor-pointer",
 } as const;
 
 const elMarks = {
@@ -41,9 +41,11 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
   const defaultHandlers: NodeHandlers = {
     text: (props) => {
       if (props.node.marks) {
-        const className = props.node.marks.reduce((accum, mark) => {
-          return `${marks[mark.type as keyof typeof marks]} ${accum}`;
-        }, "");
+        const className = props.node.marks
+          .reduce((accum, mark) => {
+            return `${marks[mark.type as keyof typeof marks]} ${accum}`;
+          }, "")
+          .trim();
 
         let hasWrappers = false;
         const elWrappers = props.node.marks.reduce((accum, mark) => {

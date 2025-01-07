@@ -133,7 +133,6 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
       );
     },
     iframe: (props) => {
-      console.log("PROPS", props);
       const {
         // @ts-ignore
         src,
@@ -146,7 +145,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
         // @ts-ignore
         referrerpolicy,
         ...rest
-      } = props;
+      } = props.node?.attrs ?? props; // TODO: why do we need to do this? we are getting different shapes at times and not sure why
 
       const styles =
         typeof style === "string"

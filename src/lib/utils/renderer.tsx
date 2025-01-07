@@ -133,6 +133,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
       );
     },
     iframe: (props) => {
+      console.log("PROPS", props);
       const {
         // @ts-ignore
         src,
@@ -145,14 +146,17 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
         // @ts-ignore
         referrerpolicy,
         ...rest
-      } = props.node.attrs;
+      } = props;
 
-      const styles = style
-        ?.split(";")
-        .reduce((accum: Record<string, string>, style: string) => {
-          const [key, value] = style.split(":");
-          return { ...accum, [key]: value };
-        }, {});
+      const styles =
+        typeof style === "string"
+          ? style
+              ?.split(";")
+              .reduce((accum: Record<string, string>, style: string) => {
+                const [key, value] = style.split(":");
+                return { ...accum, [key]: value };
+              }, {})
+          : style;
 
       return (
         <iframe

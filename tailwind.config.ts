@@ -6,7 +6,13 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  safelist: ["font-bold", "line-through", "underline", "italic"],
+  safelist: [
+    "font-bold",
+    "line-through",
+    "underline",
+    "italic",
+    "hover:underline",
+  ],
   theme: {
     extend: {
       colors: {

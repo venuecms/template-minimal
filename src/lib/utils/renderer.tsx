@@ -5,10 +5,7 @@
 import { VenueImage } from "@/components";
 import { LocalizedContent } from "@venuecms/sdk";
 import Markdown from "markdown-to-jsx";
-import Link from "next/link";
 import { ReactNode } from "react";
-
-import { cn } from "../utils";
 
 type ElementClasses = {
   text?: string;
@@ -33,6 +30,11 @@ const marks = {
   italic: "italic",
   underline: "underline",
   strike: "line-through",
+  link: "hover:underline",
+} as const;
+
+const elMarks = {
+  link: (props) => <a {...props} />,
 } as const;
 
 const getDefaultHandlers = (classes: ElementClasses = {}) => {
@@ -42,6 +44,20 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
         const className = props.node.marks.reduce((accum, mark) => {
           return `${marks[mark.type as keyof typeof marks]} ${accum}`;
         }, "");
+
+        let hasWrappers = false;
+        const elWrappers = props.node.marks.reduce((accum, mark) => {
+          if (mark.type in elMarks) {
+            hasWrappers = true;
+            const el = elMarks[mark.type];
+
+            return el({ ...mark.attrs, className, children: accum });
+          }
+        }, props.node.text);
+
+        if (hasWrappers) {
+          return elWrappers;
+        }
 
         return <span className={`${className}`}>{props.node.text}</span>;
       }
@@ -174,9 +190,9 @@ const getMarkdownHandlers = (classes: ElementClasses = {}) => {
       }),
     hr: (props: any) => <hr {...props} />,
     a: (props: any) => (
-      <Link href={props.href} className={classes.a}>
+      <a href={props.href} className={classes.a}>
         {props.children}
-      </Link>
+      </a>
     ),
     span: ({ children }: { children: ReactNode }) => <span>{children}</span>, // strip out custom colors and all that (since they are usually pasted in accidentally)
   };
@@ -232,6 +248,8 @@ export const VenueContent = ({
   const { contentJSON } = content;
 
   if (contentJSON) {
+    console.log("CONTENT", content.contentJSON);
+
     return (
       <div className={className}>
         {(contentJSON.content as Array<RenderNode>).map((node, i) => (

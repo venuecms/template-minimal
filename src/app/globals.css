@@ -66,6 +66,22 @@ html.darkGold {
   --panel-background-2: 0, 0%, 30%, 0.2;
 }
 
+html.hojden {
+  --background: 52, 32%, 94%, 1;
+  --primary: 131, 100%, 20%, 1;
+  --secondary: 16, 100%, 66%, 1;
+  --muted: 298, 100%, 25%, 0.6;
+  --nav: 298, 100%, 48%, 1;
+  --highlight: 91, 100%, 90%, 1;
+  --button-background: 298, 100%, 48%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 298, 100%, 48%, 0.4;
+  --footer-background: 0, 0%, 100%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 0, 0%, 100%, 1;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: 199, 5%, 4%, 1;

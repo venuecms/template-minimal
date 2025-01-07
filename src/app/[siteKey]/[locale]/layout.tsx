@@ -17,16 +17,19 @@ export const runtime = "edge";
 const jost = Jost({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-jost",
 });
+
 const IBMPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["300", "500"],
   display: "swap",
-  variable: "--font-ibm-plex-mono",
 });
 
-const THEME: string | undefined = undefined;
+const THEME: keyof typeof ThemeFonts | undefined = undefined;
+const ThemeFonts = {
+  hojden: jost.style,
+  default: IBMPlexMono.style,
+};
 
 // export const generateStaticParams = async () => {
 // const { data: site, error } = await getSite();
@@ -53,6 +56,8 @@ const RootLayout = async ({
     options: { next: { revalidate: 60 } },
   });
 
+  const fontVar = (THEME && ThemeFonts[THEME]) ?? ThemeFonts.default;
+
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
@@ -66,7 +71,8 @@ const RootLayout = async ({
       </head>
 
       <body
-        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base sm:max-w-[96rem] m-auto font-regular`}
+        className={`antialiased bg-background text-primary px-6 sm:px-12 font-base sm:max-w-[96rem] m-auto font-regular`}
+        style={fontVar}
       >
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider attribute="class" forcedTheme={THEME}>

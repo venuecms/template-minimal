@@ -248,8 +248,6 @@ export const VenueContent = ({
   const { contentJSON } = content;
 
   if (contentJSON) {
-    console.log("CONTENT", content.contentJSON);
-
     return (
       <div className={className}>
         {(contentJSON.content as Array<RenderNode>).map((node, i) => (

@@ -19,7 +19,7 @@ export const EventsList = ({
   return (
     <div
       className={cn(
-        "flex flex-col sm:grid sm:grid-cols-2 sm:grid-flow-row gap-x-8 text-sm",
+        "flex flex-col gap-x-8 text-sm sm:grid sm:grid-flow-row sm:grid-cols-2",
         className,
       )}
     >
@@ -46,12 +46,12 @@ export const ListEvent = ({
   return (
     <div
       className={cn(
-        "flex flex-col gap-8 sm:gap-0 pb-8 break-inside-avoid",
+        "flex break-inside-avoid flex-col gap-8 pb-8 sm:gap-0",
         className,
       )}
     >
       {withImage ? (
-        <div className={cn("w-full sm:w-80 sm:max-w-full pb-3")}>
+        <div className={cn("w-full pb-3 sm:w-80 sm:max-w-full")}>
           <Link href={`/events/${event.slug}`}>
             <VenueImage image={event.image} aspect="video" />
           </Link>

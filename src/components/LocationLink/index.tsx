@@ -22,7 +22,7 @@ export const LocationLink = ({
     <a
       href={mapLink}
       target="_blank"
-      className={cn("flex gap-2 items-center text-secondary", className)}
+      className={cn("flex items-center gap-2 text-secondary", className)}
     >
       {locationContent.title} <MapPin className="size-4" />
     </a>

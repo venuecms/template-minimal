@@ -25,7 +25,7 @@ export const Page = ({ page }: { page: VenuePage }) => {
 
       <ColumnRight>
         <VenueContent
-          className="flex flex-col gap-6 max-w-[42rem] text-sm"
+          className="flex max-w-[42rem] flex-col gap-6 text-sm"
           content={content}
           contentStyles={renderedStyles}
         />

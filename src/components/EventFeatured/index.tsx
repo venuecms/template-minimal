@@ -45,24 +45,24 @@ export const EventFeatured = ({
               {formatDate(event.startDate, site.timeZone!)}
             </Link>
           </div>
-          <div className="text-primary text-xl">
+          <div className="text-xl text-primary">
             <Link href={`/events/${event.slug}`}>{content.title}</Link>
             {location ? (
-              <LocationLink className="text-2xl pt-2" location={location} />
+              <LocationLink className="pt-2 text-2xl" location={location} />
             ) : null}
           </div>
 
           {event.tickets ? <TicketList tickets={event.tickets} /> : null}
           <Link href={`/events/${event.slug}`}>
             <VenueContent
-              className="flex flex-col gap-6 max-w-xl"
+              className="flex max-w-xl flex-col gap-6"
               content={content}
               contentStyles={renderedStyles}
             />
           </Link>
         </ColumnRight>
       </TwoColumnLayout>
-      <div className="sm:hidden flex">
+      <div className="flex sm:hidden">
         <div className="flex flex-col gap-8">
           <div>
             <div className="text-secondary">

@@ -101,7 +101,7 @@ html.hojden {
 }
 
 @media (prefers-color-scheme: light) {
-  header img {
+  html.default header img {
     @apply invert;
   }
 }

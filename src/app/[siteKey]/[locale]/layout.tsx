@@ -25,7 +25,7 @@ const IBMPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const THEME: keyof typeof ThemeFonts | undefined = undefined;
+const THEME: keyof typeof ThemeFonts | undefined = "default";
 const ThemeFonts = {
   hojden: jost.style,
   default: IBMPlexMono.style,

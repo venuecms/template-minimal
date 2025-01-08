@@ -6,9 +6,10 @@ import {
   setConfig,
 } from "@venuecms/sdk";
 import { NextRequest } from "next/server";
+import removeMarkdown from "remove-markdown";
 import RSS from "rss";
 
-import { getPublicImage } from "@/components/utils";
+import { formatDate, getPublicImage } from "@/components/utils";
 
 export const GET = async (
   req: NextRequest,
@@ -61,9 +62,10 @@ export const GET = async (
   // Add each individual post to the feed.
   eventList.map((event) => {
     const { content } = getLocalizedContent(event.localizedContent, locale);
+
     feed.item({
       title: content.title ?? "",
-      description: content.shortContent || content.content || "",
+      description: `${formatDate(event.startDate, site.timeZone!)}\n${removeMarkdown(content.shortContent || content.content || "")}`,
       url: `${site_url}/events/${event.slug}`,
       date: event.startDate,
     });

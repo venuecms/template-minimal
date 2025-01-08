@@ -1,7 +1,7 @@
 import { Params } from "@/types";
 import { setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import { IBM_Plex_Mono, Jost } from "next/font/google";
 import { notFound } from "next/navigation";
@@ -31,18 +31,6 @@ const ThemeFonts = {
   default: IBMPlexMono.style,
 };
 
-// export const generateStaticParams = async () => {
-// const { data: site, error } = await getSite();
-
-// if (error) {
-// notFound();
-// }
-// // @ts-ignore
-// const supportedLocales = site.settings.locale.supported as Array<string>;
-
-// return supportedLocales.map((locale) => ({ locale }));
-// };
-
 const RootLayout = async ({
   children,
   params,
@@ -62,6 +50,8 @@ const RootLayout = async ({
     notFound();
   }
 
+  setRequestLocale(locale);
+
   const messages = await getMessages();
 
   return (
@@ -71,7 +61,7 @@ const RootLayout = async ({
       </head>
 
       <body
-        className={`antialiased bg-background text-primary px-6 sm:px-12 font-base sm:max-w-[96rem] m-auto font-regular`}
+        className={`font-base m-auto bg-background px-6 font-regular text-primary antialiased sm:max-w-[96rem] sm:px-12`}
         style={fontVar}
       >
         <NextIntlClientProvider messages={messages}>

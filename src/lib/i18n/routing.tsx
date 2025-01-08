@@ -2,13 +2,9 @@ import { createNavigation } from "next-intl/navigation";
 import { defineRouting } from "next-intl/routing";
 import { AnchorHTMLAttributes } from "react";
 
-export const routing = defineRouting({
-  // A list of all locales that are supported
-  locales: ["en"],
+import { i18nConfig } from "./config";
 
-  // Used when no locale matches
-  defaultLocale: "en",
-});
+export const routing = defineRouting(i18nConfig);
 
 // Lightweight wrappers around Next.js' navigation APIs
 // that will consider the routing configuration
@@ -25,9 +21,7 @@ const Link = ({
 }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
   return (
     // @ts-ignore
-    <NavLink {...props} prefetch={true}>
-      {children}
-    </NavLink>
+    <NavLink {...props}>{children}</NavLink>
   );
 };
 

@@ -1,8 +1,8 @@
-export const config = {
+export const i18nConfig = {
   defaultLocale: "en",
-  locales: ["en"],
+  locales: ["en", "sv", "da", "es", "de"],
 };
 
-export type Locale = (typeof config)["locales"][number];
+export type Locale = (typeof i18nConfig)["locales"][number];
 
-export type SupportedLocale = (typeof config.locales)[number];
+export type SupportedLocale = (typeof i18nConfig.locales)[number];

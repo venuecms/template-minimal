@@ -58,6 +58,12 @@ const RootLayout = async ({
     <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          href={`/${locale}/rss.xml`}
+          title="Events"
+        />
       </head>
 
       <body

@@ -21,7 +21,9 @@ const Link = ({
 }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
   return (
     // @ts-ignore
-    <NavLink {...props}>{children}</NavLink>
+    <NavLink {...props} prefetch={true}>
+      {children}
+    </NavLink>
   );
 };
 

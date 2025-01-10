@@ -1,6 +1,7 @@
 import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
+import { cn } from "@/lib/utils";
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { LocationLink } from "../LocationLink";
@@ -21,6 +22,7 @@ export const Event = ({ event }: { event: VenueEvent }) => {
   const { location, artists } = event;
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
+  const isCancelled = event.publishState === "CANCELLED";
 
   return (
     <TwoColumnLayout>
@@ -28,13 +30,20 @@ export const Event = ({ event }: { event: VenueEvent }) => {
         <div className="flex flex-col gap-14">
           <div className="flex flex-col gap-10">
             <div>
-              <div className="text-secondary">
+              <div
+                className={cn("text-secondary", isCancelled && "line-through")}
+              >
                 {formatDate(event.startDate, event.site.timeZone!)}
               </div>
               <div>{content.title}</div>
               {location ? <LocationLink location={location} /> : null}
             </div>
-            {event.tickets ? <TicketList tickets={event.tickets} /> : null}
+            {isCancelled ? (
+              <div className="text-secondary">Cancelled</div>
+            ) : null}
+            {!isCancelled && event.tickets ? (
+              <TicketList tickets={event.tickets} />
+            ) : null}
           </div>
           <VenueImage image={event.image} />
         </div>

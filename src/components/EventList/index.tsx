@@ -42,6 +42,7 @@ export const ListEvent = ({
   const locale = useLocale();
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
+  const isCancelled = event.publishState === "CANCELLED";
 
   return (
     <div
@@ -59,7 +60,7 @@ export const ListEvent = ({
       ) : null}
       <div className="flex flex-col">
         {event.startDate ? (
-          <div className="text-secondary">
+          <div className={cn("text-secondary", isCancelled && "line-through")}>
             <Link href={`/events/${event.slug}`}>
               {formatDate(event.startDate, site.timeZone!)}
             </Link>
@@ -69,6 +70,7 @@ export const ListEvent = ({
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
         {event.location ? <LocationLink location={event.location} /> : null}
+        {isCancelled ? <div className="text-primary">Cancelled</div> : null}
       </div>
     </div>
   );

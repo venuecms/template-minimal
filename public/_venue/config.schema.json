@@ -3,11 +3,13 @@
   "properties": {
     "theme": {
       "type": "string",
-      "enum": ["larry", "darkGold", "default"]
+      "enum": ["larry", "darkGold", "default"],
+      "default": "default"
     },
     "font": {
       "type": "string",
-      "enum": ["jost", "IBMPlexMono", "default"]
+      "enum": ["jost", "IBMPlexMono"]
+      "default": "jost"
     }
   }
 }

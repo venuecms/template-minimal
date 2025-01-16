@@ -1,5 +1,5 @@
 import { Params } from "@/types";
-import { setConfig } from "@venuecms/sdk";
+import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
@@ -25,9 +25,8 @@ const IBMPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const THEME: keyof typeof ThemeFonts | undefined = "default";
 const ThemeFonts = {
-  hojden: jost.style,
+  jost: jost.style,
   default: IBMPlexMono.style,
 };
 
@@ -44,12 +43,14 @@ const RootLayout = async ({
     options: { next: { revalidate: 60 } },
   });
 
-  const fontVar = (THEME && ThemeFonts[THEME]) ?? ThemeFonts.default;
-
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
 
+  const { data: site } = await getSite();
+  const templateSettings = site?.settings?.publicSite?.template?.config ?? {};
+
+  const { themeId = "default", fontName = "default" } = templateSettings;
   setRequestLocale(locale);
 
   const messages = await getMessages();
@@ -67,11 +68,13 @@ const RootLayout = async ({
       </head>
 
       <body
-        className={`font-base m-auto bg-background px-6 font-regular text-primary antialiased sm:max-w-[96rem] sm:px-12`}
-        style={fontVar}
+        className="font-base m-auto bg-background px-6 font-regular text-primary antialiased sm:max-w-[96rem] sm:px-12"
+        style={
+          ThemeFonts[fontName as keyof typeof ThemeFonts] ?? ThemeFonts.default
+        }
       >
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" forcedTheme={THEME}>
+          <ThemeProvider attribute="class" forcedTheme={themeId}>
             <SiteHeader />
             {children}
           </ThemeProvider>

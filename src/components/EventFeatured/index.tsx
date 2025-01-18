@@ -29,6 +29,7 @@ export const EventFeatured = ({
   const { location } = event;
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
+  const isCancelled = event.publishState === "CANCELLED";
 
   return (
     <>
@@ -51,8 +52,10 @@ export const EventFeatured = ({
               <LocationLink className="pt-2 text-2xl" location={location} />
             ) : null}
           </div>
-
-          {event.tickets ? <TicketList tickets={event.tickets} /> : null}
+          {isCancelled ? <div className="text-secondary">Cancelled</div> : null}
+          {!isCancelled && event.tickets ? (
+            <TicketList tickets={event.tickets} />
+          ) : null}
           <Link href={`/events/${event.slug}`}>
             <VenueContent
               className="flex max-w-xl flex-col gap-6"

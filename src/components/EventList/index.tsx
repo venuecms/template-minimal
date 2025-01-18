@@ -60,13 +60,13 @@ export const ListEvent = ({
       ) : null}
       <div className="flex flex-col">
         {event.startDate ? (
-          <div className={cn("text-secondary", isCancelled && "line-through")}>
+          <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
               {formatDate(event.startDate, site.timeZone!)}
             </Link>
           </div>
         ) : null}
-        <div className="text-primary">
+        <div className={cn("text-primary", isCancelled && "line-through")}>
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
         {event.location ? <LocationLink location={event.location} /> : null}

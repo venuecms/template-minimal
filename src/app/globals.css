@@ -82,6 +82,22 @@ html.hojden {
   --panel-background-2: 0, 0%, 100%, 1;
 }
 
+html.ahmed {
+  --background: 60, 5%, 4%, 1;
+  --primary: 50, 25%, 90%, 1;
+  --secondary: 54, 4%, 55%, 1;
+  --muted: 47, 4%, 55%, 0.7;
+  --nav: 50, 20%, 80%, 1;
+  --highlight: 91, 100%, 90%, 1;
+  --button-background: 298, 100%, 48%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 50, 8%, 5%, 0.8;
+  --footer-background: 0, 0%, 100%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 0, 0%, 100%, 1;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: 199, 5%, 4%, 1;

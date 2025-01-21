@@ -3,7 +3,7 @@ import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-import { IBM_Plex_Mono, Jost, Gothic_A1, Young_Serif } from "next/font/google";
+import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { routing } from "@/lib/i18n";
@@ -38,8 +38,8 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 const ThemeFonts = {
-  youngserif: YoungSerif.style,
-  gothic: GothicA1.style,
+  Young_Serif: YoungSerif.style,
+  Gothic_A1: GothicA1.style,
   jost: jost.style,
   default: IBMPlexMono.style,
 };

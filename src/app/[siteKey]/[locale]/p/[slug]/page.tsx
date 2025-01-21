@@ -1,13 +1,10 @@
 import { Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import {
-  type Page as VenuePage,
-  getPage,
-  getPages,
-  setConfig,
-} from "@venuecms/sdk";
+import { getPage, getPages, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
+
+import { PageWithParent } from "@/lib/utils/tree";
 
 export const generateMetadata = getGenerateMetadata(getPage);
 
@@ -26,12 +23,7 @@ const PagePage = async ({
     notFound();
   }
 
-  return (
-    <Page
-      page={page}
-      pages={pages.records as Array<VenuePage & { parent?: VenuePage }>}
-    />
-  );
+  return <Page page={page} pages={pages.records as Array<PageWithParent>} />;
 };
 
 export default PagePage;

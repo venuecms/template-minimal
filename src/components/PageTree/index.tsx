@@ -3,7 +3,8 @@
 import { Page, getLocalizedContent } from "@venuecms/sdk";
 import { ChevronRight } from "lucide-react";
 import { useParams } from "next/navigation";
-import TreeView, { flattenTree } from "react-accessible-treeview";
+import TreeView, { INode, flattenTree } from "react-accessible-treeview";
+import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
 
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,8 @@ import {
   PageWithParentAndChildren,
   buildTree,
 } from "@/lib/utils/tree";
+
+type NodeFlatMetadata = INode<IFlatMetadata> & { id: string };
 
 export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
   const { slug } = useParams();
@@ -31,7 +34,13 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
   });
 
   const ancestorsOfCurrentpage = currentPage
-    ? [...getAncestors(flatPageTree, currentPage.id), currentPage.id]
+    ? [
+      ...getAncestors(
+        flatPageTree as Array<NodeFlatMetadata>,
+        currentPage.id,
+      ),
+      currentPage.id,
+    ]
     : [];
 
   return (
@@ -56,7 +65,7 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
           if (
             currentPage?.id === element.id &&
             element.children.length === 0 &&
-            element.metadata.parentId === undefined
+            element.metadata?.parentId === undefined
           ) {
             return null;
           }
@@ -73,7 +82,7 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
                 href={`/p/${slug}`}
                 className={cn(
                   "name",
-                  element.metadata.id === currentPage?.id && "font-bold",
+                  element.metadata?.id === currentPage?.id && "font-bold",
                 )}
               >
                 {content.title}
@@ -103,10 +112,7 @@ const ArrowIcon = ({
 };
 
 const getAncestors = (
-  nodes: Array<{
-    children: string[];
-    id: string;
-  }>,
+  nodes: Array<NodeFlatMetadata>,
   targetId: string,
   ancestors: string[] = [],
 ): string[] => {

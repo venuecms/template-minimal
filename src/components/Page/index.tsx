@@ -2,6 +2,7 @@ import { type Page as VenuePage, getLocalizedContent } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
 import { VenueContent } from "@/lib/utils/renderer";
+import { PageWithParent } from "@/lib/utils/tree";
 
 import { PageTree } from "../PageTree";
 import { VenueImage } from "../VenueImage";
@@ -13,7 +14,7 @@ export const Page = ({
   pages,
 }: {
   page: VenuePage;
-  pages: Array<VenuePage & { parent?: VenuePage }>;
+  pages: Array<PageWithParent>;
 }) => {
   const locale = useLocale();
 

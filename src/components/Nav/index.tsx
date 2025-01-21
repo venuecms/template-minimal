@@ -28,7 +28,9 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const { data: pages } = await getPages();
 
   // Filter out the root pages to use for the menu
-  const rootPages = pages?.records.filter((page) => !page.parent);
+  const rootPages = pages?.records.filter(
+    (page) => page.parentId === undefined,
+  );
 
   // Get the localized content for each root page
   const rootPageContents = rootPages?.map((page) => ({
@@ -39,12 +41,12 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
 
   const menuItems = rootPageContents
     ? rootPageContents.map(({ page, content, isStatic }) => (
-        <li key={page.slug}>
-          <Link href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
-            {content.title}
-          </Link>
-        </li>
-      ))
+      <li key={page.slug}>
+        <Link href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
+          {content.title}
+        </Link>
+      </li>
+    ))
     : null;
 
   // Render the menu for desktop and mobile

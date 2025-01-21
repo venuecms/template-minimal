@@ -1,7 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
-import { routing } from "./lib/i18n";
+import { i18nConfig, routing } from "./lib/i18n";
 
 export default async function middleware(request: NextRequest) {
   const url = new URL(request.url);
@@ -32,8 +32,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   const pathname = request.nextUrl.pathname;
-  // TODO: Do not hardcode this
-  const pathnameIsMissingLocale = ["en", "es", "sv"].every(
+  const pathnameIsMissingLocale = i18nConfig.locales.every(
     (locale) =>
       !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
   );
@@ -72,6 +71,8 @@ export default async function middleware(request: NextRequest) {
 
 export const config = {
   // Match only internationalized pathnames
-  matcher:
+  matcher: [
+    "/(.*rss\\.xml)",
     "/((?!node/|auth/|_next/|_static/|_vercel|_axiom/|media/|[\\w-]+\\.\\w+|.*\\..*).*)",
+  ],
 };

@@ -17,14 +17,14 @@ export const SiteLogo = ({
   const headerImage = image ? (
     <VenueImage
       image={image}
-      className="sm:max-w-[32rem] sm:w-full h-4 sm:h-auto w-auto"
+      className="h-4 w-auto sm:h-auto sm:max-h-56 sm:w-auto sm:max-w-[32rem]"
     />
   ) : null;
 
   return headerImage ? (
     <Link href="/">{headerImage}</Link>
   ) : (
-    <h1 className={cn("text-xl", className)}>
+    <h1 className={cn("text-xl text-nav", className)}>
       <Link href="/">{name}</Link>
     </h1>
   );

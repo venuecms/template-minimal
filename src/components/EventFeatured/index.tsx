@@ -9,6 +9,7 @@ import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { VenueContent } from "@/lib/utils/renderer";
 
+import { LocationLink } from "../LocationLink";
 import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
@@ -28,10 +29,7 @@ export const EventFeatured = ({
   const { location } = event;
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
-  const { content: locationContent } = getLocalizedContent(
-    location?.localizedContent,
-    locale,
-  );
+  const isCancelled = event.publishState === "CANCELLED";
 
   return (
     <>
@@ -48,26 +46,26 @@ export const EventFeatured = ({
               {formatDate(event.startDate, site.timeZone!)}
             </Link>
           </div>
-          <div className="text-primary text-xl">
+          <div className="text-xl text-primary">
             <Link href={`/events/${event.slug}`}>{content.title}</Link>
+            {location ? (
+              <LocationLink className="pt-2 text-2xl" location={location} />
+            ) : null}
           </div>
-          {location ? (
-            <div className="text-secondary text-2xl">
-              {locationContent.title}
-            </div>
+          {isCancelled ? <div className="text-secondary">Cancelled</div> : null}
+          {!isCancelled && event.tickets ? (
+            <TicketList tickets={event.tickets} />
           ) : null}
-
-          {event.tickets ? <TicketList tickets={event.tickets} /> : null}
           <Link href={`/events/${event.slug}`}>
             <VenueContent
-              className="flex flex-col gap-6 max-w-xl"
+              className="flex max-w-xl flex-col gap-6"
               content={content}
               contentStyles={renderedStyles}
             />
           </Link>
         </ColumnRight>
       </TwoColumnLayout>
-      <div className="sm:hidden flex">
+      <div className="flex sm:hidden">
         <div className="flex flex-col gap-8">
           <div>
             <div className="text-secondary">
@@ -75,9 +73,7 @@ export const EventFeatured = ({
                 {formatDate(event.startDate, site.timeZone!)}
               </Link>
             </div>
-            {location ? (
-              <div className="text-secondary">{locationContent.title}</div>
-            ) : null}
+            {location ? <LocationLink location={location} /> : null}
           </div>
           <div className="text-xl">
             <Link href={`/events/${event.slug}`}>{content.title}</Link>

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+html.default {
   --background: 52, 32%, 94%, 1;
   --primary: 50, 1%, 10%, 1;
   --secondary: 0, 0%, 25%, 1;
@@ -16,10 +16,32 @@
   --footer-background: 129, 5%, 50%, 1;
   --panel-background: 0, 0%, 100%, 1;
   --panel-background-2: 50, 4%, 79%, 0.2;
+
+  @media (prefers-color-scheme: dark) {
+    --background: 199, 5%, 4%, 1;
+    --primary: 199, 31%, 85%, 1;
+    --secondary: 199, 47%, 81%, 1;
+    --muted: 199, 31%, 85%, 0.6;
+    --nav: 199, 29%, 72%, 1;
+    --highlight: 58, 100%, 53%, 1;
+    --button-background: 50, 1%, 25%, 1;
+    --error: 0, 100%, 41%, 1;
+    --black: 0, 4%, 25%, 1;
+    --overlay: 0, 0%, 50%, 0.4;
+    --footer-background: 0, 0%, 4%, 1;
+    --panel-background: 0, 0%, 4%, 1;
+    --panel-background-2: 0, 0%, 40%, 0.2;
+  }
+
+  @media (prefers-color-scheme: light) {
+    & header img {
+      @apply invert;
+    }
+  }
 }
 
 html.space {
-  /* --background: c; */
+  --background: 199, 5%, 4%, 1;
   --primary: 300, 15%, 88%, 1;
   --secondary: 300, 3%, 74%, 1;
   --muted: 300, 15%, 88%, 0.6;
@@ -66,26 +88,50 @@ html.darkGold {
   --panel-background-2: 0, 0%, 30%, 0.2;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 199, 5%, 4%, 1;
-    --primary: 199, 31%, 85%, 1;
-    --secondary: 199, 47%, 81%, 1;
-    --muted: 199, 31%, 85%, 0.6;
-    --nav: 199, 29%, 72%, 1;
-    --highlight: 58, 100%, 53%, 1;
-    --button-background: 50, 1%, 25%, 1;
-    --error: 0, 100%, 41%, 1;
-    --black: 0, 4%, 25%, 1;
-    --overlay: 0, 0%, 50%, 0.4;
-    --footer-background: 0, 0%, 4%, 1;
-    --panel-background: 0, 0%, 4%, 1;
-    --panel-background-2: 0, 0%, 40%, 0.2;
-  }
+html.hojden {
+  --background: 52, 32%, 94%, 1;
+  --primary: 131, 100%, 20%, 1;
+  --secondary: 16, 100%, 66%, 1;
+  --muted: 52, 32%, 94%, 1;
+  --nav: 131, 100%, 20%, 1;
+  --highlight: 91, 100%, 90%, 1;
+  --button-background: 298, 100%, 48%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 298, 100%, 48%, 0.4;
+  --footer-background: 0, 0%, 100%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 0, 0%, 100%, 1;
 }
 
-@media (prefers-color-scheme: light) {
-  header img {
-    @apply invert;
-  }
+html.ahmed {
+  --background: 60, 5%, 4%, 1;
+  --primary: 50, 25%, 90%, 1;
+  --secondary: 54, 4%, 55%, 1;
+  --muted: 47, 4%, 55%, 0.7;
+  --nav: 50, 20%, 80%, 1;
+  --highlight: 91, 100%, 90%, 1;
+  --button-background: 298, 100%, 48%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 50, 8%, 5%, 0.8;
+  --footer-background: 0, 0%, 100%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 0, 0%, 100%, 1;
+}
+
+html.frim {
+  --background: 111, 100%, 95%, 0.5;
+  --primary: 224, 100%, 30%, 1;
+  --secondary: 0, 100%, 40%, 1;
+  --muted: 224, 100%, 30%, 0.6;
+  --nav: 224, 100%, 30%, 1;
+  --highlight: 91, 100%, 90%, 1;
+  --button-background: 298, 100%, 48%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 112, 100%, 50%, 0.4;
+  --footer-background: 0, 0%, 100%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 0, 0%, 100%, 1;
 }

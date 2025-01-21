@@ -4,27 +4,32 @@ import { useFormatter } from "next-intl";
 import { Link } from "@/lib/i18n";
 
 export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
-  const format = useFormatter();
-
   return (
     <div className="flex gap-8">
       {tickets.map((ticket) => {
         const ticketText =
           ticket.price > 0
-            ? format.number(ticket.price, {
-                style: "currency",
-                currency: ticket.currency!,
-              })
+            ? formatCurrency(ticket.price, ticket.currency!)
             : "free";
 
         return ticket.externalLink ? (
           <Link key={ticket.name} href={ticket.externalLink}>
-            {ticketText}
+            {ticketText} {ticket.name.toLowerCase()}
           </Link>
         ) : (
-          <div>{ticketText}</div>
+          <div key={ticket.name}>{ticketText}</div>
         );
       })}
     </div>
   );
+};
+
+const formatCurrency = (price: number, currency: string) => {
+  const format = useFormatter();
+  const formattedPrice = format.number(price, {
+    style: "currency",
+    currency: currency,
+  });
+
+  return formattedPrice.replaceAll(".00", "");
 };

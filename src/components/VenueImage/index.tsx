@@ -65,10 +65,10 @@ const ImageWrapper = ({
   children?: React.ReactNode;
   aspect: keyof typeof ASPECTS;
 }) => (
-  <div className="w-full h-full flex-col gap-1 flex">
+  <div className="flex h-full w-full flex-col gap-1">
     <div
       className={cn(
-        "w-full h-full bg-cover bg-center relative",
+        "relative h-full w-full bg-cover bg-center",
         ASPECTS[aspect],
       )}
     >

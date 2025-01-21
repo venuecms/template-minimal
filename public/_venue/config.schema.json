@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "theme": {
+      "type": "string",
+      "enum": ["larry", "darkGold", "default", "space"],
+      "default": "default"
+    },
+    "font": {
+      "type": "string",
+      "enum": ["jost", "IBMPlexMono", "Young_Serif", "Gothic_A1"],
+      "default": "jost"
+    }
+  }
+}

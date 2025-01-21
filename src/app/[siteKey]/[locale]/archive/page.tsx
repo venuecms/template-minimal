@@ -20,9 +20,8 @@ const ArchivePage = async ({ params }: { params: Promise<Params> }) => {
   const { siteKey, locale } = await params;
   setConfig({ siteKey });
 
-  // const { data: events } = await getEvents({ limit: 60, dir: "asc" });
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
-    getEvents({ limit: 60, lt: new Date().getTime() }),
+    getEvents({ limit: 60, lt: new Date().getTime(), dir: "desc" }),
     getPage({ slug: "archive" }),
     getSite(),
   ]);
@@ -38,7 +37,7 @@ const ArchivePage = async ({ params }: { params: Promise<Params> }) => {
   return (
     <TwoColumnLayout>
       <ColumnLeft className="text-sm text-secondary">
-        <p className="text-primary font-medium">{pageTitle}</p>
+        <p className="font-medium text-primary">{pageTitle}</p>
       </ColumnLeft>
       <ColumnRight>
         {events?.records.length ? (

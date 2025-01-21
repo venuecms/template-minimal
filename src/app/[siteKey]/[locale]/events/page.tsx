@@ -37,19 +37,13 @@ const EventsPage = async ({ params }: { params: Promise<Params> }) => {
   return (
     <TwoColumnLayout>
       <ColumnLeft className="text-sm text-secondary">
-        <p className="text-primary pb-8">{pageTitle}</p>
+        <p className="pb-8 text-primary">{pageTitle}</p>
       </ColumnLeft>
       <ColumnRight>
         {events?.records.length ? (
           <EventsList className="gap-y-12">
-            {events.records.map((event, i) => (
-              <ListEvent
-                key={event.id}
-                event={event}
-                site={site}
-                withImage
-                highlight={i < 2}
-              />
+            {events.records.map((event) => (
+              <ListEvent key={event.id} event={event} site={site} withImage />
             ))}
           </EventsList>
         ) : (

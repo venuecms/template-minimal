@@ -1,9 +1,9 @@
 import { Params } from "@/types";
-import { setConfig } from "@venuecms/sdk";
+import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-import { IBM_Plex_Mono, Jost } from "next/font/google";
+import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { routing } from "@/lib/i18n";
@@ -14,31 +14,35 @@ import "../../globals.css";
 
 export const runtime = "edge";
 
+const YoungSerif = Young_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const GothicA1 = Gothic_A1({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
 const jost = Jost({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-jost",
 });
+
 const IBMPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["300", "500"],
   display: "swap",
-  variable: "--font-ibm-plex-mono",
 });
 
-const THEME: string | undefined = undefined;
-
-// export const generateStaticParams = async () => {
-// const { data: site, error } = await getSite();
-
-// if (error) {
-// notFound();
-// }
-// // @ts-ignore
-// const supportedLocales = site.settings.locale.supported as Array<string>;
-
-// return supportedLocales.map((locale) => ({ locale }));
-// };
+const ThemeFonts = {
+  Young_Serif: YoungSerif.style,
+  Gothic_A1: GothicA1.style,
+  jost: jost.style,
+  default: IBMPlexMono.style,
+};
 
 const RootLayout = async ({
   children,
@@ -57,19 +61,34 @@ const RootLayout = async ({
     notFound();
   }
 
+  const { data: site } = await getSite();
+  const templateSettings = site?.settings?.publicSite?.template?.config ?? {};
+
+  const { themeId = "default", fontName = "default" } = templateSettings;
+  setRequestLocale(locale);
+
   const messages = await getMessages();
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          href={`/${locale}/rss.xml`}
+          title="Events"
+        />
       </head>
 
       <body
-        className={`${jost.variable} ${IBMPlexMono.variable} antialiased bg-background text-primary px-6 sm:px-12 font-base sm:max-w-[96rem] m-auto font-regular`}
+        className="font-base m-auto bg-background px-6 font-regular text-primary antialiased sm:max-w-[96rem] sm:px-12"
+        style={
+          ThemeFonts[fontName as keyof typeof ThemeFonts] ?? ThemeFonts.default
+        }
       >
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider attribute="class" forcedTheme={THEME}>
+          <ThemeProvider attribute="class" forcedTheme={themeId}>
             <SiteHeader />
             {children}
           </ThemeProvider>

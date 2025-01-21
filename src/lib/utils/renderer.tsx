@@ -5,10 +5,7 @@
 import { VenueImage } from "@/components";
 import { LocalizedContent } from "@venuecms/sdk";
 import Markdown from "markdown-to-jsx";
-import Link from "next/link";
 import { ReactNode } from "react";
-
-import { cn } from "../utils";
 
 type ElementClasses = {
   text?: string;
@@ -33,15 +30,36 @@ const marks = {
   italic: "italic",
   underline: "underline",
   strike: "line-through",
+  link: "underline underline-offset-[3px] cursor-pointer",
+} as const;
+
+const elMarks = {
+  link: (props: any): ReactNode => <a {...props} />,
 } as const;
 
 const getDefaultHandlers = (classes: ElementClasses = {}) => {
   const defaultHandlers: NodeHandlers = {
     text: (props) => {
       if (props.node.marks) {
-        const className = props.node.marks.reduce((accum, mark) => {
-          return `${marks[mark.type as keyof typeof marks]} ${accum}`;
-        }, "");
+        const className = props.node.marks
+          .reduce((accum, mark) => {
+            return `${marks[mark.type as keyof typeof marks]} ${accum}`;
+          }, "")
+          .trim();
+
+        let hasWrappers = false;
+        const elWrappers = props.node.marks.reduce((accum, mark) => {
+          if (mark.type in elMarks) {
+            hasWrappers = true;
+            const el = elMarks[mark.type as keyof typeof elMarks];
+
+            return el({ ...mark.attrs, className, children: accum });
+          }
+        }, props.node.text);
+
+        if (hasWrappers) {
+          return elWrappers;
+        }
 
         return <span className={`${className}`}>{props.node.text}</span>;
       }
@@ -110,6 +128,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           height="auto"
           style={{
             aspectRatio: "4 / 3",
+            maxWidth: "100%",
           }}
         ></iframe>
       );
@@ -127,19 +146,57 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
         // @ts-ignore
         referrerpolicy,
         ...rest
-      } = props.node.attrs;
+      } = props.node?.attrs ?? props; // TODO: why do we need to do this? we are getting different shapes at times and not sure why
 
-      const styles = style
-        ?.split(";")
-        .reduce((accum: Record<string, string>, style: string) => {
-          const [key, value] = style.split(":");
-          return { ...accum, [key]: value };
-        }, {});
+      const styles =
+        typeof style === "string"
+          ? style
+              ?.split(";")
+              .reduce((accum: Record<string, string>, style: string) => {
+                const [key, value] = style.split(":");
+                if (value !== undefined) {
+                  return { ...accum, [key]: value.trim() };
+                }
+                return accum;
+              }, {})
+          : style;
+
+      // TODO: We need iframely. A hack for now to check and iron out some common quirks
+      const isVideo = (() => {
+        return !!(src.match(/youtube.com/) || src.match(/vimeo.com/));
+      })();
+
+      const isBandcamp = (() => {
+        return !!src.match(/bandcamp.com/);
+      })();
+
+      const isVimeo = (() => {
+        return !!src.match(/vimeo.com/);
+      })();
+
+      if (isVimeo) {
+        console.log("PROPS", styles, src, rest);
+      }
 
       return (
         <iframe
           src={src}
-          style={styles}
+          style={{
+            ...styles,
+            ...(isVideo
+              ? { maxWidth: "100%", aspectRatio: "4 / 3", height: "auto" }
+              : {}),
+            ...(isBandcamp && !styles?.height
+              ? { width: "100%", maxWidth: "700px", height: "42px" }
+              : {}),
+
+            ...(isVimeo && !styles?.height
+              ? {
+                  width: "100%",
+                  aspectRatio: (rest as any).width / (rest as any).height,
+                }
+              : {}),
+          }}
           frameBorder={frameborder}
           allowFullScreen={allowfullscreen}
           referrerPolicy={referrerpolicy}
@@ -174,9 +231,9 @@ const getMarkdownHandlers = (classes: ElementClasses = {}) => {
       }),
     hr: (props: any) => <hr {...props} />,
     a: (props: any) => (
-      <Link href={props.href} className={classes.a}>
+      <a href={props.href} className={classes.a}>
         {props.children}
-      </Link>
+      </a>
     ),
     span: ({ children }: { children: ReactNode }) => <span>{children}</span>, // strip out custom colors and all that (since they are usually pasted in accidentally)
   };
@@ -205,7 +262,7 @@ export const ContentRender = (props: {
         <ContentRender
           node={child}
           handlers={handlers}
-          key={`${child.type}-${ix}`}
+          key={`${child.type}- ${ix} `}
         />,
       );
     });
@@ -234,8 +291,8 @@ export const VenueContent = ({
   if (contentJSON) {
     return (
       <div className={className}>
-        {(contentJSON.content as Array<RenderNode>).map((node) => (
-          <ContentRender classes={contentStyles} node={node} />
+        {(contentJSON.content as Array<RenderNode>).map((node, i) => (
+          <ContentRender key={i} classes={contentStyles} node={node} />
         ))}
       </div>
     );

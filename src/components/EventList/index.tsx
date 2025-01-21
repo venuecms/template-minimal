@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+import { LocationLink } from "../LocationLink";
 import { VenueImage } from "../VenueImage";
 import { formatDate } from "../utils";
 
@@ -18,7 +19,7 @@ export const EventsList = ({
   return (
     <div
       className={cn(
-        "flex flex-col sm:grid sm:grid-cols-2 sm:grid-flow-row gap-x-8 text-sm",
+        "flex flex-col gap-x-8 text-sm sm:grid sm:grid-flow-row sm:grid-cols-2",
         className,
       )}
     >
@@ -31,37 +32,27 @@ export const ListEvent = ({
   event,
   site,
   withImage,
-  highlight,
   className,
 }: {
   event: Event;
   site: Site;
   withImage?: boolean;
-  highlight?: boolean;
   className?: string;
 }) => {
   const locale = useLocale();
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
-  const { content: locationContent } = getLocalizedContent(
-    event?.location?.localizedContent,
-    locale,
-  );
+  const isCancelled = event.publishState === "CANCELLED";
 
   return (
     <div
       className={cn(
-        "flex flex-col gap-8 sm:gap-0 pb-8 break-inside-avoid",
+        "flex break-inside-avoid flex-col gap-8 pb-8 sm:gap-0",
         className,
       )}
     >
       {withImage ? (
-        <div
-          className={cn(
-            "w-full sm:w-60 pb-3",
-            highlight && "sm:w-80 sm:max-w-full",
-          )}
-        >
+        <div className={cn("w-full pb-3 sm:w-80 sm:max-w-full")}>
           <Link href={`/events/${event.slug}`}>
             <VenueImage image={event.image} aspect="video" />
           </Link>
@@ -75,12 +66,11 @@ export const ListEvent = ({
             </Link>
           </div>
         ) : null}
-        <div className="text-primary">
+        <div className={cn("text-primary", isCancelled && "line-through")}>
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
-        {event.location ? (
-          <div className="text-secondary">{locationContent.title}</div>
-        ) : null}
+        {event.location ? <LocationLink location={event.location} /> : null}
+        {isCancelled ? <div className="text-primary">Cancelled</div> : null}
       </div>
     </div>
   );

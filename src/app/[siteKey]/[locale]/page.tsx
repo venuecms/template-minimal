@@ -53,7 +53,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   return (
     <>
       {featuredEvents?.records.length ? (
-        <div className="flex flex-col pb-16 ">
+        <div className="flex flex-col pb-16">
           {featuredEvents?.records.map((event) => (
             <EventFeatured
               key={event.id}
@@ -65,9 +65,9 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         </div>
       ) : null}
 
-      <p className="sm:hidden text-secondary">Upcoming events</p>
+      <p className="text-secondary sm:hidden">Upcoming events</p>
       <TwoColumnLayout>
-        <ColumnLeft className="hidden sm:flex text-sm text-secondary">
+        <ColumnLeft className="hidden text-sm text-secondary sm:flex">
           {site.description ? (
             <VenueContent
               className="flex flex-col gap-6"
@@ -85,7 +85,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
                 ))}
               </EventsList>
               <Link
-                className="flex sm:flex-row sm:relative sm:left-1/2 w-full"
+                className="flex w-full sm:relative sm:left-1/2 sm:flex-row"
                 href="/events"
               >
                 → see all upcoming events
@@ -93,7 +93,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
             </section>
           ) : null}
           {site.description ? (
-            <div className="sm:hidden flex">
+            <div className="flex sm:hidden">
               <VenueContent
                 className="flex flex-col gap-6"
                 content={{ content: site.description } as LocalizedContent}

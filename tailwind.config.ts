@@ -6,7 +6,13 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  safelist: ["font-bold", "line-through", "underline", "italic"],
+  safelist: [
+    "font-bold",
+    "line-through",
+    "underline",
+    "italic",
+    "hover:underline",
+  ],
   theme: {
     extend: {
       colors: {
@@ -23,9 +29,6 @@ export default {
         "footer-background": "hsla(var(--footer-background))",
         "panel-background": "hsla(var(--panel-background))",
         "panel-background-2": "hsla(var(--panel-background-2))",
-      },
-      fontFamily: {
-        base: ["var(--font-ibm-plex-mono)", "system-ui", "sans-serif"],
       },
       fontSize: {
         sm: ["1rem", "1.5rem"],

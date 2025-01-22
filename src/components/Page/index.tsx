@@ -5,8 +5,14 @@ import { VenueContent } from "@/lib/utils/renderer";
 import { PageWithParent } from "@/lib/utils/tree";
 
 import { PageTree } from "../PageTree";
+import { ProfileCompact } from "../ProfileCompact";
 import { VenueImage } from "../VenueImage";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+import {
+  ColumnLeft,
+  ColumnRight,
+  TwoColumnLayout,
+  TwoSubColumnLayout,
+} from "../layout";
 import { renderedStyles } from "../utils";
 
 export const Page = ({
@@ -18,6 +24,7 @@ export const Page = ({
 }) => {
   const locale = useLocale();
 
+  const { artists = [] } = page;
   const { content } = getLocalizedContent(page?.localizedContent, locale);
 
   return (
@@ -38,6 +45,11 @@ export const Page = ({
           content={content}
           contentStyles={renderedStyles}
         />
+        <TwoSubColumnLayout>
+          {artists.map(({ profile }) => (
+            <ProfileCompact key={profile.slug} profile={profile} />
+          ))}
+        </TwoSubColumnLayout>
       </ColumnRight>
     </TwoColumnLayout>
   );

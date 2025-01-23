@@ -18,11 +18,11 @@ html.default {
   --panel-background-2: 50, 4%, 79%, 0.2;
 
   @media (prefers-color-scheme: dark) {
-    --background: 199, 5%, 4%, 1;
-    --primary: 199, 31%, 85%, 1;
-    --secondary: 199, 47%, 81%, 1;
-    --muted: 199, 31%, 85%, 0.6;
-    --nav: 199, 29%, 72%, 1;
+    --background: 300, 1%, 5%, 1;
+    --primary: 120, 25%, 90%, 1;
+    --secondary: 120, 4%, 56%, 1;
+    --muted: 120, 4%, 33%, 0.8;
+    --nav: 120, 25%, 90%, 1;
     --highlight: 58, 100%, 53%, 1;
     --button-background: 50, 1%, 25%, 1;
     --error: 0, 100%, 41%, 1;

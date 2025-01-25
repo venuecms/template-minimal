@@ -15,7 +15,6 @@ import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 import { VenueImage } from "@/components/VenueImage";
-import { TwoSubColumnLayout } from "@/components/layout";
 
 export const generateMetadata = getGenerateMetadata(() =>
   getPage({ slug: "shop" }),
@@ -40,12 +39,30 @@ const ProductsPage = async ({ params }: { params: Promise<Params> }) => {
     ? getLocalizedContent(page.localizedContent, locale).content.title
     : "Shop";
 
+  const topProducts = products?.records.slice(0, 4);
+  const moreProducts = products?.records.slice(4);
+
   return (
-    <TwoSubColumnLayout className="py-20 sm:grid-cols-[repeat(4,minmax(16rem,32rem))]">
-      {products?.records.length
-        ? products.records.map((product) => <ListProduct product={product} />)
-        : "No products found"}
-    </TwoSubColumnLayout>
+    <section className="py-20">
+      <div className="grid gap-8 pb-20 sm:max-w-full lg:grid-cols-2 xl:grid-cols-4">
+        {topProducts?.length
+          ? topProducts.map((product) => (
+              <ListProduct
+                key={product.slug}
+                featured={true}
+                product={product}
+              />
+            ))
+          : "No products found"}
+      </div>
+      {moreProducts?.length ? (
+        <div className="grid grid-cols-2 gap-8 sm:max-w-full lg:grid-cols-[repeat(4,minmax(1rem,32rem))] xl:grid-cols-[repeat(6,minmax(1rem,32rem))]">
+          {moreProducts.map((product) => (
+            <ListProduct key={product.slug} product={product} />
+          ))}
+        </div>
+      ) : null}
+    </section>
   );
 };
 
@@ -53,14 +70,17 @@ export default ProductsPage;
 
 const ListProduct = ({
   product,
+  featured,
   className,
 }: {
   product: Product;
+  featured?: boolean;
   className?: string;
 }) => {
   const locale = useLocale();
 
   const { content } = getLocalizedContent(product?.localizedContent, locale);
+  const { variants = [] } = product;
 
   return (
     <div
@@ -69,15 +89,36 @@ const ListProduct = ({
         className,
       )}
     >
-      <div className="w-full pb-3 sm:w-80 sm:max-w-full">
+      <div className="w-full pb-3 sm:w-auto sm:max-w-full">
         <Link href={`/shop/${product.slug}`}>
-          <VenueImage image={product.image} aspect="video" />
+          <VenueImage image={product.image} aspect="square" />
         </Link>
       </div>
       <div className="flex flex-col">
+        <div className="text-secondary">{product.author}</div>
         <div className="text-primary">
           <Link href={`/shop/${product.slug}`}>{content.title}</Link>
         </div>
+
+        {featured && variants.length > 0 ? (
+          <div className="flex items-center gap-4 pt-2">
+            {variants.map((variant) => (
+              <>
+                <div key={variant.productType?.type} className="text-secondary">
+                  {variant.productType?.type}
+                </div>
+                {variant.price > 0 ? (
+                  <div
+                    key={variant.productType?.type + "price"}
+                    className="border border-muted px-2 py-1 text-muted"
+                  >
+                    {variant.price}
+                  </div>
+                ) : null}
+              </>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );

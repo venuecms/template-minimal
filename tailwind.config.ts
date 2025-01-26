@@ -21,6 +21,7 @@ export default {
         highlight: "hsla(var(highlight))",
         primary: "hsla(var(--primary))",
         secondary: "hsla(var(--secondary))",
+        muted: "hsla(var(--muted))",
         "text-3": "hsla(var(--text-3))",
         nav: "hsla(var(--nav))",
         "button-background": "hsla(var(--button-background))",

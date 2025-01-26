@@ -1,11 +1,11 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getEvent, getProduct, getSite, setConfig } from "@venuecms/sdk";
+import { getProduct, getSite, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 import { Product } from "@/components/Product";
 
-export const generateMetadata = getGenerateMetadata(getEvent);
+export const generateMetadata = getGenerateMetadata(getProduct);
 
 const ProductPage = async ({
   params,

@@ -28,7 +28,6 @@ export const Product = ({
   const locale = useLocale();
   const { artists, variants = [] } = product;
 
-  console.log("SITE", site);
   const { content } = getLocalizedContent(product?.localizedContent, locale);
 
   return (
@@ -54,7 +53,19 @@ export const Product = ({
                         key={variant.productType?.type + "price"}
                         className="border border-secondary px-2 py-1 text-secondary"
                       >
-                        {variant.price} {variant.currency}
+                        {variant.externalLink ? (
+                          <a
+                            href={variant.externalLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {variant.price}{" "}
+                            {variant.currency ||
+                              site.settings?.defaults?.currency}
+                          </a>
+                        ) : (
+                          `${variant.price} ${variant.currency || site.settings?.defaults?.currency}`
+                        )}
                       </div>
                     ) : null}
                   </>

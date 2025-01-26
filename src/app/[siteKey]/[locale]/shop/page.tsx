@@ -95,7 +95,9 @@ const ListProduct = ({
         </Link>
       </div>
       <div className="flex flex-col">
-        <div className="text-secondary">{product.author}</div>
+        {product.author ? (
+          <div className="text-secondary">{product.author}</div>
+        ) : null}
         <div className="text-primary">
           <Link href={`/shop/${product.slug}`}>{content.title}</Link>
         </div>

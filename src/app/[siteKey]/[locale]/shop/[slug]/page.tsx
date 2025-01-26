@@ -20,7 +20,7 @@ const ProductPage = async ({
     getProduct({ slug }),
   ]);
 
-  if (!product) {
+  if (!product || !site) {
     notFound();
   }
 

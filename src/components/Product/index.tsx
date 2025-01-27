@@ -44,8 +44,11 @@ export const Product = ({
             {variants.length > 0 ? (
               <div className="flex items-center gap-4 pt-2">
                 {variants.map((variant) => (
-                  <>
-                    <div key={variant.productType?.type} className="text-muted">
+                  <div
+                    key={variant.productType?.type}
+                    className="flex items-center gap-4"
+                  >
+                    <div className="text-muted">
                       {variant.productType?.type}
                     </div>
                     {variant.price > 0 ? (
@@ -68,7 +71,7 @@ export const Product = ({
                         )}
                       </div>
                     ) : null}
-                  </>
+                  </div>
                 ))}
               </div>
             ) : null}

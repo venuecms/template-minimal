@@ -43,7 +43,10 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
       if (props.node.marks) {
         const className = props.node.marks
           .reduce((accum, mark) => {
-            return `${marks[mark.type as keyof typeof marks]} ${accum}`;
+            if (mark.type === "link") {
+              return accum;
+            }
+            return `${marks[mark.type as keyof typeof marks] ?? ""} ${accum}`;
           }, "")
           .trim();
 
@@ -55,6 +58,8 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
 
             return el({ ...mark.attrs, className, children: accum });
           }
+
+          return accum;
         }, props.node.text);
 
         if (hasWrappers) {
@@ -91,7 +96,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           return <>{props.children}</>;
       }
     },
-    hardBreak: () => <p></p>,
+    hardBreak: () => <br />,
     image: (props) => {
       const { src, alt } = props.node.attrs ?? {};
 
@@ -173,10 +178,6 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
       const isVimeo = (() => {
         return !!src.match(/vimeo.com/);
       })();
-
-      if (isVimeo) {
-        console.log("PROPS", styles, src, rest);
-      }
 
       return (
         <iframe

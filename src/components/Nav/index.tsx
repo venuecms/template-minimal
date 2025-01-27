@@ -15,7 +15,8 @@ import { renderedStyles } from "../utils";
 import { NavMenuDesktop } from "./NavMenuDesktop";
 import { NavMenuMobile } from "./NavMenuMobile";
 
-const StaticSlugs = ["events", "archive"];
+// Static slugs are reserved slugs in the nav that should not be redirected to a /p/[slug] but routed direct instead.
+const StaticSlugs = ["events", "archive", "shop"];
 
 export type RootPageContent = {
   page: Page;
@@ -41,12 +42,12 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
 
   const menuItems = rootPageContents
     ? rootPageContents.map(({ page, content, isStatic }) => (
-      <li key={page.slug}>
-        <Link href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
-          {content.title}
-        </Link>
-      </li>
-    ))
+        <li key={page.slug}>
+          <Link href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
+            {content.title}
+          </Link>
+        </li>
+      ))
     : null;
 
   // Render the menu for desktop and mobile

@@ -43,7 +43,8 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
       if (props.node.marks) {
         const className = props.node.marks
           .reduce((accum, mark) => {
-            if (mark.type === "link") {
+            if (elMarks[mark.type as keyof typeof elMarks]) {
+              // elMarks are handled separately
               return accum;
             }
             return `${marks[mark.type as keyof typeof marks] ?? ""} ${accum}`;

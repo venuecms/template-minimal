@@ -109,7 +109,7 @@ const ListProduct = ({
         {featured && variants.length > 0 ? (
           <div className="flex items-center gap-4 pt-2">
             {variants.map((variant) => (
-              <>
+              <div className="flex items-center gap-4 pt-2">
                 <div key={variant.productType?.type} className="text-secondary">
                   {variant.productType?.type}
                 </div>
@@ -122,7 +122,7 @@ const ListProduct = ({
                     {variant.currency || site.settings?.defaults?.currency}
                   </div>
                 ) : null}
-              </>
+              </div>
             ))}
           </div>
         ) : null}

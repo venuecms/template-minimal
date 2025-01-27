@@ -2,6 +2,7 @@ import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import {
   Product,
+  Site,
   getLocalizedContent,
   getPage,
   getProducts,
@@ -51,6 +52,7 @@ const ProductsPage = async ({ params }: { params: Promise<Params> }) => {
                 key={product.slug}
                 featured={true}
                 product={product}
+                site={site}
               />
             ))
           : "No products found"}
@@ -58,7 +60,7 @@ const ProductsPage = async ({ params }: { params: Promise<Params> }) => {
       {moreProducts?.length ? (
         <div className="grid grid-cols-2 gap-8 sm:max-w-full lg:grid-cols-[repeat(4,minmax(1rem,32rem))] xl:grid-cols-[repeat(6,minmax(1rem,32rem))]">
           {moreProducts.map((product) => (
-            <ListProduct key={product.slug} product={product} />
+            <ListProduct key={product.slug} product={product} site={site} />
           ))}
         </div>
       ) : null}
@@ -70,10 +72,12 @@ export default ProductsPage;
 
 const ListProduct = ({
   product,
+  site,
   featured,
   className,
 }: {
   product: Product;
+  site: Site;
   featured?: boolean;
   className?: string;
 }) => {
@@ -114,7 +118,8 @@ const ListProduct = ({
                     key={variant.productType?.type + "price"}
                     className="border border-muted px-2 py-1 text-muted"
                   >
-                    {variant.price}
+                    {variant.price}{" "}
+                    {variant.currency || site.settings?.defaults?.currency}
                   </div>
                 ) : null}
               </>

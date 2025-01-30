@@ -24,7 +24,7 @@ export const SiteLogo = ({
   return headerImage ? (
     <Link href="/">{headerImage}</Link>
   ) : (
-    <h1 className={cn("text-xl text-nav", className)}>
+    <h1 className={cn("text-nav", className)}>
       <Link href="/">{name}</Link>
     </h1>
   );

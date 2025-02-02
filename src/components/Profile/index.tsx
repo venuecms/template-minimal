@@ -38,7 +38,6 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           <ProfileEventList
             header="Upcoming Events"
             slug={profile.slug}
-            site={profile.site}
             filter={{ upcoming: true }}
           />
         </Suspense>
@@ -46,7 +45,6 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           <ProfileEventList
             header="Past Events"
             slug={profile.slug}
-            site={profile.site}
             filter={{ lt: Date.now() }}
           />
         </Suspense>

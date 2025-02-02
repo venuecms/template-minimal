@@ -1,7 +1,7 @@
 import { Event } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getEvent, setConfig } from "@venuecms/sdk";
+import { getEvent, getSite, setConfig } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 export const generateMetadata = getGenerateMetadata(getEvent);
@@ -14,13 +14,16 @@ const EventsPage = async ({
   const { slug, siteKey } = await params;
   setConfig({ siteKey });
 
-  const { data: event } = await getEvent({ slug });
+  const [{ data: event }, { data: site }] = await Promise.all([
+    getEvent({ slug }),
+    getSite(),
+  ]);
 
   if (!event) {
     notFound();
   }
 
-  return <Event event={event} />;
+  return <Event event={event} site={site} />;
 };
 
 export default EventsPage;

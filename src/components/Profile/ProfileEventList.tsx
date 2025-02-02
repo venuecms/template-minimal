@@ -1,19 +1,24 @@
-import { Site, getProfileEvents } from "@venuecms/sdk";
+import { getProfileEvents, getSite } from "@venuecms/sdk";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 
 export const ProfileEventList = async ({
   header,
   slug,
-  site,
   filter,
 }: {
   header: string;
   slug: string;
-  site: Site;
   filter?: { upcoming?: boolean; lt?: number };
 }) => {
-  const { data: events } = await getProfileEvents({ slug, ...filter });
+  const [{ data: events }, { data: site }] = await Promise.all([
+    getProfileEvents({ slug, ...filter }),
+    getSite(),
+  ]);
+
+  if (!site) {
+    return null;
+  }
 
   return events?.records.length ? (
     <div className="flex flex-col gap-6">

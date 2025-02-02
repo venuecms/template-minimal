@@ -1,4 +1,8 @@
-import { type Event as VenueEvent, getLocalizedContent } from "@venuecms/sdk";
+import {
+  Site,
+  type Event as VenueEvent,
+  getLocalizedContent,
+} from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
@@ -17,7 +21,7 @@ import {
 import { formatDate } from "../utils";
 import { renderedStyles } from "../utils/styles";
 
-export const Event = ({ event }: { event: VenueEvent }) => {
+export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
   const locale = useLocale();
   const { location, artists } = event;
 
@@ -33,7 +37,7 @@ export const Event = ({ event }: { event: VenueEvent }) => {
               <div
                 className={cn("text-secondary", isCancelled && "line-through")}
               >
-                {formatDate(event.startDate, event.site.timeZone!)}
+                {formatDate(event.startDate, site.timeZone!)}
               </div>
               <div>{content.title}</div>
               {location ? <LocationLink location={location} /> : null}

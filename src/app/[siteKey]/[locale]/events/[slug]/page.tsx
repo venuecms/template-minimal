@@ -19,7 +19,7 @@ const EventsPage = async ({
     getSite(),
   ]);
 
-  if (!event) {
+  if (!event || !site) {
     notFound();
   }
 

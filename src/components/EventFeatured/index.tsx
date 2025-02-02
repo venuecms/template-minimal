@@ -43,7 +43,11 @@ export const EventFeatured = ({
         <ColumnRight className="max-w-4xl gap-16">
           <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
-              {formatDate(event.startDate, site.timeZone!)}
+              {formatDate({
+                date: event.startDate,
+                withTime: event.hasTime,
+                timeZone: site.timeZone!,
+              })}
             </Link>
           </div>
           <div className="text-xl text-primary">
@@ -70,7 +74,11 @@ export const EventFeatured = ({
           <div>
             <div className="text-secondary">
               <Link href={`/events/${event.slug}`}>
-                {formatDate(event.startDate, site.timeZone!)}
+                {formatDate({
+                  date: event.startDate,
+                  withTime: event.hasTime,
+                  timeZone: site.timeZone!,
+                })}
               </Link>
             </div>
             {location ? <LocationLink location={location} /> : null}

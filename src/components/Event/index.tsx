@@ -37,7 +37,11 @@ export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
               <div
                 className={cn("text-secondary", isCancelled && "line-through")}
               >
-                {formatDate(event.startDate, site.timeZone!)}
+                {formatDate({
+                  date: event.startDate,
+                  withTime: event.hasTime,
+                  timeZone: site.timeZone!,
+                })}
               </div>
               <div>{content.title}</div>
               {location ? <LocationLink location={location} /> : null}

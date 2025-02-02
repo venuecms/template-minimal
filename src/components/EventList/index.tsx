@@ -62,7 +62,11 @@ export const ListEvent = ({
         {event.startDate ? (
           <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
-              {formatDate(event.startDate, site.timeZone!)}
+              {formatDate({
+                date: event.startDate,
+                withTime: event.hasTime,
+                timeZone: site.timeZone!,
+              })}
             </Link>
           </div>
         ) : null}

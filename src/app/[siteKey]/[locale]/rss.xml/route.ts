@@ -65,7 +65,7 @@ export const GET = async (
 
     feed.item({
       title: content.title ?? "",
-      description: `${formatDate(event.startDate, site.timeZone!)}:\n ${removeMarkdown(content.shortContent || content.content || "")}`,
+      description: `${formatDate({ date: event.startDate, withTime: event.hasTime, timeZone: site.timeZone! })}:\n ${removeMarkdown(content.shortContent || content.content || "")}`,
       url: `${site_url}/events/${event.slug}`,
       date: event.startDate,
     });

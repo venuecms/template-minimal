@@ -3,7 +3,7 @@ import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif } from "next/font/google";
+import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif, Hanken_Grotesk } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { routing } from "@/lib/i18n";
@@ -16,7 +16,12 @@ export const runtime = "edge";
 
 const YoungSerif = Young_Serif({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+const HankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -38,6 +43,7 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 const ThemeFonts = {
+  Hanken_Grotesk: HankenGrotesk.style,
   Young_Serif: YoungSerif.style,
   Gothic_A1: GothicA1.style,
   jost: jost.style,
@@ -64,7 +70,7 @@ const RootLayout = async ({
   const { data: site } = await getSite();
   const templateSettings = site?.settings?.publicSite?.template?.config ?? {};
 
-  const { themeId = "default", fontName = "default" } = templateSettings;
+  const { themeId = "default", fontName = "Hanken_Grotesk" } = templateSettings;
   setRequestLocale(locale);
 
   const messages = await getMessages();

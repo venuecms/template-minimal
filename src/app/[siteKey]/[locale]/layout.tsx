@@ -3,7 +3,7 @@ import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif, Hanken_Grotesk, Schibsted_Grotesk } from "next/font/google";
+import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif, Hanken_Grotesk, Outfit, Schibsted_Grotesk } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { routing } from "@/lib/i18n";
@@ -13,6 +13,12 @@ import { SiteHeader } from "@/components/SiteHeader";
 import "../../globals.css";
 
 export const runtime = "edge";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
 
 const SchibstedGrotesk = Schibsted_Grotesk({
   subsets: ["latin"],
@@ -50,6 +56,7 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 const ThemeFonts = {
+  outfit: outfit.style,
   Schibsted_Grotesk: SchibstedGrotesk.style,
   Hanken_Grotesk: HankenGrotesk.style,
   Young_Serif: YoungSerif.style,
@@ -79,7 +86,7 @@ const RootLayout = async ({
   const { data: site } = await getSite();
   const templateSettings = site?.settings?.publicSite?.template?.config ?? {};
 
-  const { themeId = "default", fontName = "default" } = templateSettings;
+  const { themeId = "default", fontName = "outfit" } = templateSettings;
   setRequestLocale(locale);
 
   const messages = await getMessages();

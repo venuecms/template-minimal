@@ -86,7 +86,7 @@ const RootLayout = async ({
   const { data: site } = await getSite();
   const templateSettings = site?.settings?.publicSite?.template?.config ?? {};
 
-  const { themeId = "default", fontName = "outfit" } = templateSettings;
+  const { themeId = "default", fontName = "default" } = templateSettings;
   setRequestLocale(locale);
 
   const messages = await getMessages();

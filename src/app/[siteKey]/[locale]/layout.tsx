@@ -3,7 +3,7 @@ import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif, Hanken_Grotesk, Outfit, Schibsted_Grotesk } from "next/font/google";
+import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif, Hanken_Grotesk, Outfit, Schibsted_Grotesk, Abel } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { routing } from "@/lib/i18n";
@@ -14,6 +14,11 @@ import "../../globals.css";
 
 export const runtime = "edge";
 
+const abel = Abel({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
 const outfit = Outfit({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -56,6 +61,7 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 const ThemeFonts = {
+  abel: abel.style,
   outfit: outfit.style,
   Schibsted_Grotesk: SchibstedGrotesk.style,
   Hanken_Grotesk: HankenGrotesk.style,

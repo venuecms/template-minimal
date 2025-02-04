@@ -135,3 +135,19 @@ html.frim {
   --panel-background: 0, 0%, 100%, 1;
   --panel-background-2: 0, 0%, 100%, 1;
 }
+
+html.kvast {
+  --background: 0, 0%, 96%, 1;
+  --primary: 0, 0%, 13%, 1;
+  --secondary: 0, 0%, 26%, 1;
+  --muted: 0, 2%, 39%, 1;
+  --nav: 0, 0%, 26%, 1;
+  --highlight: 9, 85%, 55%, 1;
+  --button-background: 298, 100%, 48%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 0, 0%, 13%, 1;
+  --overlay: 9, 85%, 55%, 0.2;
+  --footer-background: 0, 0%, 100%, 1;
+  --panel-background: 0, 0%, 100%, 1;
+  --panel-background-2: 0, 0%, 100%, 1;
+}

@@ -88,7 +88,7 @@ export const Product = ({
         />
         <TwoSubColumnLayout>
           {artists.map(({ profile }) => (
-            <ProfileCompact key={profile.slug} profile={{ ...profile, site }} />
+            <ProfileCompact key={profile.slug} profile={profile} />
           ))}
         </TwoSubColumnLayout>
       </ColumnRight>

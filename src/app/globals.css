@@ -8,14 +8,7 @@ html.default {
   --secondary: 0, 0%, 25%, 1;
   --muted: 120, 4%, 33%, 0.6;
   --nav: 0, 0%, 25%, 1;
-  --highlight: 130, 99%, 42%, 1;
-  --button-background: 0, 0%, 80%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 0, 0%, 84%, 0.8;
-  --footer-background: 129, 5%, 50%, 1;
-  --panel-background: 0, 0%, 100%, 1;
-  --panel-background-2: 50, 4%, 79%, 0.2;
 
   @media (prefers-color-scheme: dark) {
     --background: 300, 1%, 5%, 1;
@@ -23,14 +16,7 @@ html.default {
     --secondary: 120, 4%, 56%, 1;
     --muted: 120, 4%, 33%, 0.8;
     --nav: 120, 25%, 90%, 1;
-    --highlight: 58, 100%, 53%, 1;
-    --button-background: 50, 1%, 25%, 1;
-    --error: 0, 100%, 41%, 1;
-    --black: 0, 4%, 25%, 1;
     --overlay: 0, 0%, 50%, 0.4;
-    --footer-background: 0, 0%, 4%, 1;
-    --panel-background: 0, 0%, 4%, 1;
-    --panel-background-2: 0, 0%, 40%, 0.2;
   }
 
   @media (prefers-color-scheme: light) {
@@ -46,14 +32,7 @@ html.space {
   --secondary: 300, 3%, 74%, 1;
   --muted: 300, 15%, 88%, 0.6;
   --nav: 310, 97%, 64%, 1;
-  --highlight: 91, 100%, 90%, 1;
-  --button-background: 300, 4%, 12%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 300, 15%, 88%, 0.4;
-  --footer-background: 300, 4%, 12%, 1;
-  --panel-background: 300, 4%, 12%, 1;
-  --panel-background-2: 300, 4%, 12%, 1;
 }
 
 html.larry {
@@ -62,14 +41,7 @@ html.larry {
   --secondary: 298, 100%, 48%, 1;
   --muted: 298, 100%, 25%, 0.6;
   --nav: 298, 100%, 48%, 1;
-  --highlight: 91, 100%, 90%, 1;
-  --button-background: 298, 100%, 48%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 298, 100%, 48%, 0.4;
-  --footer-background: 0, 0%, 100%, 1;
-  --panel-background: 0, 0%, 100%, 1;
-  --panel-background-2: 0, 0%, 100%, 1;
 }
 
 html.darkGold {
@@ -78,14 +50,7 @@ html.darkGold {
   --secondary: 149, 14%, 77%, 1;
   --muted: 0, 0%, 63%, 1;
   --nav: 0, 0%, 80%, 1;
-  --highlight: 58, 100%, 53%, 1;
-  --button-background: 51, 11%, 35%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 4%, 25%, 1;
   --overlay: 57, 100%, 53%, 0.2;
-  --footer-background: 51, 11%, 35%, 1;
-  --panel-background: 51, 11%, 35%, 1;
-  --panel-background-2: 0, 0%, 30%, 0.2;
 }
 
 html.hojden {
@@ -94,14 +59,7 @@ html.hojden {
   --secondary: 16, 100%, 66%, 1;
   --muted: 52, 32%, 94%, 1;
   --nav: 131, 100%, 20%, 1;
-  --highlight: 91, 100%, 90%, 1;
-  --button-background: 298, 100%, 48%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 298, 100%, 48%, 0.4;
-  --footer-background: 0, 0%, 100%, 1;
-  --panel-background: 0, 0%, 100%, 1;
-  --panel-background-2: 0, 0%, 100%, 1;
 }
 
 html.ahmed {
@@ -110,14 +68,7 @@ html.ahmed {
   --secondary: 54, 4%, 55%, 1;
   --muted: 47, 4%, 55%, 0.7;
   --nav: 50, 20%, 80%, 1;
-  --highlight: 91, 100%, 90%, 1;
-  --button-background: 298, 100%, 48%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 50, 8%, 5%, 0.8;
-  --footer-background: 0, 0%, 100%, 1;
-  --panel-background: 0, 0%, 100%, 1;
-  --panel-background-2: 0, 0%, 100%, 1;
 }
 
 html.frim {
@@ -126,14 +77,7 @@ html.frim {
   --secondary: 0, 100%, 40%, 1;
   --muted: 224, 100%, 30%, 0.6;
   --nav: 224, 100%, 30%, 1;
-  --highlight: 91, 100%, 90%, 1;
-  --button-background: 298, 100%, 48%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 112, 100%, 50%, 0.4;
-  --footer-background: 0, 0%, 100%, 1;
-  --panel-background: 0, 0%, 100%, 1;
-  --panel-background-2: 0, 0%, 100%, 1;
 }
 
 html.kvast {
@@ -142,14 +86,7 @@ html.kvast {
   --secondary: 0, 0%, 26%, 1;
   --muted: 0, 2%, 39%, 1;
   --nav: 0, 0%, 26%, 1;
-  --highlight: 9, 85%, 55%, 1;
-  --button-background: 298, 100%, 48%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 9, 85%, 55%, 0.2;
-  --footer-background: 0, 0%, 100%, 1;
-  --panel-background: 0, 0%, 100%, 1;
-  --panel-background-2: 0, 0%, 100%, 1;
 }
 
 html.Bronze {
@@ -158,14 +95,7 @@ html.Bronze {
   --secondary: 50, 4%, 70%, 1;
   --muted: 50, 2%, 70%, 0.6;
   --nav: 51, 5%, 70%, 1;
-  --highlight: 58, 100%, 53%, 1;
-  --button-background: 51, 11%, 35%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 51, 11%, 35%, 0.2;
-  --footer-background: 50, 30%, 12%, 1;
-  --panel-background: 50, 30%, 12%, 1;
-  --panel-background-2: 50, 30%, 12%, 1;
 }
 
 html.Queen {
@@ -174,14 +104,7 @@ html.Queen {
   --secondary: 50, 4%, 70%, 1;
   --muted: 50, 2%, 70%, 0.6;
   --nav: 51, 5%, 70%, 1;
-  --highlight: 58, 100%, 53%, 1;
-  --button-background: 51, 11%, 35%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 51, 11%, 35%, 0.2;
-  --footer-background: 0, 30%, 12%, 1;
-  --panel-background: 0, 30%, 12%, 1;
-  --panel-background-2: 0, 30%, 12%, 0.2;
 }
 
 html.Moss {
@@ -190,14 +113,7 @@ html.Moss {
   --secondary: 50, 4%, 70%, 1;
   --muted: 50, 2%, 70%, 0.6;
   --nav: 51, 5%, 70%, 1;
-  --highlight: 58, 100%, 53%, 1;
-  --button-background: 51, 11%, 35%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 51, 11%, 35%, 0.2;
-  --footer-background: 147, 30%, 12%, 1;
-  --panel-background: 147, 30%, 12%, 1;
-  --panel-background-2: 147, 30%, 12%, 0.2;
 }
 
 html.Slate {
@@ -206,14 +122,7 @@ html.Slate {
   --secondary: 50, 4%, 70%, 1;
   --muted: 50, 2%, 70%, 0.6;
   --nav: 51, 5%, 70%, 1;
-  --highlight: 58, 100%, 53%, 1;
-  --button-background: 51, 11%, 35%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 51, 11%, 35%, 0.2;
-  --footer-background: 214, 30%, 12%, 1;
-  --panel-background: 214, 30%, 12%, 1;
-  --panel-background-2: 214, 30%, 12%, 0.2;
 }
 
 html.HotPink {
@@ -222,14 +131,7 @@ html.HotPink {
   --secondary: 50, 4%, 80%, 1;
   --muted: 50, 2%, 70%, 0.8;
   --nav: 51, 5%, 80%, 1;
-  --highlight: 58, 100%, 53%, 1;
-  --button-background: 51, 11%, 35%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 0, 0%, 13%, 1;
   --overlay: 51, 11%, 35%, 0.2;
-  --footer-background: 309, 87%, 36%, 1;
-  --panel-background: 309, 87%, 36%, 1;
-  --panel-background-2: 309, 87%, 36%, 0.2;
 }
 
 html.helloDarkness {
@@ -238,14 +140,7 @@ html.helloDarkness {
   --secondary: 121, 4%, 70%, 1;
   --muted: 129, 5%, 70%, 0.8;
   --nav: 0, 0%, 80%, 1;
-  --highlight: 130, 99%, 42%, 1;
-  --button-background: 0, 0%, 0%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 149, 38%, 4%, 1;
   --overlay: 166, 100%, 20%, 0.2;
-  --footer-background: 149, 38%, 4%, 1;
-  --panel-background: 149, 38%, 4%, 1;
-  --panel-background-2: 149, 38%, 4%, 0.4;
 }
 
 html.goldenCircle1 {
@@ -254,14 +149,7 @@ html.goldenCircle1 {
   --secondary: 12, 65%, 59%, 1;
   --muted: 0, 0%, 47%, 1;
   --nav: 347, 60%, 66%, 1;
-  --highlight: 196, 50%, 45%, 1;
-  --button-background: 0, 0%, 0%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 149, 38%, 4%, 1;
   --overlay: 0, 0%, 0%, 0.3;
-  --footer-background: 0, 0%, 10%, 1;
-  --panel-background: 0, 0%, 10%, 1;
-  --panel-background-2: 0, 0%, 10%, 0.4;
 }
 
 html.goldenCircle2 {
@@ -270,14 +158,7 @@ html.goldenCircle2 {
   --secondary: 74, 31%, 45%, 1;
   --muted: 0, 0%, 47%, 1;
   --nav: 196, 50%, 45%, 1;
-  --highlight: 196, 50%, 45%, 1;
-  --button-background: 0, 0%, 0%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 149, 38%, 4%, 1;
   --overlay: 0, 0%, 0%, 0.3;
-  --footer-background: 0, 0%, 10%, 1;
-  --panel-background: 0, 0%, 10%, 1;
-  --panel-background-2: 0, 0%, 10%, 0.4;
 }
 
 html.newLand {
@@ -286,12 +167,5 @@ html.newLand {
   --secondary: 315, 34%, 50%, 1;
   --muted: 0, 0%, 63%, 1;
   --nav: 188, 53%, 55%, 1;
-  --highlight: 188, 53%, 55%, 1;
-  --button-background: 0, 0%, 0%, 1;
-  --error: 0, 100%, 41%, 1;
-  --black: 149, 38%, 4%, 1;
   --overlay: 0, 0%, 0%, 0.3;
-  --footer-background: 206, 13%, 11%, 1;
-  --panel-background: 206, 13%, 11%, 1;
-  --panel-background-2: 206, 13%, 11%, 0.4;
 }

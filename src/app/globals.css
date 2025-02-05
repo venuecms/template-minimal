@@ -263,6 +263,7 @@ html.goldenCircle1 {
   --panel-background: 0, 0%, 10%, 1;
   --panel-background-2: 0, 0%, 10%, 0.4;
 }
+
 html.goldenCircle2 {
   --background: 0, 0%, 10%, 1;
   --primary: 0, 0%, 85%, 1;
@@ -277,4 +278,20 @@ html.goldenCircle2 {
   --footer-background: 0, 0%, 10%, 1;
   --panel-background: 0, 0%, 10%, 1;
   --panel-background-2: 0, 0%, 10%, 0.4;
+}
+
+html.newLand {
+  --background: 206, 13%, 11%, 1;
+  --primary: 0, 0%, 84%, 1;
+  --secondary: 315, 34%, 50%, 1;
+  --muted: 0, 0%, 63%, 1;
+  --nav: 188, 53%, 55%, 1;
+  --highlight: 188, 53%, 55%, 1;
+  --button-background: 0, 0%, 0%, 1;
+  --error: 0, 100%, 41%, 1;
+  --black: 149, 38%, 4%, 1;
+  --overlay: 0, 0%, 0%, 0.3;
+  --footer-background: 206, 13%, 11%, 1;
+  --panel-background: 206, 13%, 11%, 1;
+  --panel-background-2: 206, 13%, 11%, 0.4;
 }

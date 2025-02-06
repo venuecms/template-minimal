@@ -36,7 +36,7 @@ const EventsPage = async ({ params }: { params: Promise<Params> }) => {
 
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-lg text-secondary">
+      <ColumnLeft className="text-sm text-secondary">
         <p className="pb-8 text-primary">{pageTitle}</p>
       </ColumnLeft>
       <ColumnRight>

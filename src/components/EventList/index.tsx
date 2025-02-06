@@ -73,7 +73,9 @@ export const ListEvent = ({
         <div className={cn("text-primary", isCancelled && "line-through")}>
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
-        {event.location ? <LocationLink location={event.location} /> : null}
+        {event.location && !event.location.isDefault ? (
+          <LocationLink location={event.location} />
+        ) : null}
         {isCancelled ? <div className="text-primary">Cancelled</div> : null}
       </div>
     </div>

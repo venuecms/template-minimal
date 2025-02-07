@@ -43,7 +43,13 @@ const ArchivePage = async ({ params }: { params: Promise<Params> }) => {
         {events?.records.length ? (
           <EventsList>
             {events.records.map((event) => (
-              <ListEvent key={event.id} event={event} site={site} />
+              <ListEvent
+                key={event.id}
+                event={event}
+                site={site}
+                withTime={false}
+                dateTemplate={"d MMMM yyyy"}
+              />
             ))}
           </EventsList>
         ) : (

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { LocationLink } from "../LocationLink";
 import { VenueImage } from "../VenueImage";
-import { formatDate } from "../utils";
+import { formatDateRange } from "../utils";
 
 export const EventsList = ({
   children,
@@ -41,7 +41,7 @@ export const ListEvent = ({
 }) => {
   const locale = useLocale();
 
-  const { content } = getLocalizedContent(event?.localizedContent, locale);
+  const { content } = getLocalizedContent(event.localizedContent, locale);
   const isCancelled = event.publishState === "CANCELLED";
 
   return (
@@ -62,8 +62,9 @@ export const ListEvent = ({
         {event.startDate ? (
           <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
-              {formatDate({
-                date: event.startDate,
+              {formatDateRange({
+                start: event.startDate,
+                end: event.endDate,
                 withTime: event.hasTime,
                 timeZone: site.timeZone!,
               })}

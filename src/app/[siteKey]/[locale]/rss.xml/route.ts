@@ -9,7 +9,7 @@ import { NextRequest } from "next/server";
 import removeMarkdown from "remove-markdown";
 import RSS from "rss";
 
-import { formatDate, getPublicImage } from "@/components/utils";
+import { formatDateRange, getPublicImage } from "@/components/utils";
 
 export const GET = async (
   req: NextRequest,
@@ -65,7 +65,7 @@ export const GET = async (
 
     feed.item({
       title: content.title ?? "",
-      description: `${formatDate({ date: event.startDate, withTime: event.hasTime, timeZone: site.timeZone! })}:\n ${removeMarkdown(content.shortContent || content.content || "")}`,
+      description: `${formatDateRange({ start: event.startDate, end: event.endDate, withTime: event.hasTime, timeZone: site.timeZone! })}:\n ${removeMarkdown(content.shortContent || content.content || "")}`,
       url: `${site_url}/events/${event.slug}`,
       date: event.startDate,
     });

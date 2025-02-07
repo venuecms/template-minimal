@@ -84,12 +84,15 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
                   <ListEvent key={event.id} event={event} site={site} />
                 ))}
               </EventsList>
-              <Link
-                className="flex w-full sm:relative sm:left-1/2 sm:flex-row"
-                href="/events"
-              >
-                → see all upcoming events
-              </Link>
+              <div className="w-full grid-cols-2 sm:grid">
+                <span></span>
+                <Link
+                  className="flex w-full sm:relative sm:flex-row"
+                  href="/events"
+                >
+                  → see all upcoming events
+                </Link>
+              </div>
             </section>
           ) : null}
           {site.description ? (

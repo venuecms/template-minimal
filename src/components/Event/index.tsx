@@ -18,7 +18,7 @@ import {
   TwoColumnLayout,
   TwoSubColumnLayout,
 } from "../layout";
-import { formatDate } from "../utils";
+import { formatDateRange } from "../utils";
 import { renderedStyles } from "../utils/styles";
 
 export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
@@ -37,8 +37,9 @@ export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
               <div
                 className={cn("text-secondary", isCancelled && "line-through")}
               >
-                {formatDate({
-                  date: event.startDate,
+                {formatDateRange({
+                  start: event.startDate,
+                  end: event.endDate,
                   withTime: event.hasTime,
                   timeZone: site.timeZone!,
                 })}

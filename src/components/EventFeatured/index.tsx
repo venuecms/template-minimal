@@ -13,7 +13,7 @@ import { LocationLink } from "../LocationLink";
 import { TicketList } from "../TicketList";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
-import { formatDate } from "../utils";
+import { formatDateRange } from "../utils";
 import { renderedStyles } from "../utils/styles";
 
 export const EventFeatured = ({
@@ -43,8 +43,9 @@ export const EventFeatured = ({
         <ColumnRight className="max-w-4xl gap-16">
           <div className="text-secondary">
             <Link href={`/events/${event.slug}`}>
-              {formatDate({
-                date: event.startDate,
+              {formatDateRange({
+                start: event.startDate,
+                end: event.endDate,
                 withTime: event.hasTime,
                 timeZone: site.timeZone!,
               })}
@@ -74,8 +75,9 @@ export const EventFeatured = ({
           <div>
             <div className="text-secondary">
               <Link href={`/events/${event.slug}`}>
-                {formatDate({
-                  date: event.startDate,
+                {formatDateRange({
+                  start: event.startDate,
+                  end: event.endDate,
                   withTime: event.hasTime,
                   timeZone: site.timeZone!,
                 })}

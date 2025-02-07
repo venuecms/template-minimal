@@ -1,6 +1,7 @@
 import { Location as VenueLocation, getLocalizedContent } from "@venuecms/sdk";
 import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
+import { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -11,11 +12,6 @@ export const LocationLink = ({
   location: VenueLocation;
   className?: string;
 }) => {
-  const locale = useLocale();
-  const { content: locationContent } = getLocalizedContent(
-    location?.localizedContent,
-    locale,
-  );
   const { mapLink } = location;
 
   return mapLink ? (
@@ -24,11 +20,39 @@ export const LocationLink = ({
       target="_blank"
       className={cn("flex items-center gap-2 text-secondary", className)}
     >
-      {locationContent.title} <MapPin className="size-4" />
+      <LocationDisplay
+        location={location}
+        icon={<MapPin className="size-4" />}
+      />{" "}
     </a>
   ) : (
-    <div className={cn("text-secondary", className)}>
-      {locationContent.title}
+    <LocationDisplay location={location} />
+  );
+};
+
+const LocationDisplay = ({
+  location,
+  icon,
+}: {
+  location: VenueLocation;
+  icon?: ReactNode;
+}) => {
+  const locale = useLocale();
+  const { content: locationContent } = getLocalizedContent(
+    location.localizedContent,
+    locale,
+  );
+  const { isDefault, country, city, region } = location;
+
+  return (
+    <div className="flex flex-row items-center gap-2">
+      <span>
+        {locationContent.title}
+        {!isDefault
+          ? `${city ? `, ${city}` : ""} ${region ? `, ${region} ` : ""} ${country ? country : ""}`
+          : null}
+      </span>
+      {icon}
     </div>
   );
 };

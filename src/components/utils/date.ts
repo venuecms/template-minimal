@@ -5,12 +5,12 @@ const formatDate = ({
   date,
   withTime = true,
   timeZone,
-  template = "EEEE d MMMM yyyy",
+  template,
 }: {
   date: string;
   withTime?: boolean;
   timeZone: string;
-  template?: string;
+  template: string;
 }) => {
   if (withTime) {
     return format(new TZDate(date, timeZone), `${template} • h.mmaaa`)
@@ -25,11 +25,13 @@ export const formatDateRange = ({
   end,
   timeZone,
   withTime,
+  template = "EEEE d MMMM yyyy",
 }: {
   start: string;
   end: string;
   timeZone: string;
   withTime?: boolean;
+  template?: string;
 }) => {
   const startDate = new TZDate(start, timeZone);
   const endDate = new TZDate(end, timeZone);
@@ -40,7 +42,7 @@ export const formatDateRange = ({
     startDate.getFullYear() !== endDate.getFullYear();
 
   if (!isMultiDay) {
-    return formatDate({ date: start, withTime, timeZone });
+    return formatDate({ date: start, withTime, template, timeZone });
   }
 
   const isSameMonth =

@@ -32,11 +32,15 @@ export const ListEvent = ({
   event,
   site,
   withImage,
+  withTime = true,
+  dateTemplate,
   className,
 }: {
   event: Event;
   site: Site;
   withImage?: boolean;
+  withTime?: boolean;
+  dateTemplate?: string;
   className?: string;
 }) => {
   const locale = useLocale();
@@ -65,7 +69,8 @@ export const ListEvent = ({
               {formatDateRange({
                 start: event.startDate,
                 end: event.endDate,
-                withTime: event.hasTime,
+                withTime: withTime && event.hasTime,
+                template: dateTemplate,
                 timeZone: site.timeZone!,
               })}
             </Link>

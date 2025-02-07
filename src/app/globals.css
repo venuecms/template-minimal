@@ -89,7 +89,7 @@ html.kvast {
   --overlay: 9, 85%, 55%, 0.2;
 }
 
-html.Bronze {
+html.bronze {
   --background: 50, 30%, 12%, 1;
   --primary: 50, 4%, 96%, 1;
   --secondary: 50, 4%, 70%, 1;
@@ -98,7 +98,7 @@ html.Bronze {
   --overlay: 51, 11%, 35%, 0.2;
 }
 
-html.Queen {
+html.queen {
   --background: 0, 30%, 12%, 1;
   --primary: 50, 4%, 96%, 1;
   --secondary: 50, 4%, 70%, 1;
@@ -107,7 +107,7 @@ html.Queen {
   --overlay: 51, 11%, 35%, 0.2;
 }
 
-html.Moss {
+html.moss {
   --background: 147, 30%, 12%, 1;
   --primary: 50, 4%, 96%, 1;
   --secondary: 50, 4%, 70%, 1;
@@ -116,7 +116,7 @@ html.Moss {
   --overlay: 51, 11%, 35%, 0.2;
 }
 
-html.Slate {
+html.slate {
   --background: 214, 30%, 12%, 1;
   --primary: 50, 4%, 96%, 1;
   --secondary: 50, 4%, 70%, 1;
@@ -125,7 +125,7 @@ html.Slate {
   --overlay: 51, 11%, 35%, 0.2;
 }
 
-html.HotPink {
+html.hotPink {
   --background: 309, 87%, 36%, 1;
   --primary: 50, 4%, 96%, 1;
   --secondary: 50, 4%, 80%, 1;

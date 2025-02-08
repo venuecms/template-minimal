@@ -1,15 +1,25 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
+  "title": "Config",
   "properties": {
-    "theme": {
+    "themeId": {
       "type": "string",
-      "enum": ["larry", "darkGold", "default", "space"],
-      "default": "default"
+      "enum": ["default", "larry", "darkGold", "space"],
+      "default": "default",
+      "title": "Theme"
     },
-    "font": {
+    "fontName": {
       "type": "string",
       "enum": ["jost", "IBMPlexMono", "Young_Serif", "Gothic_A1"],
-      "default": "jost"
+      "default": "jost",
+      "title": "Font"
+    },
+    "showSearch": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allows users to search your website",
+      "title": "Enable Search"
     }
   }
 }

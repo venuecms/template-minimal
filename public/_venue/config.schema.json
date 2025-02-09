@@ -4,13 +4,42 @@
   "properties": {
     "themeId": {
       "type": "string",
-      "enum": ["default", "larry", "darkGold", "space"],
+      "enum": [
+        "default",
+        "space",
+        "larry",
+        "darkGold",
+        "hojden",
+        "ahmed",
+        "frim",
+        "kvast",
+        "bronze",
+        "queen",
+        "moss",
+        "slate",
+        "hotPink",
+        "helloDarkness",
+        "goldenCircle1",
+        "goldenCircle2",
+        "newLand"
+      ],
       "default": "default",
       "title": "Theme"
     },
     "fontName": {
       "type": "string",
-      "enum": ["jost", "IBMPlexMono", "Young_Serif", "Gothic_A1"],
+      "enum": [
+        "default",
+        "custom",
+        "abel",
+        "outfit",
+        "Schibsted_Grotesk",
+        "Hanken_Grotesk",
+        "Young_Serif",
+        "Gothic_A1",
+        "jost",
+        "IBM_Plex_Mono"
+      ],
       "default": "jost",
       "title": "Font"
     },
@@ -19,6 +48,12 @@
       "default": false,
       "description": "Allows users to search your website",
       "title": "Enable Search"
+    },
+    "showLogin": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allows users to login to your website",
+      "title": "Enable Login"
     }
   }
 }

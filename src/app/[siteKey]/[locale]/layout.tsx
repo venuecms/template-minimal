@@ -3,7 +3,16 @@ import { getSite, setConfig } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-import { Gothic_A1, IBM_Plex_Mono, Jost, Young_Serif, Hanken_Grotesk, Outfit, Schibsted_Grotesk, Abel } from "next/font/google";
+import {
+  Abel,
+  Gothic_A1,
+  Hanken_Grotesk,
+  IBM_Plex_Mono,
+  Jost,
+  Outfit,
+  Schibsted_Grotesk,
+  Young_Serif,
+} from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { routing } from "@/lib/i18n";
@@ -90,7 +99,12 @@ const RootLayout = async ({
   }
 
   const { data: site } = await getSite();
-  const templateSettings = site?.settings?.publicSite?.template?.config ?? {};
+  if (!site) {
+    notFound();
+  }
+
+  const templateSettings = (site?.settings?.publicSite?.template?.config ??
+    {}) as { themeId: string; fontName: string }; // These ar defined by users so the type is unkown so we define the type here
 
   const { themeId = "default", fontName = "default" } = templateSettings;
   setRequestLocale(locale);
@@ -107,6 +121,20 @@ const RootLayout = async ({
           href={`/${locale}/rss.xml`}
           title="Events"
         />
+        {fontName === "custom" && (
+          <style>
+            {`
+              @font-face {
+                font-family: 'custom';
+                src: url('sites/${site.id}/fonts/custom.woff2') format('woff2'),
+                url('sites/${site.id}/fonts/custom.woff2') format('woff');
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+            `}
+          </style>
+        )}
       </head>
 
       <body

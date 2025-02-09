@@ -79,6 +79,7 @@ const ThemeFonts = {
   jost: jost.style,
   IBM_Plex_Mono: IBMPlexMono.style,
   default: SchibstedGrotesk.style,
+  custom: { fontFamily: "custom" },
 };
 
 const RootLayout = async ({
@@ -126,12 +127,12 @@ const RootLayout = async ({
             {`
               @font-face {
                 font-family: 'custom';
-                src: url('sites/${site.id}/fonts/custom.woff2') format('woff2'),
-                url('sites/${site.id}/fonts/custom.woff2') format('woff');
+                src: url('/media/sites/${site.id}/fonts/custom.woff2') format('woff2');
                 font-weight: normal;
                 font-style: normal;
                 font-display: swap;
             }
+              .
             `}
           </style>
         )}

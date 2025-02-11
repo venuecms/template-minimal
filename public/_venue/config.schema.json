@@ -54,6 +54,12 @@
       "default": false,
       "description": "Allows users to login to your website",
       "title": "Enable Login"
+    },
+    "showHeroImage": {
+      "type": "boolean",
+      "default": false,
+      "description": "Shows your hero image on the home page",
+      "title": "Show Hero Image"
     }
   }
 }

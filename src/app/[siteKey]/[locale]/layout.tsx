@@ -12,6 +12,8 @@ import {
   Outfit,
   Schibsted_Grotesk,
   Young_Serif,
+  EB_Garamond,
+  Karla,
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
@@ -23,11 +25,24 @@ import "../../globals.css";
 
 export const runtime = "edge";
 
+const karla = Karla({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "800"],
+  display: "swap",
+});
+
 const abel = Abel({
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
 });
+
 const outfit = Outfit({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -70,6 +85,8 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 const ThemeFonts = {
+  karla: karla.style,
+  EB_Garamond: ebGaramond.style,
   abel: abel.style,
   outfit: outfit.style,
   Schibsted_Grotesk: SchibstedGrotesk.style,

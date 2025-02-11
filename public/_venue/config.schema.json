@@ -38,7 +38,9 @@
         "Young_Serif",
         "Gothic_A1",
         "jost",
-        "IBM_Plex_Mono"
+        "IBM_Plex_Mono",
+        "EP_Garamond",
+        "Karla"
       ],
       "default": "jost",
       "title": "Font"

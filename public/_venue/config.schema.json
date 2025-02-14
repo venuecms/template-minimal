@@ -38,7 +38,9 @@
         "Young_Serif",
         "Gothic_A1",
         "jost",
-        "IBM_Plex_Mono"
+        "IBM_Plex_Mono",
+        "EP_Garamond",
+        "Karla"
       ],
       "default": "jost",
       "title": "Font"
@@ -54,6 +56,12 @@
       "default": false,
       "description": "Allows users to login to your website",
       "title": "Enable Login"
+    },
+    "showHeroImage": {
+      "type": "boolean",
+      "default": false,
+      "description": "Shows your hero image on the home page",
+      "title": "Show Hero Image"
     }
   }
 }

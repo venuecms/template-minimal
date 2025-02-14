@@ -1,3 +1,4 @@
+import { VenueImage } from "@/components";
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
 import { LocalizedContent, getEvents, getSite, setConfig } from "@venuecms/sdk";
@@ -50,8 +51,21 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
     notFound();
   }
 
+  // NOTE: This is in transition from this legacy object. All config will soon be attached to the webSite settings object instead
+  const showHeroImage =
+    site.settings?.publicSite?.template?.config?.showHeroImage;
+  const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
+
   return (
     <>
+      {showHeroImage ? (
+        <div className="w-vw absolute left-0 top-0 -z-30 h-svh w-screen bg-red-300">
+          <VenueImage aspect="video" image={webSiteSettings?.image} />
+          <div className="absolute left-0 top-0 h-full w-full bg-[#F0EFEB] bg-cover bg-center bg-no-repeat opacity-90">
+            <div className="absolute inset-0 bg-[#1F1C1F]"></div>
+          </div>
+        </div>
+      ) : null}
       {featuredEvents?.records.length ? (
         <div className="flex flex-col pb-16">
           {featuredEvents?.records.map((event) => (

@@ -54,15 +54,16 @@ export default async function middleware(request: NextRequest) {
   // check the subdomain which we'll use as a the sitekey
   const subdomain = host.split(".")[0];
 
-  // check if a custom domain exists
-  const { data: siteData } = await getSiteKeyByDomain({ domain: host });
-  const domainSiteKey = siteData?.siteKey;
+  // check if a custom domain exists (don't bother checking if it's hosted on venuecms.com)
+  const domainSiteKey = /.*venuecms\.com.*/i.test(host)
+    ? undefined
+    : await getSiteKeyByDomain({ domain: host });
 
-  // Use the sample site by default so we can render without a siteKey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
-  const siteKey = domainSiteKey
-    ? domainSiteKey
+  const siteKey = domainSiteKey?.data
+    ? domainSiteKey.data.siteKey
     : subdomain === "localhost" || subdomain === "venuecms"
-      ? "sample"
+      ? // Use the sample site by default so we can render without a siteKey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
+        "sample"
       : subdomain;
 
   // rewrite with the sitekey as part of the path for caching and to give access to all sub pages

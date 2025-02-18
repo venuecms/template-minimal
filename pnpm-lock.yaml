@@ -15,8 +15,8 @@ importers:
         specifier: ^1.1.4
         version: 1.1.4(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
       '@venuecms/sdk':
-        specifier: ^0.0.20
-        version: 0.0.20
+        specifier: ^0.0.21
+        version: 0.0.21
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -561,8 +561,8 @@ packages:
   '@types/rss@0.0.32':
     resolution: {integrity: sha512-2oKNqKyUY4RSdvl5eZR1n2Q9yvw3XTe3mQHsFPn9alaNBxfPnbXBtGP8R0SV8pK1PrVnLul0zx7izbm5/gF5Qw==}
 
-  '@venuecms/sdk@0.0.20':
-    resolution: {integrity: sha512-hXUmCJNwr4jqL9bef7xXYMp0siIsr2HKskhPVT6wnx417X4XWZedzd2YplnY6aupGUgWe+KTSMtW1zfThVFlUg==}
+  '@venuecms/sdk@0.0.21':
+    resolution: {integrity: sha512-XWiJRffmgg6349lIC6BHmv7H7jhuRgmUevHuMi4244wznZMRBgVOrjQg8up1pCoB1wsRc6MTk0vQuun+Ymp8FA==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1722,7 +1722,7 @@ snapshots:
 
   '@types/rss@0.0.32': {}
 
-  '@venuecms/sdk@0.0.20':
+  '@venuecms/sdk@0.0.21':
     dependencies:
       '@hey-api/client-fetch': 0.5.7
       zod: 3.24.1

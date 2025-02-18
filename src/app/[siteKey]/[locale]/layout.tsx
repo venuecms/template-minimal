@@ -5,15 +5,15 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import {
   Abel,
+  EB_Garamond,
   Gothic_A1,
   Hanken_Grotesk,
   IBM_Plex_Mono,
   Jost,
+  Karla,
   Outfit,
   Schibsted_Grotesk,
   Young_Serif,
-  EB_Garamond,
-  Karla,
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
@@ -133,12 +133,21 @@ const RootLayout = async ({
     <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {fontName === "custom" && (
+          <link
+            rel="alternate"
+            type="application/rss+xml"
+            href={`/${locale}/rss.xml`}
+            title="Events"
+          />
+        )}
         <link
-          rel="alternate"
-          type="application/rss+xml"
-          href={`/${locale}/rss.xml`}
-          title="Events"
+          rel="preload"
+          href={`/media/sites/${site.id}/fonts/custom.woff2`}
+          as="font"
+          type="font/woff2"
         />
+
         {fontName === "custom" && (
           <style>
             {`

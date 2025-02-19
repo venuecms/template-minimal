@@ -84,7 +84,6 @@ const ListProduct = ({
   const locale = useLocale();
 
   const { content } = getLocalizedContent(product?.localizedContent, locale);
-  const { variants = [] } = product;
 
   return (
     <div
@@ -105,27 +104,6 @@ const ListProduct = ({
         <div className="text-primary">
           <Link href={`/shop/${product.slug}`}>{content.title}</Link>
         </div>
-
-        {featured && variants.length > 0 ? (
-          <div className="flex items-center gap-4 pt-2">
-            {variants.map((variant) => (
-              <div className="flex items-center gap-4 pt-2">
-                <div key={variant.productType?.type} className="text-secondary">
-                  {variant.productType?.type}
-                </div>
-                {variant.price > 0 ? (
-                  <div
-                    key={variant.productType?.type + "price"}
-                    className="border border-muted px-2 py-1 text-muted"
-                  >
-                    {variant.price}{" "}
-                    {variant.currency || site.settings?.defaults?.currency}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        ) : null}
       </div>
     </div>
   );

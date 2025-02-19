@@ -64,10 +64,11 @@ export const Product = ({
                           >
                             {variant.price}{" "}
                             {variant.currency ||
-                              site.settings?.defaults?.currency}
+                              site.settings?.defaults?.currency ||
+                              ""}
                           </a>
                         ) : (
-                          `${variant.price} ${variant.currency || site.settings?.defaults?.currency}`
+                          `${variant.price} ${variant.currency || site.settings?.defaults?.currency || ""}`
                         )}
                       </div>
                     ) : null}

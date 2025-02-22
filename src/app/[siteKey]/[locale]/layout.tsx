@@ -1,7 +1,7 @@
 import { Params } from "@/types";
 import { getSite } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import {
   Abel,
@@ -113,6 +113,8 @@ const RootLayout = async ({
     notFound();
   }
 
+  const t = await getTranslations("events");
+
   const templateSettings = (site?.settings?.publicSite?.template?.config ??
     {}) as { themeId: string; fontName: string }; // These ar defined by users so the type is unkown so we define the type here
 
@@ -128,7 +130,7 @@ const RootLayout = async ({
             rel="alternate"
             type="application/rss+xml"
             href={`/${locale}/rss.xml`}
-            title="Events"
+            title={t("events")}
           />
         )}
         <link

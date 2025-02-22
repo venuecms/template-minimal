@@ -2,6 +2,7 @@ import { VenueImage } from "@/components";
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
 import { LocalizedContent, getEvents, getSite } from "@venuecms/sdk";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { Link } from "@/lib/i18n";
@@ -38,6 +39,7 @@ export const generateMetadata = async ({
 
 const Home = async ({ params }: { params: Promise<Params> }) => {
   await setupSSR({ params });
+  const t = await getTranslations("events");
 
   const [{ data: site }, { data: events }, { data: featuredEvents }] =
     await Promise.all([
@@ -78,7 +80,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         </div>
       ) : null}
 
-      <p className="text-secondary sm:hidden">Upcoming events</p>
+      <p className="text-secondary sm:hidden">{t("upcoming_events")}</p>
       <TwoColumnLayout>
         <ColumnLeft className="hidden text-sm text-secondary sm:flex">
           {site.description ? (
@@ -103,7 +105,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
                   className="flex w-full sm:relative sm:flex-row"
                   href="/events"
                 >
-                  → see all upcoming events
+                  → {t("see_all_upcoming_events")}
                 </Link>
               </div>
             </section>

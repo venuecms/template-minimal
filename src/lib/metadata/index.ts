@@ -5,11 +5,10 @@ import {
   type Site,
   getLocalizedContent,
   getSite,
-  setConfig,
 } from "@venuecms/sdk";
 import removeMarkdown from "remove-markdown";
 
-import { getPublicImage } from "@/components/utils";
+import { getPublicImage, setupSSR } from "@/components/utils";
 
 type LocalizedItem = {
   image?: MediaItem;
@@ -105,8 +104,8 @@ export const getGenerateMetadata =
   (getItem: (params: { slug: string }) => Promise<{ data: any }>) =>
   async ({ params }: { params: Promise<Params & { slug: string }> }) => {
     try {
-      const { siteKey, slug, locale } = await params;
-      setConfig({ siteKey });
+      const { slug, locale } = await params;
+      await setupSSR({ params });
 
       const [{ data: site }, { data: item }] = await Promise.all([
         getSite(),

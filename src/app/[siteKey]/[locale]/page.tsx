@@ -1,7 +1,7 @@
 import { VenueImage } from "@/components";
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
-import { LocalizedContent, getEvents, getSite, setConfig } from "@venuecms/sdk";
+import { LocalizedContent, getEvents, getSite } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 import { Link } from "@/lib/i18n";
@@ -10,15 +10,15 @@ import { VenueContent } from "@/lib/utils/renderer";
 import { EventFeatured } from "@/components/EventFeatured";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
-import { renderedStyles } from "@/components/utils";
+import { renderedStyles, setupSSR } from "@/components/utils";
 
 export const generateMetadata = async ({
   params,
 }: {
   params: Promise<Params>;
 }) => {
-  const { siteKey, locale } = await params;
-  setConfig({ siteKey });
+  const { locale } = await params;
+  await setupSSR({ params });
 
   const { data: site } = await getSite();
   if (!site) {
@@ -37,8 +37,7 @@ export const generateMetadata = async ({
 };
 
 const Home = async ({ params }: { params: Promise<Params> }) => {
-  const { siteKey } = await params;
-  setConfig({ siteKey });
+  await setupSSR({ params });
 
   const [{ data: site }, { data: events }, { data: featuredEvents }] =
     await Promise.all([

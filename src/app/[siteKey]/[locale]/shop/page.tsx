@@ -7,7 +7,6 @@ import {
   getPage,
   getProducts,
   getSite,
-  setConfig,
 } from "@venuecms/sdk";
 import { useLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -16,14 +15,15 @@ import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 import { VenueImage } from "@/components/VenueImage";
+import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(() =>
   getPage({ slug: "shop" }),
 );
 
 const ProductsPage = async ({ params }: { params: Promise<Params> }) => {
-  const { siteKey, locale } = await params;
-  setConfig({ siteKey });
+  const { locale } = await params;
+  await setupSSR({ params });
 
   const [{ data: products }, { data: page }, { data: site }] =
     await Promise.all([

@@ -29,7 +29,9 @@
     "menu": "Menu"
   },
   "events": {
-    "buy_ticket": "BUY TICKET"
+    "buy_ticket": "BUY TICKET",
+    "upcoming_events": "Upcoming Events",
+    "past_events": "Past Events"
   },
   "main": {
     "explore_archive": "Explore the Archive",

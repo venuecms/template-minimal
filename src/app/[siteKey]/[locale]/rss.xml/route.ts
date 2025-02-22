@@ -1,26 +1,17 @@
 import { Params } from "@/types";
-import {
-  getEvents,
-  getLocalizedContent,
-  getSite,
-  setConfig,
-} from "@venuecms/sdk";
+import { getEvents, getLocalizedContent, getSite } from "@venuecms/sdk";
 import { NextRequest } from "next/server";
 import removeMarkdown from "remove-markdown";
 import RSS from "rss";
 
-import { formatDateRange, getPublicImage } from "@/components/utils";
+import { formatDateRange, getPublicImage, setupSSR } from "@/components/utils";
 
 export const GET = async (
   req: NextRequest,
   { params }: { params: Promise<Params> },
 ) => {
-  const { siteKey, locale } = await params;
-
-  setConfig({
-    siteKey,
-    options: { next: { revalidate: 60 } },
-  });
+  const { locale } = await params;
+  await setupSSR({ params });
 
   const [{ data: events }, { data: site }] = await Promise.all([
     getEvents({

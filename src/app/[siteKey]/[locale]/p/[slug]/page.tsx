@@ -1,10 +1,12 @@
 import { Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getPage, getPages, setConfig } from "@venuecms/sdk";
+import { getPage, getPages } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 import { PageWithParent } from "@/lib/utils/tree";
+
+import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(getPage);
 
@@ -13,8 +15,8 @@ const PagePage = async ({
 }: {
   params: Promise<{ slug: string } & Params>;
 }) => {
-  const { slug, siteKey } = await params;
-  setConfig({ siteKey });
+  const { slug } = await params;
+  await setupSSR({ params });
 
   const { data: page } = await getPage({ slug });
   const { data: pages } = await getPages();

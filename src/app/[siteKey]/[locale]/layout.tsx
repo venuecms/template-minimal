@@ -1,7 +1,7 @@
 import { Params } from "@/types";
-import { getSite, setConfig } from "@venuecms/sdk";
+import { getSite } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import {
   Abel,
@@ -17,9 +17,8 @@ import {
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { routing } from "@/lib/i18n";
-
 import { SiteHeader } from "@/components/SiteHeader";
+import { setupSSR } from "@/components/utils";
 
 import "../../globals.css";
 
@@ -106,15 +105,8 @@ const RootLayout = async ({
   children: React.ReactNode;
   params: Promise<Params>;
 }>) => {
-  const { locale, siteKey } = await params;
-  setConfig({
-    siteKey,
-    options: { next: { revalidate: 60 } },
-  });
-
-  if (!routing.locales.includes(locale as any)) {
-    notFound();
-  }
+  const { locale } = await params;
+  await setupSSR({ params });
 
   const { data: site } = await getSite();
   if (!site) {
@@ -125,10 +117,8 @@ const RootLayout = async ({
     {}) as { themeId: string; fontName: string }; // These ar defined by users so the type is unkown so we define the type here
 
   const { themeId = "default", fontName = "default" } = templateSettings;
-  setRequestLocale(locale);
 
   const messages = await getMessages();
-
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
@@ -170,7 +160,7 @@ const RootLayout = async ({
           ThemeFonts[fontName as keyof typeof ThemeFonts] ?? ThemeFonts.default
         }
       >
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" forcedTheme={themeId}>
             <SiteHeader />
             {children}

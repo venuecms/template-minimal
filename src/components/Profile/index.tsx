@@ -2,7 +2,7 @@ import {
   type Profile as VenueProfile,
   getLocalizedContent,
 } from "@venuecms/sdk";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Suspense } from "react";
 
 import { VenueContent } from "@/lib/utils/renderer";
@@ -14,6 +14,7 @@ import { ProfileEventList, ProfileEventListSkeleton } from "./ProfileEventList";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {
   const locale = useLocale();
+  const t = useTranslations("events");
 
   const { content } = getLocalizedContent(profile?.localizedContent, locale);
 
@@ -36,14 +37,14 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
         />
         <Suspense fallback={<ProfileEventListSkeleton numElements={1} />}>
           <ProfileEventList
-            header="Upcoming Events"
+            header={t("upcoming_events")}
             slug={profile.slug}
             filter={{ upcoming: true }}
           />
         </Suspense>
         <Suspense fallback={null}>
           <ProfileEventList
-            header="Past Events"
+            header={t("past_events")}
             slug={profile.slug}
             filter={{ lt: Date.now() }}
           />

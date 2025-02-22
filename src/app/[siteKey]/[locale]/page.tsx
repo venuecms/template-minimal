@@ -99,15 +99,17 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
                   <ListEvent key={event.id} event={event} site={site} />
                 ))}
               </EventsList>
-              <div className="w-full grid-cols-2 sm:grid">
-                <span></span>
-                <Link
-                  className="flex w-full sm:relative sm:flex-row"
-                  href="/events"
-                >
-                  → {t("see_all_upcoming_events")}
-                </Link>
-              </div>
+              {events.records.length >= 6 ? (
+                <div className="w-full grid-cols-2 sm:grid">
+                  <span></span>
+                  <Link
+                    className="flex w-full sm:relative sm:flex-row"
+                    href="/events"
+                  >
+                    → {t("see_all_upcoming_events")}
+                  </Link>
+                </div>
+              ) : null}
             </section>
           ) : null}
           {site.description ? (

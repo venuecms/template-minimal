@@ -1,3 +1,4 @@
+import type { MediaItem } from "@venuecms/sdk";
 import Image, { ImageProps, StaticImageData } from "next/image";
 
 const defaultBlur =
@@ -5,25 +6,28 @@ const defaultBlur =
 
 export const ResponsiveImage = async ({
   src,
+  image = {},
   fallback,
-  metadata,
   ...props
 }: {
-  src: string;
+  src?: string;
+  image?: Partial<MediaItem>;
   fallback?: StaticImageData;
-  metadata?: any;
 } & Partial<ImageProps>) => {
+  const { altText } = image;
+  const metadata: { focus?: { x: number; y: number } } = image?.metadata ?? {};
+
   const remoteImageProps = src
     ? {
-        img: {
-          src,
-        },
-        base64: defaultBlur,
-      }
+      img: {
+        src,
+      },
+      base64: defaultBlur,
+    }
     : {
-        img: { src: fallback?.src || defaultBlur },
-        base64: defaultBlur,
-      };
+      img: { src: fallback?.src || defaultBlur },
+      base64: defaultBlur,
+    };
 
   // Handle image focusing
   const center = { x: 0.5, y: 0.5 };
@@ -49,7 +53,7 @@ export const ResponsiveImage = async ({
 
   return (
     <Image
-      alt={""}
+      alt={(altText as string) ?? "image"}
       src={remoteImageProps.img.src}
       fill={true}
       placeholder="blur"

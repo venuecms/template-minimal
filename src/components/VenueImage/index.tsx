@@ -30,7 +30,7 @@ export const VenueImage = ({
       const { width, height } = metadata ?? {};
 
       return (
-        <div className="flex flex-col gap-1">
+        <CreditWrapper credit={credit}>
           {aspect ? (
             <ImageWrapper aspect={aspect}>
               <ResponsiveImage
@@ -49,12 +49,7 @@ export const VenueImage = ({
               {...props}
             />
           )}
-          {credit ? (
-            <div className="text-end text-xs text-muted opacity-60">
-              {credit}
-            </div>
-          ) : null}
-        </div>
+        </CreditWrapper>
       );
     }
   }
@@ -69,6 +64,22 @@ export const VenueImage = ({
 
   return null; // TODO: return a placeholder
 };
+
+const CreditWrapper = ({
+  children,
+  credit,
+}: {
+  children?: React.ReactNode;
+  credit?: string | null;
+}) =>
+  credit ? (
+    <div className="flex flex-col gap-1">
+      {children}
+      <div className="text-end text-xs text-muted opacity-60">{credit}</div>
+    </div>
+  ) : (
+    children
+  );
 
 // wrapper to contain the ResponsiveImage
 const ImageWrapper = ({

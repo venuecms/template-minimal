@@ -1,29 +1,78 @@
 import { Params } from "@/types";
-import { getSite, setConfig } from "@venuecms/sdk";
+import { getSite } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import {
   Abel,
+  EB_Garamond,
   Gothic_A1,
   Hanken_Grotesk,
   IBM_Plex_Mono,
   Jost,
+  Karla,
   Outfit,
   Schibsted_Grotesk,
   Young_Serif,
-  EB_Garamond,
-  Karla,
+  Courier_Prime,
+  Kosugi_Maru,
+  Special_Elite,
+  Inter,
+  Atkinson_Hyperlegible_Next,
+  Oswald,
+  Work_Sans,
+
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { routing } from "@/lib/i18n";
-
 import { SiteHeader } from "@/components/SiteHeader";
+import { setupSSR } from "@/components/utils";
 
 import "../../globals.css";
 
 export const runtime = "edge";
+
+const WorkSans = Work_Sans({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const AtkinsonHyperlegibleNext = Atkinson_Hyperlegible_Next({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const courierPrime = Courier_Prime({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const KosugiMaru = Kosugi_Maru({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const SpecialElite = Special_Elite({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
 
 const karla = Karla({
   subsets: ["latin"],
@@ -85,7 +134,14 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 const ThemeFonts = {
-  karla: karla.style,
+  Work_Sans: WorkSans.style,
+  oswald: oswald.style,
+  Atkinson_Hyperlegible_Next: AtkinsonHyperlegibleNext.style,
+  Courier: courierPrime.style,
+  Kosugi_Maru: KosugiMaru.style,
+  Special_Elite: SpecialElite.style,
+  Inter: inter.style,
+  Karla: karla.style,
   EB_Garamond: ebGaramond.style,
   abel: abel.style,
   outfit: outfit.style,
@@ -106,39 +162,41 @@ const RootLayout = async ({
   children: React.ReactNode;
   params: Promise<Params>;
 }>) => {
-  const { locale, siteKey } = await params;
-  setConfig({
-    siteKey,
-    options: { next: { revalidate: 60 } },
-  });
-
-  if (!routing.locales.includes(locale as any)) {
-    notFound();
-  }
+  const { locale } = await params;
+  await setupSSR({ params });
 
   const { data: site } = await getSite();
   if (!site) {
     notFound();
   }
 
+  const t = await getTranslations("events");
+
   const templateSettings = (site?.settings?.publicSite?.template?.config ??
     {}) as { themeId: string; fontName: string }; // These ar defined by users so the type is unkown so we define the type here
 
   const { themeId = "default", fontName = "default" } = templateSettings;
-  setRequestLocale(locale);
 
   const messages = await getMessages();
-
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {fontName === "custom" && (
+          <link
+            rel="alternate"
+            type="application/rss+xml"
+            href={`/${locale}/rss.xml`}
+            title={t("events")}
+          />
+        )}
         <link
-          rel="alternate"
-          type="application/rss+xml"
-          href={`/${locale}/rss.xml`}
-          title="Events"
+          rel="preload"
+          href={`/media/sites/${site.id}/fonts/custom.woff2`}
+          as="font"
+          type="font/woff2"
         />
+
         {fontName === "custom" && (
           <style>
             {`
@@ -161,7 +219,7 @@ const RootLayout = async ({
           ThemeFonts[fontName as keyof typeof ThemeFonts] ?? ThemeFonts.default
         }
       >
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" forcedTheme={themeId}>
             <SiteHeader />
             {children}

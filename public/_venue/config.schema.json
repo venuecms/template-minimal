@@ -21,7 +21,11 @@
         "helloDarkness",
         "goldenCircle1",
         "goldenCircle2",
-        "newLand"
+        "newLand",
+        "hundredK",
+        "silverGrey1",
+        "silverGrey2",
+        "darkGrey1"
       ],
       "default": "default",
       "title": "Theme"
@@ -40,7 +44,14 @@
         "jost",
         "IBM_Plex_Mono",
         "EP_Garamond",
-        "Karla"
+        "Karla",
+        "Courier",
+        "Kosugi_Maru",
+        "Special_Elite",
+        "Inter",
+        "Atkinson_Hyperlegible_Next",
+        "Oswald",
+        "Work_Sans"
       ],
       "default": "jost",
       "title": "Font"

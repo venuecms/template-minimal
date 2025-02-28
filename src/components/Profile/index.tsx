@@ -39,14 +39,14 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           <ProfileEventList
             header={t("upcoming_events")}
             slug={profile.slug}
-            filter={{ upcoming: true }}
+            filter={{ upcoming: true, dir: "asc" }}
           />
         </Suspense>
         <Suspense fallback={null}>
           <ProfileEventList
             header={t("past_events")}
             slug={profile.slug}
-            filter={{ lt: Date.now() }}
+            filter={{ lt: Date.now(), dir: "desc" }}
           />
         </Suspense>
       </ColumnRight>

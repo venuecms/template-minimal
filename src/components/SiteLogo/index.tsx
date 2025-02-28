@@ -17,7 +17,7 @@ export const SiteLogo = ({
   const headerImage = image ? (
     <VenueImage
       image={image}
-      className="h-4 w-auto sm:h-auto sm:max-h-12 sm:w-auto sm:max-w-[32rem]"
+      className="h-auto w-auto min-w-8 sm:h-auto sm:max-h-12 sm:w-auto sm:max-w-[32rem]"
     />
   ) : null;
 

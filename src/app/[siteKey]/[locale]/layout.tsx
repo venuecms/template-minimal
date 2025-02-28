@@ -21,7 +21,6 @@ import {
   Atkinson_Hyperlegible_Next,
   Oswald,
   Work_Sans,
-
 } from "next/font/google";
 import { notFound } from "next/navigation";
 

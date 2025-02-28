@@ -5,20 +5,20 @@ import {
   getLocalizedContent,
   getPage,
   getSite,
-  setConfig,
 } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
+import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(() =>
   getPage({ slug: "events" }),
 );
 
 const EventsPage = async ({ params }: { params: Promise<Params> }) => {
-  const { siteKey, locale } = await params;
-  setConfig({ siteKey });
+  const { locale } = await params;
+  await setupSSR({ params });
 
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
     getEvents({ limit: 60, upcoming: true }),

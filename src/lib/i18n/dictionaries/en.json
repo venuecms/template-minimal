@@ -1,38 +1,12 @@
 {
-  "footer": {
-    "general_information": "General Information",
-    "open_in_maps": "open in maps",
-    "booking_policy": "Booking Policy",
-    "privacy_policy": "Privacy Policy",
-    "accessibility": "Accessibility",
-    "technical_info": "Technical info",
-    "history": "History",
-    "about": "About",
-    "membership": "Membership",
-    "program": "Program"
-  },
   "menu": {
-    "home": "Homepage",
-    "events": "Events",
-    "members": "Members",
-    "shop": "Records, Books, etc.",
-    "explore_archive": "Explore the Archive",
-    "support_us": "Support Us",
-
-    "technical_info": "Technical Info",
-    "accessibility": "Accessibility",
-    "booking_policy": "Booking Policy",
-    "privacy_policy": "Privacy Policy",
-    "becoming_member": "Becoming a Member",
-
     "search": "Search",
     "menu": "Menu"
   },
   "events": {
-    "buy_ticket": "BUY TICKET"
-  },
-  "main": {
-    "explore_archive": "Explore the Archive",
+    "upcoming_events": "Upcoming Events",
+    "past_events": "Past Events",
+    "see_all_upcoming_events": "see all upcoming events",
     "events": "Events"
   }
 }

@@ -42,11 +42,11 @@ export const Product = ({
               <div>{content.title}</div>
             </div>
             {variants.length > 0 ? (
-              <div className="flex items-center gap-4 pt-2">
+              <div className="flex flex-col gap-4 pt-2">
                 {variants.map((variant) => (
                   <div
                     key={variant.productType?.type}
-                    className="flex items-center gap-4"
+                    className="flex items-center gap-8"
                   >
                     <div className="text-muted">
                       {variant.productType?.type}
@@ -54,7 +54,7 @@ export const Product = ({
                     {variant.price > 0 ? (
                       <div
                         key={variant.productType?.type + "price"}
-                        className="border border-secondary px-2 py-1 text-secondary"
+                        className="border border-muted px-2 py-1 text-secondary"
                       >
                         {variant.externalLink ? (
                           <a
@@ -64,10 +64,11 @@ export const Product = ({
                           >
                             {variant.price}{" "}
                             {variant.currency ||
-                              site.settings?.defaults?.currency}
+                              site.settings?.defaults?.currency ||
+                              ""}
                           </a>
                         ) : (
-                          `${variant.price} ${variant.currency || site.settings?.defaults?.currency}`
+                          `${variant.price} ${variant.currency || site.settings?.defaults?.currency || ""}`
                         )}
                       </div>
                     ) : null}

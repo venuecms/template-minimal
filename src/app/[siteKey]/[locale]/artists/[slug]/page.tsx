@@ -1,8 +1,10 @@
 import { Profile } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getProfile, setConfig } from "@venuecms/sdk";
+import { getProfile } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
+
+import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(getProfile);
 
@@ -11,8 +13,8 @@ const ArtistPage = async ({
 }: {
   params: Promise<{ slug: string } & Params>;
 }) => {
-  const { slug, siteKey } = await params;
-  setConfig({ siteKey });
+  const { slug } = await params;
+  await setupSSR({ params });
 
   const { data: profile } = await getProfile({ slug });
 

@@ -1,3 +1,4 @@
+import { getSiteKeyByDomain } from "@venuecms/sdk";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -53,14 +54,17 @@ export default async function middleware(request: NextRequest) {
   // check the subdomain which we'll use as a the sitekey
   const subdomain = host.split(".")[0];
 
-  // Use the sample site by default so we can render without a siteKey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
-  // TODO: Here we will resolve custom hostnames. For now a test with a hardcoded hostname.
-  const siteKey =
-    host === "www.gototradeschool.org"
-      ? "tradeschool"
-      : subdomain === "localhost" || subdomain === "venuecms"
-        ? "sample"
-        : subdomain;
+  // check if a custom domain exists (don't bother checking if it's hosted on venuecms.com)
+  const domainSiteKey = /.*venuecms\.com.*/i.test(host)
+    ? undefined
+    : await getSiteKeyByDomain({ domain: host });
+
+  const siteKey = domainSiteKey?.data
+    ? domainSiteKey.data.siteKey
+    : subdomain === "localhost" || subdomain === "venuecms"
+      ? // Use the sample site by default so we can render without a siteKey (but also allow this to work even if you haven't edited this file and simply want to pass in an env var)
+        "sample"
+      : subdomain;
 
   // rewrite with the sitekey as part of the path for caching and to give access to all sub pages
   const localizedURL = new URL(request.url);

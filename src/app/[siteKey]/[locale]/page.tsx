@@ -1,6 +1,8 @@
+import { VenueImage } from "@/components";
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
-import { LocalizedContent, getEvents, getSite, setConfig } from "@venuecms/sdk";
+import { LocalizedContent, getEvents, getSite } from "@venuecms/sdk";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { Link } from "@/lib/i18n";
@@ -9,15 +11,15 @@ import { VenueContent } from "@/lib/utils/renderer";
 import { EventFeatured } from "@/components/EventFeatured";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
-import { renderedStyles } from "@/components/utils";
+import { renderedStyles, setupSSR } from "@/components/utils";
 
 export const generateMetadata = async ({
   params,
 }: {
   params: Promise<Params>;
 }) => {
-  const { siteKey, locale } = await params;
-  setConfig({ siteKey });
+  const { locale } = await params;
+  await setupSSR({ params });
 
   const { data: site } = await getSite();
   if (!site) {
@@ -36,8 +38,8 @@ export const generateMetadata = async ({
 };
 
 const Home = async ({ params }: { params: Promise<Params> }) => {
-  const { siteKey } = await params;
-  setConfig({ siteKey });
+  await setupSSR({ params });
+  const t = await getTranslations("events");
 
   const [{ data: site }, { data: events }, { data: featuredEvents }] =
     await Promise.all([
@@ -50,8 +52,21 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
     notFound();
   }
 
+  // NOTE: This is in transition from this legacy object. All config will soon be attached to the webSite settings object instead
+  const showHeroImage =
+    site.settings?.publicSite?.template?.config?.showHeroImage;
+  const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
+
   return (
     <>
+      {showHeroImage ? (
+        <div className="w-vw absolute left-0 top-0 -z-30 h-svh w-screen bg-red-300">
+          <VenueImage aspect="video" image={webSiteSettings?.image} />
+          <div className="absolute left-0 top-0 h-full w-full bg-[#F0EFEB] bg-cover bg-center bg-no-repeat opacity-90">
+            <div className="absolute inset-0 bg-[#1F1C1F]"></div>
+          </div>
+        </div>
+      ) : null}
       {featuredEvents?.records.length ? (
         <div className="flex flex-col pb-16">
           {featuredEvents?.records.map((event) => (
@@ -65,7 +80,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
         </div>
       ) : null}
 
-      <p className="text-secondary sm:hidden">Upcoming events</p>
+      <p className="text-secondary sm:hidden">{t("upcoming_events")}</p>
       <TwoColumnLayout>
         <ColumnLeft className="hidden text-sm text-secondary sm:flex">
           {site.description ? (
@@ -84,15 +99,17 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
                   <ListEvent key={event.id} event={event} site={site} />
                 ))}
               </EventsList>
-              <div className="w-full grid-cols-2 sm:grid">
-                <span></span>
-                <Link
-                  className="flex w-full sm:relative sm:flex-row"
-                  href="/events"
-                >
-                  → see all upcoming events
-                </Link>
-              </div>
+              {events.records.length >= 6 ? (
+                <div className="w-full grid-cols-2 sm:grid">
+                  <span></span>
+                  <Link
+                    className="flex w-full sm:relative sm:flex-row"
+                    href="/events"
+                  >
+                    → {t("see_all_upcoming_events")}
+                  </Link>
+                </div>
+              ) : null}
             </section>
           ) : null}
           {site.description ? (

@@ -18,7 +18,6 @@ import {
   Kosugi_Maru,
   Special_Elite,
   Inter,
-  Atkinson_Hyperlegible_Next,
   Oswald,
   Work_Sans,
 } from "next/font/google";
@@ -38,12 +37,6 @@ const WorkSans = Work_Sans({
 });
 
 const oswald = Oswald({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-});
-
-const AtkinsonHyperlegibleNext = Atkinson_Hyperlegible_Next({
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
@@ -135,7 +128,6 @@ const IBMPlexMono = IBM_Plex_Mono({
 const ThemeFonts = {
   Work_Sans: WorkSans.style,
   oswald: oswald.style,
-  Atkinson_Hyperlegible_Next: AtkinsonHyperlegibleNext.style,
   Courier: courierPrime.style,
   Kosugi_Maru: KosugiMaru.style,
   Special_Elite: SpecialElite.style,

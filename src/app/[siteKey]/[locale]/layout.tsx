@@ -14,6 +14,12 @@ import {
   Outfit,
   Schibsted_Grotesk,
   Young_Serif,
+  Courier_Prime,
+  Kosugi_Maru,
+  Special_Elite,
+  Inter,
+  Oswald,
+  Work_Sans,
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
@@ -23,6 +29,42 @@ import { setupSSR } from "@/components/utils";
 import "../../globals.css";
 
 export const runtime = "edge";
+
+const WorkSans = Work_Sans({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const courierPrime = Courier_Prime({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const KosugiMaru = Kosugi_Maru({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const SpecialElite = Special_Elite({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
 
 const karla = Karla({
   subsets: ["latin"],
@@ -84,7 +126,13 @@ const IBMPlexMono = IBM_Plex_Mono({
 });
 
 const ThemeFonts = {
-  karla: karla.style,
+  Work_Sans: WorkSans.style,
+  oswald: oswald.style,
+  Courier: courierPrime.style,
+  Kosugi_Maru: KosugiMaru.style,
+  Special_Elite: SpecialElite.style,
+  Inter: inter.style,
+  Karla: karla.style,
   EB_Garamond: ebGaramond.style,
   abel: abel.style,
   outfit: outfit.style,

@@ -12,7 +12,7 @@ export const ProfileEventList = async ({
   filter?: { upcoming?: boolean; lt?: number; dir?: "asc" | "desc" };
 }) => {
   const [{ data: events }, { data: site }] = await Promise.all([
-    getProfileEvents({ slug, ...filter }),
+    getProfileEvents({ slug, limit: 60, ...filter }),
     getSite(),
   ]);
 

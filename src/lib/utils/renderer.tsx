@@ -34,7 +34,10 @@ const marks = {
 } as const;
 
 const elMarks = {
-  link: (props: any): ReactNode => <a {...props} />,
+  link: (props: any): ReactNode => {
+    const { class: className, ...rest } = props;
+    return <a {...rest} className={className} />;
+  },
 } as const;
 
 const getDefaultHandlers = (classes: ElementClasses = {}) => {
@@ -157,14 +160,14 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
       const styles =
         typeof style === "string"
           ? style
-              ?.split(";")
-              .reduce((accum: Record<string, string>, style: string) => {
-                const [key, value] = style.split(":");
-                if (value !== undefined) {
-                  return { ...accum, [key]: value.trim() };
-                }
-                return accum;
-              }, {})
+            ?.split(";")
+            .reduce((accum: Record<string, string>, style: string) => {
+              const [key, value] = style.split(":");
+              if (value !== undefined) {
+                return { ...accum, [key]: value.trim() };
+              }
+              return accum;
+            }, {})
           : style;
 
       // TODO: We need iframely. A hack for now to check and iron out some common quirks
@@ -194,9 +197,9 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
 
             ...(isVimeo && !styles?.height
               ? {
-                  width: "100%",
-                  aspectRatio: (rest as any).width / (rest as any).height,
-                }
+                width: "100%",
+                aspectRatio: (rest as any).width / (rest as any).height,
+              }
               : {}),
           }}
           frameBorder={frameborder}

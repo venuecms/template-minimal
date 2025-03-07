@@ -73,6 +73,12 @@
       "default": false,
       "description": "Shows your hero image on the home page",
       "title": "Show Hero Image"
+    },
+    "noHeroOverlay": {
+      "type": "boolean",
+      "default": false,
+      "description": "Removes the opacity overlay",
+      "title": "Remove Hero Opacity Overlay"
     }
   }
 }

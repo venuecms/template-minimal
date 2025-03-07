@@ -55,6 +55,8 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   // NOTE: This is in transition from this legacy object. All config will soon be attached to the webSite settings object instead
   const showHeroImage =
     site.settings?.publicSite?.template?.config?.showHeroImage;
+  const noHeroOverlay =
+    site.settings?.publicSite?.template?.config?.noHeroOverlay;
   const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
 
   return (
@@ -62,9 +64,11 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       {showHeroImage ? (
         <div className="w-vw absolute left-0 top-0 -z-30 h-svh w-screen bg-red-300">
           <VenueImage aspect="video" image={webSiteSettings?.image} />
-          <div className="absolute left-0 top-0 h-full w-full bg-[#1F1C1F] bg-cover bg-center bg-no-repeat opacity-80">
-            <div className="absolute inset-0 bg-[#1F1C1F]"></div>
-          </div>
+          {noHeroOverlay ? null : (
+            <div className="absolute left-0 top-0 h-full w-full bg-[#1F1C1F] bg-cover bg-center bg-no-repeat opacity-80">
+              <div className="absolute inset-0 bg-[#1F1C1F]"></div>
+            </div>
+          )}
         </div>
       ) : null}
       {featuredEvents?.records.length ? (

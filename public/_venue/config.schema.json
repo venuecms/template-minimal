@@ -25,7 +25,8 @@
         "hundredK",
         "silverGrey1",
         "silverGrey2",
-        "darkGrey1"
+        "darkGrey1",
+        "eroPink"
       ],
       "default": "default",
       "title": "Theme"

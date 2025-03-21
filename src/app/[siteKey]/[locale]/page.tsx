@@ -83,8 +83,8 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
           ))}
         </div>
       ) : null}
-
-      <p className="text-secondary sm:hidden">{t("upcoming_events")}</p>
+ 
+     
       <TwoColumnLayout>
         <ColumnLeft className="hidden text-sm text-secondary sm:flex">
           {site.description ? (

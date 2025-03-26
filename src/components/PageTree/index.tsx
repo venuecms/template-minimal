@@ -19,6 +19,7 @@ type NodeFlatMetadata = INode<IFlatMetadata> & { id: string };
 export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
   const { slug } = useParams();
   const pageTree = buildTree(pages);
+  const { locale } = useParams();
 
   const currentPage = pages.find((page) => page.slug === slug);
   // find the top-most node in the tree and remove all others for this nav
@@ -60,7 +61,7 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
         }) => {
           // @ts-ignore - ignoring as the typing is partially handled in the underlying library
           const { localizedContent, slug } = element.metadata as Page;
-          const { content } = getLocalizedContent(localizedContent, "en");
+          const { content } = getLocalizedContent(localizedContent, locale);
 
           if (
             currentPage?.id === element.id &&

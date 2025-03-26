@@ -2,6 +2,7 @@
 
 import { Page, getLocalizedContent } from "@venuecms/sdk";
 import { ChevronRight } from "lucide-react";
+import { useLocale } from "next-intl";
 import { useParams } from "next/navigation";
 import TreeView, { INode, flattenTree } from "react-accessible-treeview";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
@@ -18,8 +19,8 @@ type NodeFlatMetadata = INode<IFlatMetadata> & { id: string };
 
 export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
   const { slug } = useParams();
+  const locale = useLocale();
   const pageTree = buildTree(pages);
-  const { locale } = useParams();
 
   const currentPage = pages.find((page) => page.slug === slug);
   // find the top-most node in the tree and remove all others for this nav
@@ -36,12 +37,12 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
 
   const ancestorsOfCurrentpage = currentPage
     ? [
-      ...getAncestors(
-        flatPageTree as Array<NodeFlatMetadata>,
+        ...getAncestors(
+          flatPageTree as Array<NodeFlatMetadata>,
+          currentPage.id,
+        ),
         currentPage.id,
-      ),
-      currentPage.id,
-    ]
+      ]
     : [];
 
   return (

@@ -26,7 +26,8 @@
         "silverGrey1",
         "silverGrey2",
         "darkGrey1",
-        "eroPink"
+        "eroPink",
+        "blackOnWhite"
       ],
       "default": "default",
       "title": "Theme"
@@ -44,7 +45,7 @@
         "Gothic_A1",
         "jost",
         "IBM_Plex_Mono",
-        "EP_Garamond",
+        "EB_Garamond",
         "Karla",
         "Courier",
         "Kosugi_Maru",

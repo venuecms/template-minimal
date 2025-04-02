@@ -2,16 +2,12 @@ import { InputHTMLAttributes, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface ControlledInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   initialValue?: string;
   onChange?: (value: string) => void;
 }
 
-export const Input = ({
-  initialValue,
-  onChange,
-  ...props
-}: ControlledInputProps) => {
+export const Input = ({ initialValue, onChange, ...props }: InputProps) => {
   const { className, ...rest } = props;
   const [value, setValue] = useState(initialValue || "");
 
@@ -28,7 +24,7 @@ export const Input = ({
       value={value}
       onChange={handleChange}
       className={cn(
-        "h-6 border border-muted bg-background p-1 text-primary outline-transparent",
+        "h-6 border border-muted bg-transparent p-1 text-primary outline-transparent",
         className,
       )}
       {...rest}

@@ -1,19 +1,23 @@
-"use client";
-
 import { SearchIcon, X } from "lucide-react";
-import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
 import { Input } from "../ui/Input";
 import { useSearch } from "./provider";
 
-export const SearchInput = ({ className }: { className?: string }) => {
-  const [searchActive, setSearchActive] = useState(false);
+export const SearchInput = ({
+  className,
+  active = false,
+  setActive,
+}: {
+  className?: string;
+  active: boolean;
+  setActive?: (setSearchActive: boolean) => void;
+}) => {
   const { query, setQuery } = useSearch();
 
   const reset = () => {
-    setSearchActive(false);
+    setActive?.(false);
   };
 
   return (
@@ -21,14 +25,14 @@ export const SearchInput = ({ className }: { className?: string }) => {
       className={cn(
         "flex h-6 justify-end",
         className,
-        searchActive && "absolute left-0 w-full gap-4",
+        active && "absolute left-0 w-full gap-4",
       )}
     >
-      <SearchIcon className="size-6" onClick={() => setSearchActive(true)} />
+      <SearchIcon className="size-6" onClick={() => setActive?.(true)} />
       <div
         className={cn(
           "grid grid-cols-[1fr,auto] items-center gap-8 overflow-hidden transition-[width] duration-300 ease-in-out",
-          searchActive ? "w-full" : "w-0",
+          active ? "w-full" : "w-0",
         )}
       >
         <Input value={query} onChange={setQuery} />

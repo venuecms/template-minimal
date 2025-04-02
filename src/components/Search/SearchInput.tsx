@@ -26,6 +26,8 @@ export const SearchInput = ({
   useEffect(() => {
     if (active) {
       inputRef.current?.focus();
+    } else {
+      inputRef.current?.blur();
     }
   }, [active]);
 

@@ -24,7 +24,8 @@
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "remove-markdown": "^0.6.0",
     "rss": "^1.2.2",
-    "tailwind-merge": "^2.5.4"
+    "tailwind-merge": "^2.5.4",
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",

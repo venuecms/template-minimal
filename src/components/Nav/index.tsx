@@ -11,6 +11,7 @@ import { ReactNode } from "react";
 import { Link } from "@/lib/i18n";
 import { VenueContent } from "@/lib/utils/renderer";
 
+import { SearchProvider } from "../Search/provider";
 import { renderedStyles } from "../utils";
 import { NavMenuDesktop } from "./NavMenuDesktop";
 import { NavMenuMobile } from "./NavMenuMobile";
@@ -52,7 +53,7 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
 
   // Render the menu for desktop and mobile
   return (
-    <>
+    <SearchProvider>
       <NavMenuDesktop>{menuItems}</NavMenuDesktop>
       <NavMenuMobile
         logo={logo}
@@ -67,6 +68,6 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
       >
         {menuItems}
       </NavMenuMobile>
-    </>
+    </SearchProvider>
   );
 };

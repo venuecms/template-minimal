@@ -21,13 +21,13 @@ export const SearchInput = ({ className }: { className?: string }) => {
       className={cn(
         "flex h-6 justify-end",
         className,
-        searchActive && "w-full gap-8",
+        searchActive && "absolute left-0 w-full gap-4",
       )}
     >
       <SearchIcon className="size-6" onClick={() => setSearchActive(true)} />
       <div
         className={cn(
-          "flex size-6 gap-8 overflow-hidden transition-[width] duration-300 ease-in-out",
+          "grid grid-cols-[1fr,auto] items-center gap-8 overflow-hidden transition-[width] duration-300 ease-in-out",
           searchActive ? "w-full" : "w-0",
         )}
       >

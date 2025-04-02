@@ -28,7 +28,7 @@ export const Input = ({
       value={value}
       onChange={handleChange}
       className={cn(
-        "h-6 border border-muted bg-transparent p-1 text-primary outline-transparent",
+        "h-6 border border-muted bg-background p-1 text-primary outline-transparent",
         className,
       )}
       {...rest}

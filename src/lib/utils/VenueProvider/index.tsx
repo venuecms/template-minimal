@@ -16,7 +16,7 @@ export const VenueProvider = ({
   const instance = useMemo(() => {
     setConfig({
       siteKey,
-      options: { next: { revalidate: 60 } },
+      options: { baseUrl: "/", next: { revalidate: 60 } },
     });
   }, [siteKey]);
 

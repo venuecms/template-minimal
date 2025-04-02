@@ -1,4 +1,5 @@
 import { SearchIcon, X } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,14 @@ export const SearchInput = ({
     setActive?.(false);
   };
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (active) {
+      inputRef.current?.focus();
+    }
+  }, [active]);
+
   return (
     <div
       className={cn(
@@ -35,7 +44,7 @@ export const SearchInput = ({
           active ? "w-full" : "w-0",
         )}
       >
-        <Input value={query} onChange={setQuery} />
+        <Input value={query} onChange={setQuery} ref={inputRef} />
         <X onClick={reset} className="size-5" />
       </div>
     </div>

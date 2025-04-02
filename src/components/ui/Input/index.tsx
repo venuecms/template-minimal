@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, useState } from "react";
+import { InputHTMLAttributes, forwardRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -7,27 +7,33 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange?: (value: string) => void;
 }
 
-export const Input = ({ initialValue, onChange, ...props }: InputProps) => {
-  const { className, ...rest } = props;
-  const [value, setValue] = useState(initialValue || "");
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ initialValue, onChange, ...props }, ref) => {
+    const { className, ...rest } = props;
+    const [value, setValue] = useState(initialValue || "");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    setValue(inputValue);
-    if (onChange) {
-      onChange(inputValue);
-    }
-  };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = e.target.value;
+      setValue(inputValue);
 
-  return (
-    <input
-      value={value}
-      onChange={handleChange}
-      className={cn(
-        "h-6 border border-muted bg-transparent p-1 text-primary outline-transparent",
-        className,
-      )}
-      {...rest}
-    />
-  );
-};
+      if (onChange) {
+        onChange(inputValue);
+      }
+    };
+
+    return (
+      <input
+        ref={ref}
+        value={value}
+        onChange={handleChange}
+        className={cn(
+          "h-6 border border-muted bg-transparent p-1 text-primary outline-transparent",
+          className,
+        )}
+        {...rest}
+      />
+    );
+  },
+);
+
+Input.displayName = "Input";

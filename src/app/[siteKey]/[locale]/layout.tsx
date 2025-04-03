@@ -5,24 +5,28 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import {
   Abel,
+  Courier_Prime,
   EB_Garamond,
   Gothic_A1,
   Hanken_Grotesk,
   IBM_Plex_Mono,
+  Inter,
   Jost,
   Karla,
+  Kosugi_Maru,
+  Oswald,
   Outfit,
   Schibsted_Grotesk,
-  Young_Serif,
-  Courier_Prime,
-  Kosugi_Maru,
   Special_Elite,
-  Inter,
-  Oswald,
   Work_Sans,
+  Young_Serif,
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
+import { VenueProvider } from "@/lib/utils/VenueProvider";
+
+import { SearchProvider } from "@/components/Search/provider";
+import { SearchResults } from "@/components/SearchResults";
 import { SiteHeader } from "@/components/SiteHeader";
 import { setupSSR } from "@/components/utils";
 
@@ -153,7 +157,7 @@ const RootLayout = async ({
   children: React.ReactNode;
   params: Promise<Params>;
 }>) => {
-  const { locale } = await params;
+  const { locale, siteKey } = await params;
   await setupSSR({ params });
 
   const { data: site } = await getSite();
@@ -212,8 +216,12 @@ const RootLayout = async ({
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider attribute="class" forcedTheme={themeId}>
-            <SiteHeader />
-            {children}
+            <VenueProvider siteKey={siteKey}>
+              <SearchProvider>
+                <SiteHeader />
+                <SearchResults>{children}</SearchResults>
+              </SearchProvider>
+            </VenueProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

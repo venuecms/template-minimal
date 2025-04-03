@@ -1,20 +1,18 @@
 "use client";
 
-import { searchSite } from "@venuecms/sdk";
+import { SearchSiteResponse, searchSite } from "@venuecms/sdk";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { createContext, useContext, useReducer } from "react";
 import { useDebounce } from "use-debounce";
 
 type StateContext = {
-  results: {
-    events: any[];
-    profiles: any[];
-    pages: any[];
-    products: any[];
-  };
+  query?: string;
+  isPending: boolean;
+  results: SearchSiteResponse;
 };
 
 export const emptyContext: StateContext = {
+  isPending: false,
   results: {
     events: [],
     profiles: [],
@@ -27,6 +25,7 @@ const StateContext = createContext(emptyContext);
 const DispatchContext = createContext({});
 
 export const SearchProvider = ({ children }: PropsWithChildren) => {
+  // TODO: not necessary for this anymore. switch to a simpler implementation
   const [state, dispatch] = useReducer((state, action) => {
     return { ...state, ...action.payload };
   }, []);
@@ -56,10 +55,20 @@ export const useDispatch = () => {
   }
 
   const actions = {
-    setResults: (results: Partial<StateContext>) =>
-      //@ts-ignore
+    setIsPending: (isPending: boolean) =>
+      //@ts-expect-error
       context({
-        payload: results,
+        payload: { isPending },
+      }),
+    setQuery: (query: string) =>
+      //@ts-expect-error
+      context({
+        payload: { query },
+      }),
+    setResults: (results: StateContext["results"]) =>
+      //@ts-expect-error
+      context({
+        payload: { results },
       }),
   };
 
@@ -69,27 +78,28 @@ export const useDispatch = () => {
 export default StateContext;
 
 export const useSearch = () => {
-  const [isPending, setIsPending] = useState(false);
-  const [query, setQuery] = useState("");
-  const [debouncedQuery] = useDebounce<string>(query, 500);
-  const { results } = useSearchState();
-  const { setResults } = useDispatch();
+  const { query, results, isPending } = useSearchState();
+  const { setResults, setQuery, setIsPending } = useDispatch();
+  const [debouncedQuery] = useDebounce<string | undefined>(query, 500);
 
   useEffect(() => {
     if (!debouncedQuery) {
-      setResults(emptyContext);
+      setResults(emptyContext.results);
       return;
     }
 
+    setIsPending(true);
     const search = async () => {
-      setIsPending(true);
-      setResults(emptyContext);
+      setResults(emptyContext.results);
 
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const { data } = await searchSite({
         query: debouncedQuery,
       });
 
-      setResults(data ? { results: data } : emptyContext);
+      setIsPending(false);
+
+      setResults(data ?? emptyContext.results);
     };
 
     search();

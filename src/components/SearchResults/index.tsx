@@ -1,20 +1,36 @@
 "use client";
 
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk";
+import { useLocale } from "next-intl";
+import {
+  Dispatch,
+  PropsWithChildren,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
+
+import { Link } from "@/lib/i18n";
+import { VenueContext } from "@/lib/utils/VenueProvider";
 
 import { useSearch } from "../Search/provider";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
+import { Skeleton } from "../ui/Input/Skeleton";
 
 type FilterType = "events" | "profiles" | "pages" | "products";
 
-export const SearchResults = () => {
-  const { query, results } = useSearch();
+export const SearchResults = ({ children }: PropsWithChildren) => {
+  const site = useContext(VenueContext);
+  const locale = useLocale();
+
+  const { query, results, isPending } = useSearch();
   const [currentFilter, setCurrentFilter] = useState<FilterType>("events");
 
-  const filteredResults = results[currentFilter] ?? [];
+  const filteredResults = results?.[currentFilter] ?? [];
 
-  return (
-    <TwoColumnLayout className="left-0 top-0 h-full w-full bg-background">
+  return query?.length ? (
+    <TwoColumnLayout>
       <ColumnLeft>
         <div className="flex flex-col gap-12">
           <ul>
@@ -58,15 +74,56 @@ export const SearchResults = () => {
       </ColumnLeft>
 
       <ColumnRight>
-        {filteredResults.map((result) => (
-          <div>
-            <div>{result.localizedContent[0].title}</div>
-            <div>{result.localizedContent[0].shortContent}</div>
-          </div>
-        ))}
-        )
+        {isPending ? (
+          <SearchResultsSkeleton />
+        ) : site ? (
+          <ListContainer>
+            {filteredResults.map((result) => {
+              const { content } = getLocalizedContent(
+                result.localizedContent as Array<LocalizedContent>,
+                locale,
+              );
+              return (
+                <div className="flex flex-col gap-2" key={result.id}>
+                  <Link
+                    href={`/${filterToPathMap[currentFilter]}/${result.slug}`}
+                  >
+                    <div>{content.title}</div>
+                    <div>{content.shortContent}</div>
+                  </Link>
+                </div>
+              );
+            })}
+          </ListContainer>
+        ) : null}
       </ColumnRight>
     </TwoColumnLayout>
+  ) : (
+    children
+  );
+};
+
+const filterToPathMap = {
+  events: "events",
+  profiles: "artists",
+  pages: "p",
+  products: "shop",
+};
+
+const ListContainer = ({ children }: { children: ReactNode }) => {
+  return <div className="flex flex-col gap-8">{children}</div>;
+};
+
+const SearchResultsSkeleton = () => {
+  return (
+    <ListContainer>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <div className="flex flex-col gap-2" key={index}>
+          <Skeleton className="h-4 w-1/3" />
+          <Skeleton className="h-8" />
+        </div>
+      ))}
+    </ListContainer>
   );
 };
 

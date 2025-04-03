@@ -19,6 +19,7 @@ export const SearchInput = ({
 
   const reset = () => {
     setActive?.(false);
+    setQuery?.("");
   };
 
   const inputRef = useRef<HTMLInputElement>(null);

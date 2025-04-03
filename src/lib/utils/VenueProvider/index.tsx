@@ -1,9 +1,9 @@
 "use client";
 
-import { setConfig } from "@venuecms/sdk";
-import { ReactNode, createContext, useMemo } from "react";
+import { Site, getSite, setConfig } from "@venuecms/sdk";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
-export const VenueContext = createContext<any>(null);
+export const VenueContext = createContext<Site | undefined>(undefined);
 
 // Instantiates the venue SDK with a siteKey
 export const VenueProvider = ({
@@ -13,11 +13,15 @@ export const VenueProvider = ({
   siteKey: string;
   children: ReactNode;
 }) => {
-  const instance = useMemo(() => {
+  const [instance, setInstance] = useState<Site | undefined>();
+
+  useEffect(() => {
     setConfig({
       siteKey,
       options: { baseUrl: "/", next: { revalidate: 60 } },
     });
+
+    getSite().then(({ data }) => setInstance(data));
   }, [siteKey]);
 
   return (

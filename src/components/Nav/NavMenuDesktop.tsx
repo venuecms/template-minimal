@@ -14,7 +14,6 @@ export const NavMenuDesktop = ({ children }: { children: ReactNode }) => {
         <ol className="flex items-center gap-8 text-sm text-nav">{children}</ol>
       ) : null}
       <SearchInput active={searchActive} setActive={setSearchActive} />
-      <SearchResults />
     </nav>
   );
 };

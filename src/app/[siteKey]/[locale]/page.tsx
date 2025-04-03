@@ -39,7 +39,6 @@ export const generateMetadata = async ({
 };
 
 const Home = async ({ params }: { params: Promise<Params> }) => {
-  const { siteKey } = await params;
   await setupSSR({ params });
   const t = await getTranslations("events");
 
@@ -62,7 +61,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
 
   return (
-    <VenueProvider siteKey={siteKey}>
+    <>
       {showHeroImage ? (
         <div className="w-vw absolute left-0 top-0 -z-30 h-svh w-screen bg-red-300">
           <VenueImage aspect="video" image={webSiteSettings?.image} />
@@ -128,7 +127,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
           ) : null}
         </ColumnRight>
       </TwoColumnLayout>
-    </VenueProvider>
+    </>
   );
 };
 

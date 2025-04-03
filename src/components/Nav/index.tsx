@@ -53,7 +53,7 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
 
   // Render the menu for desktop and mobile
   return (
-    <SearchProvider>
+    <>
       <NavMenuDesktop>{menuItems}</NavMenuDesktop>
       <NavMenuMobile
         logo={logo}
@@ -68,6 +68,6 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
       >
         {menuItems}
       </NavMenuMobile>
-    </SearchProvider>
+    </>
   );
 };

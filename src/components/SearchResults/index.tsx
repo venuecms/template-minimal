@@ -84,11 +84,11 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
                 locale,
               );
               return (
-                <div className="flex flex-col gap-2" key={result.id}>
+                <div className="flex flex-col gap-3" key={result.id}>
                   <Link
                     href={`/${filterToPathMap[currentFilter]}/${result.slug}`}
                   >
-                    <div>{content.title}</div>
+                    <div className="text-secondary">{content.title}</div>
                     <div>{content.shortContent}</div>
                   </Link>
                 </div>

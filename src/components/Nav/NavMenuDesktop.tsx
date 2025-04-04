@@ -1,11 +1,27 @@
-import { SearchIcon } from "lucide-react";
+"use client";
+
 import { ReactNode } from "react";
 
-export const NavMenuDesktop = async ({ children }: { children: ReactNode }) => {
+import { SearchInput } from "../Search/SearchInput";
+import { useSearchQuery } from "../Search/provider";
+
+export const NavMenuDesktop = ({
+  showSearch,
+  children,
+}: {
+  showSearch: boolean;
+  children: ReactNode;
+}) => {
+  const { isActive } = useSearchQuery();
+
   return (
-    <nav className="hidden w-full items-center justify-between sm:flex">
-      <ol className="flex items-center gap-8 text-sm text-nav">{children}</ol>
-      <div className="gap-8">{/* <SearchIcon className="size-6" /> */}</div>
+    <nav className="relative hidden w-full items-center justify-between sm:flex">
+      {!isActive ? (
+        <ol className="mr-8 flex items-center gap-8 text-sm text-nav">
+          {children}
+        </ol>
+      ) : null}
+      {showSearch ? <SearchInput /> : null}
     </nav>
   );
 };

@@ -28,6 +28,10 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const locale = await getLocale();
   const { data: pages } = await getPages();
 
+  // Defined in the custom fields for this template under public/_venue/config.schema.json
+  const showSearch: boolean =
+    !!site.settings?.publicSite?.template?.config?.showSearch;
+
   // Filter out the root pages to use for the menu
   const rootPages = pages?.records.filter(
     (page) => page.parentId === undefined,
@@ -53,7 +57,7 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   // Render the menu for desktop and mobile
   return (
     <>
-      <NavMenuDesktop>{menuItems}</NavMenuDesktop>
+      <NavMenuDesktop showSearch={showSearch}>{menuItems}</NavMenuDesktop>
       <NavMenuMobile
         logo={logo}
         footer={

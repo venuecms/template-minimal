@@ -14,9 +14,12 @@ importers:
       '@radix-ui/react-dialog':
         specifier: ^1.1.4
         version: 1.1.4(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@tanstack/react-query':
+        specifier: ^5.71.5
+        version: 5.71.5(react@19.0.0-rc-66855b96-20241106)
       '@venuecms/sdk':
-        specifier: ^0.0.22
-        version: 0.0.22
+        specifier: ^0.0.24
+        version: 0.0.24
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -56,7 +59,13 @@ importers:
       tailwind-merge:
         specifier: ^2.5.4
         version: 2.5.4
+      use-debounce:
+        specifier: ^10.0.4
+        version: 10.0.4(react@19.0.0-rc-66855b96-20241106)
     devDependencies:
+      '@tanstack/react-query-devtools':
+        specifier: ^5.71.5
+        version: 5.71.5(@tanstack/react-query@5.71.5(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.3.3)
@@ -537,6 +546,23 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
+  '@tanstack/query-core@5.71.5':
+    resolution: {integrity: sha512-XOQ5SyjCdwhxyLksGKWSL5poqyEXYPDnsrZAzJm2LgrMm4Yh6VOrfC+IFosXreDw9HNqC11YAMY3HlfHjNzuaA==}
+
+  '@tanstack/query-devtools@5.71.5':
+    resolution: {integrity: sha512-Fq1JeAp+I52Md/KnyeFxzG7G0RpdHgeOfDNhSPkZQs/JqqXuAfpUf+wFHDz+vP0GZbSnla2JmcLSQebOkIb1yA==}
+
+  '@tanstack/react-query-devtools@5.71.5':
+    resolution: {integrity: sha512-VErQ29hgwmLrZjMmHp83iv+UdeCbqAyj/JR1mZjDbf+ghyJT+Hmh8jfbh6WYzKh8Fnej7uwl3nHbCsqd3VjoWw==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.71.5
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.71.5':
+    resolution: {integrity: sha512-WpxZWy4fDASjY+iAaXB+aY+LC95PQ34W6EWVkjJ0hdzWWbczFnr9nHvHkVDpwdR18I1NO8igNGQJFrLrgyzI8Q==}
+    peerDependencies:
+      react: ^18 || ^19
+
   '@trivago/prettier-plugin-sort-imports@4.3.0':
     resolution: {integrity: sha512-r3n0onD3BTOVUNPhR4lhVK4/pABGpbA7bW3eumZnYdKaHkf1qEC+Mag6DPbGNuuh0eG8AaYj+YqmVHSiGslaTQ==}
     peerDependencies:
@@ -561,8 +587,8 @@ packages:
   '@types/rss@0.0.32':
     resolution: {integrity: sha512-2oKNqKyUY4RSdvl5eZR1n2Q9yvw3XTe3mQHsFPn9alaNBxfPnbXBtGP8R0SV8pK1PrVnLul0zx7izbm5/gF5Qw==}
 
-  '@venuecms/sdk@0.0.22':
-    resolution: {integrity: sha512-qMVIaIMj9eM1WqKVRW3/aezuGNP1Wz+n5qdaCCd11KBC5GyCnnw7n67Qga0yAgLSoL/j3NtuIcYChkPYRDUCeQ==}
+  '@venuecms/sdk@0.0.24':
+    resolution: {integrity: sha512-v0d+zd1PjVvMT/T27aNRv1WPwHVGbY1tHj3G2+/R1OUmoSm2Fq5ef9q3ysFc+ieU56XJDsRk2ytdz1a673wO8Q==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1254,6 +1280,12 @@ packages:
       '@types/react':
         optional: true
 
+  use-debounce@10.0.4:
+    resolution: {integrity: sha512-6Cf7Yr7Wk7Kdv77nnJMf6de4HuDE4dTxKij+RqE9rufDsI6zsbjyAxcH5y2ueJCQAnfgKbzXbZHYlkFwmBlWkw==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      react: '*'
+
   use-intl@3.26.5:
     resolution: {integrity: sha512-OdsJnC/znPvHCHLQH/duvQNXnP1w0hPfS+tkSi3mAbfjYBGh4JnyfdwkQBfIVf7t8gs9eSX/CntxUMvtKdG2MQ==}
     peerDependencies:
@@ -1693,6 +1725,21 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@tanstack/query-core@5.71.5': {}
+
+  '@tanstack/query-devtools@5.71.5': {}
+
+  '@tanstack/react-query-devtools@5.71.5(@tanstack/react-query@5.71.5(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)':
+    dependencies:
+      '@tanstack/query-devtools': 5.71.5
+      '@tanstack/react-query': 5.71.5(react@19.0.0-rc-66855b96-20241106)
+      react: 19.0.0-rc-66855b96-20241106
+
+  '@tanstack/react-query@5.71.5(react@19.0.0-rc-66855b96-20241106)':
+    dependencies:
+      '@tanstack/query-core': 5.71.5
+      react: 19.0.0-rc-66855b96-20241106
+
   '@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.3)':
     dependencies:
       '@babel/generator': 7.17.7
@@ -1722,7 +1769,7 @@ snapshots:
 
   '@types/rss@0.0.32': {}
 
-  '@venuecms/sdk@0.0.22':
+  '@venuecms/sdk@0.0.24':
     dependencies:
       '@hey-api/client-fetch': 0.5.7
       zod: 3.24.1
@@ -2326,6 +2373,10 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 18.3.12
+
+  use-debounce@10.0.4(react@19.0.0-rc-66855b96-20241106):
+    dependencies:
+      react: 19.0.0-rc-66855b96-20241106
 
   use-intl@3.26.5(react@19.0.0-rc-66855b96-20241106):
     dependencies:

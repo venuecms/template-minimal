@@ -21,10 +21,6 @@ const nextConfig: NextConfig = {
         destination:
           "https://eisvdiypdhqebatccxpr.supabase.co/storage/v1/object/public/venue-platform-media-public-dev/:path*",
       },
-      {
-        source: "/api/:path*",
-        destination: `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : process.env.API_ROOT}/api/:path*`,
-      },
     ];
   },
 };

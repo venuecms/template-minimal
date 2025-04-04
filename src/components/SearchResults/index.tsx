@@ -15,7 +15,7 @@ import {
 import { Link } from "@/lib/i18n";
 import { VenueContext } from "@/lib/utils/VenueProvider";
 
-import { useSearchResults } from "../Search/provider";
+import { useSearchQuery, useSearchResults } from "../Search/provider";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { Skeleton } from "../ui/Input/Skeleton";
 
@@ -32,6 +32,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
   const site = useContext(VenueContext);
   const locale = useLocale();
 
+  const { reset } = useSearchQuery();
   const { isQueryEnabled, results } = useSearchResults();
   const [currentFilter, setCurrentFilter] = useState<FilterType>("events");
 
@@ -93,6 +94,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
                 <div className="flex flex-col gap-3" key={result.id}>
                   <Link
                     href={`/${filterToPathMap[currentFilter]}/${result.slug}`}
+                    onClick={reset}
                   >
                     <div className="text-secondary">{content.title}</div>
                     <div>{content.shortContent}</div>

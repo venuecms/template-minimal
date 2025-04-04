@@ -27,7 +27,7 @@ import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { VenueProvider } from "@/lib/utils/VenueProvider";
 
 import { SearchProvider } from "@/components/Search/provider";
-import { SearchResults, SearchResultsLayout } from "@/components/SearchResults";
+import { SearchResultsLayout } from "@/components/SearchResults";
 import { SiteHeader } from "@/components/SiteHeader";
 import { setupSSR } from "@/components/utils";
 

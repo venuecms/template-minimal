@@ -17,6 +17,9 @@ import { useDebounce } from "use-debounce";
 interface SearchQueryContextType {
   query: string;
   setQuery: Dispatch<SetStateAction<string>>;
+  reset: () => void;
+  isActive: boolean;
+  setActive: Dispatch<SetStateAction<boolean>>;
 }
 
 // Create the context with a default value (or throw error in hook if not provided)
@@ -37,9 +40,18 @@ export const emptyResults: SearchSiteResponse = {
  */
 export const SearchProvider = ({ children }: PropsWithChildren) => {
   const [query, setQuery] = useState<string>("");
+  const [isActive, setActive] = useState<boolean>(false);
+
+  const reset = () => {
+    setActive(false);
+    setQuery("");
+  };
 
   // Memoize the context value to prevent unnecessary re-renders
-  const contextValue = useMemo(() => ({ query, setQuery }), [query]);
+  const contextValue = useMemo(
+    () => ({ query, setQuery, isActive, setActive, reset }),
+    [query, isActive],
+  );
 
   return (
     <SearchQueryContext.Provider value={contextValue}>

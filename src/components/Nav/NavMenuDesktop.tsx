@@ -1,18 +1,19 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 import { SearchInput } from "../Search/SearchInput";
+import { useSearchQuery } from "../Search/provider";
 
 export const NavMenuDesktop = ({ children }: { children: ReactNode }) => {
-  const [searchActive, setSearchActive] = useState(false);
+  const { isActive } = useSearchQuery();
 
   return (
     <nav className="relative hidden w-full items-center justify-between sm:flex">
-      {!searchActive ? (
+      {!isActive ? (
         <ol className="flex items-center gap-8 text-sm text-nav">{children}</ol>
       ) : null}
-      <SearchInput active={searchActive} setActive={setSearchActive} />
+      <SearchInput />
     </nav>
   );
 };

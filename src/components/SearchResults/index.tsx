@@ -53,7 +53,8 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
     <TwoColumnLayout>
       <ColumnLeft>
         <div className="flex flex-col gap-12">
-          <ul>
+          <div>filter</div>
+          <ul className="flex flex-col gap-7">
             <FilterSelect
               setFilter={setCurrentFilter}
               value="events"
@@ -145,7 +146,7 @@ const FilterSelect = ({
 };
 
 const ListContainer = ({ children }: { children: ReactNode }) => {
-  return <div className="flex flex-col gap-8">{children}</div>;
+  return <div className="flex flex-col gap-12">{children}</div>;
 };
 
 export const SearchResultsSkeleton = () => {

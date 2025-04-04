@@ -28,6 +28,7 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const locale = await getLocale();
   const { data: pages } = await getPages();
 
+  // Defined in the custom fields for this template under public/_venue/config.schema.json
   const showSearch: boolean =
     !!site.settings?.publicSite?.template?.config?.showSearch;
 

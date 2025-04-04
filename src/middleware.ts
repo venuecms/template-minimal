@@ -24,7 +24,7 @@ export default async function middleware(request: NextRequest) {
     }
 
     const headers = new Headers(request.headers);
-    headers.set("Authorization", `Bearer ${process.env.API_KEY}`);
+    headers.set("Authorization", `Bearer ${process.env.VENUE_API_KEY}`);
 
     return NextResponse.rewrite(destination, {
       request: {

@@ -7,6 +7,7 @@ import {
   PropsWithChildren,
   ReactNode,
   SetStateAction,
+  Suspense,
   useContext,
   useState,
 } from "react";
@@ -14,22 +15,29 @@ import {
 import { Link } from "@/lib/i18n";
 import { VenueContext } from "@/lib/utils/VenueProvider";
 
-import { useSearch } from "../Search/provider";
+import { useSearchResults } from "../Search/provider";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { Skeleton } from "../ui/Input/Skeleton";
 
 type FilterType = "events" | "profiles" | "pages" | "products";
 
+export const SearchResultsLayout = ({ children }: PropsWithChildren) => {
+  return (
+    <Suspense fallback={<SearchResultsSkeleton />}>
+      <SearchResults>{children}</SearchResults>
+    </Suspense>
+  );
+};
 export const SearchResults = ({ children }: PropsWithChildren) => {
   const site = useContext(VenueContext);
   const locale = useLocale();
 
-  const { query, results, isPending } = useSearch();
+  const { isQueryEnabled, results } = useSearchResults();
   const [currentFilter, setCurrentFilter] = useState<FilterType>("events");
 
   const filteredResults = results?.[currentFilter] ?? [];
 
-  return query?.length ? (
+  return isQueryEnabled ? (
     <TwoColumnLayout>
       <ColumnLeft>
         <div className="flex flex-col gap-12">
@@ -74,9 +82,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
       </ColumnLeft>
 
       <ColumnRight>
-        {isPending ? (
-          <SearchResultsSkeleton />
-        ) : site ? (
+        {site ? (
           <ListContainer>
             {filteredResults.map((result) => {
               const { content } = getLocalizedContent(
@@ -114,16 +120,22 @@ const ListContainer = ({ children }: { children: ReactNode }) => {
   return <div className="flex flex-col gap-8">{children}</div>;
 };
 
-const SearchResultsSkeleton = () => {
+export const SearchResultsSkeleton = () => {
   return (
-    <ListContainer>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <div className="flex flex-col gap-2" key={index}>
-          <Skeleton className="h-4 w-1/3" />
-          <Skeleton className="h-8" />
-        </div>
-      ))}
-    </ListContainer>
+    <TwoColumnLayout>
+      <ColumnLeft></ColumnLeft>
+
+      <ColumnRight>
+        <ListContainer>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div className="flex flex-col gap-2" key={index}>
+              <Skeleton className="h-4 w-1/3" />
+              <Skeleton className="h-8" />
+            </div>
+          ))}
+        </ListContainer>
+      </ColumnRight>
+    </TwoColumnLayout>
   );
 };
 

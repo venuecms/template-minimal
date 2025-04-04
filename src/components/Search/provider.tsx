@@ -1,109 +1,135 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { SearchSiteResponse, searchSite } from "@venuecms/sdk";
-import { PropsWithChildren, useEffect, useState } from "react";
-import { createContext, useContext, useReducer } from "react";
+import {
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { useDebounce } from "use-debounce";
 
-type StateContext = {
-  query?: string;
-  isPending: boolean;
-  results: SearchSiteResponse;
+// Define the shape of the context value
+interface SearchQueryContextType {
+  query: string;
+  setQuery: Dispatch<SetStateAction<string>>;
+}
+
+// Create the context with a default value (or throw error in hook if not provided)
+const SearchQueryContext = createContext<SearchQueryContextType | undefined>(
+  undefined,
+);
+
+// Define the structure for empty results, useful as initialData for useQuery
+export const emptyResults: SearchSiteResponse = {
+  events: [],
+  profiles: [],
+  pages: [],
+  products: [],
 };
 
-export const emptyContext: StateContext = {
-  isPending: false,
-  results: {
-    events: [],
-    profiles: [],
-    pages: [],
-    products: [],
-  },
-};
-
-const StateContext = createContext(emptyContext);
-const DispatchContext = createContext({});
-
+/**
+ * Provides the search query state (query string and setter) to its children.
+ */
 export const SearchProvider = ({ children }: PropsWithChildren) => {
-  // TODO: not necessary for this anymore. switch to a simpler implementation
-  const [state, dispatch] = useReducer((state, action) => {
-    return { ...state, ...action.payload };
-  }, []);
+  const [query, setQuery] = useState<string>("");
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({ query, setQuery }), [query]);
 
   return (
-    <StateContext.Provider value={state}>
-      <DispatchContext.Provider value={dispatch}>
-        {children}
-      </DispatchContext.Provider>
-    </StateContext.Provider>
+    <SearchQueryContext.Provider value={contextValue}>
+      {children}
+    </SearchQueryContext.Provider>
   );
 };
 
-export const useSearchState = () => {
-  const context = useContext(StateContext);
+/**
+ * Hook to access the search query and its setter function.
+ * Throws an error if used outside of a SearchProvider.
+ */
+export const useSearchQuery = (): SearchQueryContextType => {
+  const context = useContext(SearchQueryContext);
   if (context === undefined) {
-    console.log("no context yet");
+    throw new Error("useSearchQuery must be used within a SearchProvider");
   }
-
   return context;
 };
 
-export const useDispatch = () => {
-  const context = useContext(DispatchContext);
-  if (context === undefined) {
-    throw new Error("useDispatch must be used within a DispatchProvider");
-  }
+/**
+ * Hook to perform the search operation using React Query and Suspense.
+ * Consumes the query from SearchQueryContext, handles debouncing,
+ * fetching, caching, and provides results and status.
+ * Designed to be used in components that will display search results.
+ * @param debounceMs - Debounce delay in milliseconds (default: 500).
+ * @param minQueryLength - Minimum query length to trigger search (default: 2).
+ */
+export const useSearchResults = (
+  debounceMs: number = 500,
+  minQueryLength: number = 2,
+) => {
+  // Get the raw query from the context
+  const { query } = useSearchQuery();
+  // Debounce the query value
+  const [debouncedQuery] = useDebounce(query, debounceMs);
 
-  const actions = {
-    setIsPending: (isPending: boolean) =>
-      //@ts-expect-error
-      context({
-        payload: { isPending },
-      }),
-    setQuery: (query: string) =>
-      //@ts-expect-error
-      context({
-        payload: { query },
-      }),
-    setResults: (results: StateContext["results"]) =>
-      //@ts-expect-error
-      context({
-        payload: { results },
-      }),
+  // Determine if the debounced query is valid for searching
+  const isQueryEnabled = debouncedQuery.trim().length >= minQueryLength;
+
+  const {
+    data: results, // Rename data to results for clarity
+    // isLoading is less relevant with Suspense, but isFetching is useful
+    isFetching,
+    isError,
+    error,
+  } = useQuery<SearchSiteResponse, Error>({
+    // Use the debounced query in the key
+    queryKey: ["siteSearch", debouncedQuery],
+    queryFn: async () => {
+      // Double-check enablement inside queryFn for safety, though 'enabled' handles this
+      if (!isQueryEnabled) {
+        // Should not happen if 'enabled' is working correctly, but good practice
+        return emptyResults;
+      }
+      console.log("Fetching search results for:", debouncedQuery); // Added log
+      const { data, error } = await searchSite({ query: debouncedQuery });
+      if (error) {
+        // Throw error to let React Query handle the error state
+        console.error("Search failed:", error); // Log error
+        throw new Error(error.message || "Search failed");
+      }
+      return data ?? emptyResults;
+    },
+    // Only run the query if the debounced query is long enough
+    enabled: isQueryEnabled,
+    // Keep data fresh for a short time, cache longer
+    staleTime: 1000 * 60 * 1, // 1 minute (adjusted staleTime slightly for clarity)
+    gcTime: 1000 * 60 * 15, // 15 minutes garbage collection
+    // Enable Suspense mode
+    suspense: true,
+    // Use initialData to prevent Suspense triggering on mount with empty query
+    // and provide a stable empty structure when disabled
+    // Keep previous data while fetching new results for smoother UX
+    keepPreviousData: true,
+  });
+
+  return {
+    // The debounced query value used for the search
+    debouncedQuery,
+    // The search results, guaranteed to be defined due to initialData
+    results: results,
+    // Indicates background fetching (useful even with Suspense)
+    isFetching,
+    // Error status and object
+    isError,
+    error,
+    // Expose whether the current debounced query is long enough to trigger a search
+    isQueryEnabled,
   };
-
-  return actions;
 };
 
-export default StateContext;
-
-export const useSearch = () => {
-  const { query, results, isPending } = useSearchState();
-  const { setResults, setQuery, setIsPending } = useDispatch();
-  const [debouncedQuery] = useDebounce<string | undefined>(query, 500);
-
-  useEffect(() => {
-    if (!debouncedQuery) {
-      setResults(emptyContext.results);
-      return;
-    }
-
-    setIsPending(true);
-    const search = async () => {
-      setResults(emptyContext.results);
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const { data } = await searchSite({
-        query: debouncedQuery,
-      });
-
-      setIsPending(false);
-
-      setResults(data ?? emptyContext.results);
-    };
-
-    search();
-  }, [debouncedQuery]);
-
-  return { setQuery, query, results, isPending };
-};
+export default SearchQueryContext;

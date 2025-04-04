@@ -3,7 +3,6 @@
 import { ReactNode, useState } from "react";
 
 import { SearchInput } from "../Search/SearchInput";
-import { SearchResults } from "../SearchResults";
 
 export const NavMenuDesktop = ({ children }: { children: ReactNode }) => {
   const [searchActive, setSearchActive] = useState(false);

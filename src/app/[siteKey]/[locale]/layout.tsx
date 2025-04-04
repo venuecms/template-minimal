@@ -23,10 +23,11 @@ import {
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
+import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { VenueProvider } from "@/lib/utils/VenueProvider";
 
 import { SearchProvider } from "@/components/Search/provider";
-import { SearchResults } from "@/components/SearchResults";
+import { SearchResults, SearchResultsLayout } from "@/components/SearchResults";
 import { SiteHeader } from "@/components/SiteHeader";
 import { setupSSR } from "@/components/utils";
 
@@ -215,14 +216,16 @@ const RootLayout = async ({
         }
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider attribute="class" forcedTheme={themeId}>
-            <VenueProvider siteKey={siteKey}>
-              <SearchProvider>
-                <SiteHeader />
-                <SearchResults>{children}</SearchResults>
-              </SearchProvider>
-            </VenueProvider>
-          </ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider attribute="class" forcedTheme={themeId}>
+              <VenueProvider siteKey={siteKey}>
+                <SearchProvider>
+                  <SiteHeader />
+                  <SearchResultsLayout>{children}</SearchResultsLayout>
+                </SearchProvider>
+              </VenueProvider>
+            </ThemeProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

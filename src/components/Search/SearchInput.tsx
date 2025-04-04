@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 import { Input } from "../ui/Input";
-import { useSearch } from "./provider";
+import { useSearchQuery } from "./provider";
 
 export const SearchInput = ({
   className,
@@ -15,7 +15,7 @@ export const SearchInput = ({
   active: boolean;
   setActive?: (setSearchActive: boolean) => void;
 }) => {
-  const { query, setQuery } = useSearch();
+  const { query, setQuery } = useSearchQuery();
 
   const reset = () => {
     setActive?.(false);

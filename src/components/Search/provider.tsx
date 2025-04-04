@@ -7,7 +7,9 @@ import {
   PropsWithChildren,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -46,6 +48,26 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
     setActive(false);
     setQuery("");
   };
+
+  // Handle Escape key when the search is active
+  const handleEsc = useCallback((event: KeyboardEvent) => {
+    if (event?.key === "Escape") {
+      reset();
+    }
+  }, []);
+
+  useEffect(() => {
+    // creates an event handler to handle the Esc key
+    if (isActive) {
+      document.addEventListener("keydown", handleEsc);
+    } else {
+      document.removeEventListener("keydown", handleEsc);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [isActive]);
 
   // Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(

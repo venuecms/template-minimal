@@ -34,7 +34,11 @@ export const SearchInput = ({ className }: { className?: string }) => {
           isActive ? "w-full" : "w-0",
         )}
       >
-        <Input value={query} onChange={setQuery} ref={inputRef} />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          ref={inputRef}
+        />
         <X onClick={reset} className="size-5" />
       </div>
     </div>

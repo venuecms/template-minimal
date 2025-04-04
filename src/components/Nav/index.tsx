@@ -11,7 +11,6 @@ import { ReactNode } from "react";
 import { Link } from "@/lib/i18n";
 import { VenueContent } from "@/lib/utils/renderer";
 
-import { SearchProvider } from "../Search/provider";
 import { renderedStyles } from "../utils";
 import { NavMenuDesktop } from "./NavMenuDesktop";
 import { NavMenuMobile } from "./NavMenuMobile";
@@ -28,6 +27,9 @@ export type RootPageContent = {
 export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const locale = await getLocale();
   const { data: pages } = await getPages();
+
+  const showSearch: boolean =
+    !!site.settings?.publicSite?.template?.config?.showSearch;
 
   // Filter out the root pages to use for the menu
   const rootPages = pages?.records.filter(
@@ -54,7 +56,7 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   // Render the menu for desktop and mobile
   return (
     <>
-      <NavMenuDesktop>{menuItems}</NavMenuDesktop>
+      <NavMenuDesktop showSearch={showSearch}>{menuItems}</NavMenuDesktop>
       <NavMenuMobile
         logo={logo}
         footer={

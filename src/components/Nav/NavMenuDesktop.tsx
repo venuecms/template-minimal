@@ -5,7 +5,13 @@ import { ReactNode } from "react";
 import { SearchInput } from "../Search/SearchInput";
 import { useSearchQuery } from "../Search/provider";
 
-export const NavMenuDesktop = ({ children }: { children: ReactNode }) => {
+export const NavMenuDesktop = ({
+  showSearch,
+  children,
+}: {
+  showSearch: boolean;
+  children: ReactNode;
+}) => {
   const { isActive } = useSearchQuery();
 
   return (
@@ -15,7 +21,7 @@ export const NavMenuDesktop = ({ children }: { children: ReactNode }) => {
           {children}
         </ol>
       ) : null}
-      <SearchInput />
+      {showSearch ? <SearchInput /> : null}
     </nav>
   );
 };

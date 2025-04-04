@@ -6,7 +6,6 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { Link } from "@/lib/i18n";
-import { VenueProvider } from "@/lib/utils/VenueProvider";
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { EventFeatured } from "@/components/EventFeatured";

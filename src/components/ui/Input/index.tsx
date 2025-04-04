@@ -2,10 +2,9 @@ import { InputHTMLAttributes, forwardRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   initialValue?: string;
-  onChange?: (value: string) => void;
-}
+};
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ initialValue, onChange, ...props }, ref) => {
@@ -17,7 +16,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       setValue(inputValue);
 
       if (onChange) {
-        onChange(inputValue);
+        onChange(e);
       }
     };
 

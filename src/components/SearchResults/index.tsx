@@ -41,7 +41,6 @@ export const SearchResultsLayout = ({ children }: PropsWithChildren) => {
 };
 
 export const SearchResults = ({ children }: PropsWithChildren) => {
-  const site = useContext(VenueContext);
   const locale = useLocale();
 
   const { reset } = useSearchQuery();
@@ -95,29 +94,27 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
       </ColumnLeft>
 
       <ColumnRight>
-        {site ? (
-          <ListContainer>
-            {filteredResults.map((result) => {
-              const { content } = getLocalizedContent(
-                result.localizedContent as Array<LocalizedContent>,
-                locale,
-              );
-              return (
-                <div className="flex flex-col gap-3" key={result.id}>
-                  <Link
-                    href={`/${filterToPathMap[currentFilter]}/${result.slug}`}
-                    onClick={reset}
-                  >
-                    <div className="text-secondary">{content.title}</div>
-                    <div>
-                      {content.shortContent ?? getExcerpt(content.content)}
-                    </div>
-                  </Link>
-                </div>
-              );
-            })}
-          </ListContainer>
-        ) : null}
+        <ListContainer>
+          {filteredResults.map((result) => {
+            const { content } = getLocalizedContent(
+              result.localizedContent as Array<LocalizedContent>,
+              locale,
+            );
+            return (
+              <div className="flex flex-col gap-3" key={result.id}>
+                <Link
+                  href={`/${filterToPathMap[currentFilter]}/${result.slug}`}
+                  onClick={reset}
+                >
+                  <div className="text-secondary">{content.title}</div>
+                  <div>
+                    {content.shortContent ?? getExcerpt(content.content)}
+                  </div>
+                </Link>
+              </div>
+            );
+          })}
+        </ListContainer>
       </ColumnRight>
     </TwoColumnLayout>
   ) : (

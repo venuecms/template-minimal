@@ -11,7 +11,9 @@ export const NavMenuDesktop = ({ children }: { children: ReactNode }) => {
   return (
     <nav className="relative hidden w-full items-center justify-between sm:flex">
       {!isActive ? (
-        <ol className="flex items-center gap-8 text-sm text-nav">{children}</ol>
+        <ol className="mr-8 flex items-center gap-8 text-sm text-nav">
+          {children}
+        </ol>
       ) : null}
       <SearchInput />
     </nav>

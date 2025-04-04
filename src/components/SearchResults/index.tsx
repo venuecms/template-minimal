@@ -18,16 +18,28 @@ import { VenueContext } from "@/lib/utils/VenueProvider";
 import { useSearchQuery, useSearchResults } from "../Search/provider";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { Skeleton } from "../ui/Input/Skeleton";
+import { getExcerpt } from "../utils";
+import { ErrorBoundary } from "../utils/ErrorBoundary";
 
 type FilterType = "events" | "profiles" | "pages" | "products";
 
+const filterToPathMap = {
+  events: "events",
+  profiles: "artists",
+  pages: "p",
+  products: "shop",
+};
+
 export const SearchResultsLayout = ({ children }: PropsWithChildren) => {
   return (
-    <Suspense fallback={<SearchResultsSkeleton />}>
-      <SearchResults>{children}</SearchResults>
-    </Suspense>
+    <ErrorBoundary fallback={<ErrorResults />}>
+      <Suspense fallback={<SearchResultsSkeleton />}>
+        <SearchResults>{children}</SearchResults>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
+
 export const SearchResults = ({ children }: PropsWithChildren) => {
   const site = useContext(VenueContext);
   const locale = useLocale();
@@ -97,7 +109,9 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
                     onClick={reset}
                   >
                     <div className="text-secondary">{content.title}</div>
-                    <div>{content.shortContent}</div>
+                    <div>
+                      {content.shortContent ?? getExcerpt(content.content)}
+                    </div>
                   </Link>
                 </div>
               );
@@ -111,11 +125,26 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
   );
 };
 
-const filterToPathMap = {
-  events: "events",
-  profiles: "artists",
-  pages: "p",
-  products: "shop",
+const FilterSelect = ({
+  children,
+  setFilter,
+  value,
+  currentValue,
+  results = {} as Record<FilterType, Array<any>>,
+}: {
+  children: ReactNode;
+  setFilter: Dispatch<SetStateAction<FilterType>>;
+  value: FilterType;
+  currentValue: FilterType;
+  results: Record<FilterType, Array<any>>;
+}) => {
+  return (
+    <li className="flex gap-8" onClick={() => setFilter(value)}>
+      {currentValue === value ? <span>→</span> : null}
+      {children}
+      <span>[ {results[value]?.length ?? 0} ]</span>
+    </li>
+  );
 };
 
 const ListContainer = ({ children }: { children: ReactNode }) => {
@@ -141,24 +170,13 @@ export const SearchResultsSkeleton = () => {
   );
 };
 
-const FilterSelect = ({
-  children,
-  setFilter,
-  value,
-  currentValue,
-  results = {} as Record<FilterType, Array<any>>,
-}: {
-  children: ReactNode;
-  setFilter: Dispatch<SetStateAction<FilterType>>;
-  value: FilterType;
-  currentValue: FilterType;
-  results: Record<FilterType, Array<any>>;
-}) => {
+const ErrorResults = () => {
   return (
-    <li className="flex gap-8" onClick={() => setFilter(value)}>
-      {currentValue === value ? <span>→</span> : null}
-      {children}
-      <span>[ {results[value]?.length ?? 0} ]</span>
-    </li>
+    <TwoColumnLayout>
+      <ColumnLeft></ColumnLeft>
+      <ColumnRight>
+        Something went wrong while searching... try again?
+      </ColumnRight>
+    </TwoColumnLayout>
   );
 };

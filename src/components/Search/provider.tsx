@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { SearchSiteResponse, searchSite } from "@venuecms/sdk";
 import {
   Dispatch,
@@ -31,10 +31,10 @@ const SearchQueryContext = createContext<SearchQueryContextType | undefined>(
 
 // Define the structure for empty results, useful as initialData for useQuery
 export const emptyResults: SearchSiteResponse = {
-  events: [],
-  profiles: [],
-  pages: [],
-  products: [],
+  events: [] as SearchSiteResponse["events"],
+  profiles: [] as SearchSiteResponse["profiles"],
+  pages: [] as SearchSiteResponse["pages"],
+  products: [] as SearchSiteResponse["products"],
 };
 
 /**
@@ -115,15 +115,14 @@ export const useSearchResults = (
   const isQueryEnabled = debouncedQuery.trim().length >= minQueryLength;
 
   const {
-    data: results, // Rename data to results for clarity
-    // isLoading is less relevant with Suspense, but isFetching is useful
+    data: results,
     isFetching,
     isError,
     error,
-  } = useQuery<SearchSiteResponse, Error>({
+  } = useSuspenseQuery<SearchSiteResponse, Error>({
     // Use the debounced query in the key
     queryKey: ["siteSearch", debouncedQuery],
-    queryFn: async () => {
+    queryFn: async (): Promise<SearchSiteResponse> => {
       // Double-check enablement inside queryFn for safety, though 'enabled' handles this
       if (!isQueryEnabled) {
         // Should not happen if 'enabled' is working correctly, but good practice
@@ -134,28 +133,25 @@ export const useSearchResults = (
       if (error) {
         // Throw error to let React Query handle the error state
         console.error("Search failed:", error); // Log error
-        throw new Error(error.message || "Search failed");
+        throw new Error("Search failed");
       }
+
       return data ?? emptyResults;
     },
-    // Only run the query if the debounced query is long enough
-    enabled: isQueryEnabled,
     // Keep data fresh for a short time, cache longer
     staleTime: 1000 * 60 * 1, // 1 minute (adjusted staleTime slightly for clarity)
     gcTime: 1000 * 60 * 15, // 15 minutes garbage collection
-    // Enable Suspense mode
-    suspense: true,
     // Use initialData to prevent Suspense triggering on mount with empty query
     // and provide a stable empty structure when disabled
     // Keep previous data while fetching new results for smoother UX
-    keepPreviousData: true,
+    // keepPreviousData: true,
   });
 
   return {
     // The debounced query value used for the search
     debouncedQuery,
     // The search results, guaranteed to be defined due to initialData
-    results: results,
+    results: results as SearchSiteResponse,
     // Indicates background fetching (useful even with Suspense)
     isFetching,
     // Error status and object

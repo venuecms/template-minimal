@@ -10,6 +10,7 @@ import { VenueContent } from "@/lib/utils/renderer";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
+import { ErrorBoundary } from "../utils/ErrorBoundary";
 import { ProfileEventList, ProfileEventListSkeleton } from "./ProfileEventList";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {
@@ -35,20 +36,24 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           content={content}
           contentStyles={renderedStyles}
         />
-        <Suspense fallback={<ProfileEventListSkeleton numElements={1} />}>
-          <ProfileEventList
-            header={t("upcoming_events")}
-            slug={profile.slug}
-            filter={{ upcoming: true, dir: "asc" }}
-          />
-        </Suspense>
-        <Suspense fallback={null}>
-          <ProfileEventList
-            header={t("past_events")}
-            slug={profile.slug}
-            filter={{ lt: Date.now(), dir: "desc" }}
-          />
-        </Suspense>
+        <ErrorBoundary fallback={null}>
+          <Suspense fallback={<ProfileEventListSkeleton numElements={1} />}>
+            <ProfileEventList
+              header={t("upcoming_events")}
+              slug={profile.slug}
+              filter={{ upcoming: true, dir: "asc" }}
+            />
+          </Suspense>
+        </ErrorBoundary>
+        <ErrorBoundary fallback={null}>
+          <Suspense fallback={null}>
+            <ProfileEventList
+              header={t("past_events")}
+              slug={profile.slug}
+              filter={{ lt: Date.now(), dir: "desc" }}
+            />
+          </Suspense>
+        </ErrorBoundary>
       </ColumnRight>
     </TwoColumnLayout>
   );

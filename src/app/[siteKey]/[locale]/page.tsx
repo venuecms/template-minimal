@@ -1,7 +1,12 @@
 import { VenueImage } from "@/components";
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
-import { LocalizedContent, getEvents, getSite } from "@venuecms/sdk";
+import {
+  LocalizedContent,
+  getEvents,
+  getLocalizedContent,
+  getSite,
+} from "@venuecms/sdk";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
@@ -40,6 +45,7 @@ export const generateMetadata = async ({
 const Home = async ({ params }: { params: Promise<Params> }) => {
   await setupSSR({ params });
   const t = await getTranslations("events");
+  const { locale } = await params;
 
   const [{ data: site }, { data: events }, { data: featuredEvents }] =
     await Promise.all([
@@ -58,6 +64,13 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   const noHeroOverlay =
     site.settings?.publicSite?.template?.config?.noHeroOverlay;
   const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
+
+  const { content } = webSiteSettings?.localizedContent?.length
+    ? getLocalizedContent(webSiteSettings?.localizedContent, locale)
+    : // This wedges in a legacy way, before we were localizing the site description for websites.
+      // It is essentially falling back onto the general instance site description which is not localized
+      // and is used mostly for listing info about an instnace that is not on a website.
+      { content: { content: site.description } as LocalizedContent };
 
   return (
     <>
@@ -89,7 +102,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
           {site.description ? (
             <VenueContent
               className="flex flex-col gap-6"
-              content={{ content: site.description } as LocalizedContent}
+              content={content}
               contentStyles={renderedStyles}
             />
           ) : null}

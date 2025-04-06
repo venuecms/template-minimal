@@ -65,6 +65,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
     site.settings?.publicSite?.template?.config?.noHeroOverlay;
   const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
 
+  console.log("WEBSITE SETTINGS", webSiteSettings);
   const { content } = webSiteSettings?.localizedContent?.length
     ? getLocalizedContent(webSiteSettings?.localizedContent, locale)
     : // This wedges in a legacy way, before we were localizing the site description for websites.
@@ -99,7 +100,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
 
       <TwoColumnLayout>
         <ColumnLeft className="hidden text-sm text-secondary sm:flex">
-          {site.description ? (
+          {content ? (
             <VenueContent
               className="flex flex-col gap-6"
               content={content}
@@ -128,11 +129,11 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
               ) : null}
             </section>
           ) : null}
-          {site.description ? (
+          {content ? (
             <div className="flex sm:hidden">
               <VenueContent
                 className="flex flex-col gap-6"
-                content={{ content: site.description } as LocalizedContent}
+                content={content}
                 contentStyles={renderedStyles}
               />
             </div>

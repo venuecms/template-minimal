@@ -65,7 +65,6 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
     site.settings?.publicSite?.template?.config?.noHeroOverlay;
   const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
 
-  console.log("WEBSITE SETTINGS", webSiteSettings);
   const { content } = webSiteSettings?.localizedContent?.length
     ? getLocalizedContent(webSiteSettings?.localizedContent, locale)
     : // This wedges in a legacy way, before we were localizing the site description for websites.

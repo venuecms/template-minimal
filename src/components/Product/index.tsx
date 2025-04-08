@@ -52,7 +52,7 @@ export const Product = ({
                     <div className="text-muted">
                       {variant.productType?.type}
                     </div>
-                    <VariantPriceWithoutFree variant={variant} site={site} />
+                    <VariantPrice variant={variant} site={site} />
                   </div>
                 ))}
               </div>
@@ -88,10 +88,10 @@ const VariantPrice = ({
   const displayPrice =
     variant.price > 0
       ? `${variant.price} ${variant.currency || site.settings?.defaults?.currency || ""}`
-      : variant.price === 0
+      : variant.price < 0
         ? "Free"
-        : "";
-  return variant.externalLink || variant.price > 0 ? (
+        : "Buy";
+  return (
     <div
       key={variant.productType?.type + "price"}
       className="border border-muted px-2 py-1 text-secondary"
@@ -108,33 +108,5 @@ const VariantPrice = ({
         variant.price > 0 && displayPrice
       )}
     </div>
-  ) : null;
-};
-
-const VariantPriceWithoutFree = ({
-  variant,
-  site,
-}: {
-  variant: ProductVariant;
-  site: Site;
-}) => {
-  return variant.price > 0 ? (
-    <div
-      key={variant.productType?.type + "price"}
-      className="border border-muted px-2 py-1 text-secondary"
-    >
-      {variant.externalLink ? (
-        <a
-          href={variant.externalLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {variant.price}{" "}
-          {variant.currency || site.settings?.defaults?.currency || ""}
-        </a>
-      ) : (
-        `${variant.price} ${variant.currency || site.settings?.defaults?.currency || ""}`
-      )}
-    </div>
-  ) : null;
+  );
 };

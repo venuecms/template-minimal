@@ -51,27 +51,31 @@ export const Product = ({
                     <div className="text-muted">
                       {variant.productType?.type}
                     </div>
-                    {variant.price > 0 ? (
-                      <div
-                        key={variant.productType?.type + "price"}
-                        className="border border-muted px-2 py-1 text-secondary"
-                      >
-                        {variant.externalLink ? (
-                          <a
-                            href={variant.externalLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {variant.price}{" "}
-                            {variant.currency ||
-                              site.settings?.defaults?.currency ||
-                              ""}
-                          </a>
-                        ) : (
-                          `${variant.price} ${variant.currency || site.settings?.defaults?.currency || ""}`
-                        )}
-                      </div>
-                    ) : null}
+                    <div
+                      key={variant.productType?.type + "price"}
+                      className="border border-muted px-2 py-1 text-secondary"
+                    >
+                      {variant.externalLink ? (
+                        <a
+                          href={variant.externalLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {variant.price > 0 ? (
+                            <>
+                              {variant.price > 0 ? variant.price : "Free"}{" "}
+                              {variant.currency ||
+                                site.settings?.defaults?.currency ||
+                                ""}
+                            </>
+                          ) : (
+                            "Free"
+                          )}
+                        </a>
+                      ) : (
+                        `${variant.price} ${variant.currency || site.settings?.defaults?.currency || ""}`
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

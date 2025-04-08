@@ -1,5 +1,4 @@
 import { getGenerateMetadata } from "@/lib";
-import { Params } from "@/types";
 import {
   getEvents,
   getLocalizedContent,
@@ -9,6 +8,7 @@ import {
 import { notFound } from "next/navigation";
 
 import { EventsList, ListEvent } from "@/components/EventList";
+import { Pagination } from "@/components/Pagination";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { setupSSR } from "@/components/utils";
 
@@ -16,12 +16,21 @@ export const generateMetadata = getGenerateMetadata(() =>
   getPage({ slug: "archive" }),
 );
 
-const ArchivePage = async ({ params }: { params: Promise<Params> }) => {
+const ITEMS_PER_PAGE = 50;
+
+const ArchivePage = async ({ params, searchParams }) => {
   const { locale } = await params;
   await setupSSR({ params });
 
+  const currentPage = parseInt(searchParams?.page as string, 10) || 0;
+
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
-    getEvents({ limit: 60, lt: new Date().getTime(), dir: "desc" }),
+    getEvents({
+      page: currentPage,
+      limit: ITEMS_PER_PAGE,
+      lt: new Date().getTime(),
+      dir: "desc",
+    }),
     getPage({ slug: "archive" }),
     getSite(),
   ]);
@@ -30,9 +39,16 @@ const ArchivePage = async ({ params }: { params: Promise<Params> }) => {
     notFound();
   }
 
+  console.log("SDKPage", currentPage, events);
+
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
     : "archive";
+
+  // Calculate total pages
+  const totalPages = events?.count
+    ? Math.ceil(events.count / ITEMS_PER_PAGE)
+    : 100;
 
   return (
     <TwoColumnLayout>
@@ -55,6 +71,14 @@ const ArchivePage = async ({ params }: { params: Promise<Params> }) => {
         ) : (
           "No events found"
         )}
+        {/* Add Pagination component */}
+        {events?.records.length && totalPages > 1 ? (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            baseUrl={`/archive`} // Use locale in base URL
+          />
+        ) : null}
       </ColumnRight>
     </TwoColumnLayout>
   );

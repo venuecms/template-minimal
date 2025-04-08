@@ -91,7 +91,7 @@ const VariantPrice = ({
       : variant.price < 0
         ? "Free"
         : "Buy";
-  return (
+  return variant.price > 0 || variant.externalLink ? (
     <div
       key={variant.productType?.type + "price"}
       className="border border-muted px-2 py-1 text-secondary"
@@ -105,8 +105,8 @@ const VariantPrice = ({
           {displayPrice}
         </a>
       ) : (
-        variant.price > 0 && displayPrice
+        displayPrice
       )}
     </div>
-  );
+  ) : null;
 };

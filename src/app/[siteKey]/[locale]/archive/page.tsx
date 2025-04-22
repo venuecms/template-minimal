@@ -39,8 +39,6 @@ const ArchivePage = async ({ params, searchParams }) => {
     notFound();
   }
 
-  console.log("SDKPage", currentPage, events);
-
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
     : "archive";
@@ -71,7 +69,6 @@ const ArchivePage = async ({ params, searchParams }) => {
         ) : (
           "No events found"
         )}
-        {/* Add Pagination component */}
         {events?.records.length && totalPages > 1 ? (
           <Pagination
             currentPage={currentPage}

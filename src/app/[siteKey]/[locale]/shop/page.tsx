@@ -14,6 +14,7 @@ import { notFound } from "next/navigation";
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+import { Pagination } from "@/components/Pagination";
 import { VenueImage } from "@/components/VenueImage";
 import { setupSSR } from "@/components/utils";
 
@@ -21,13 +22,25 @@ export const generateMetadata = getGenerateMetadata(() =>
   getPage({ slug: "shop" }),
 );
 
-const ProductsPage = async ({ params }: { params: Promise<Params> }) => {
+const ITEMS_PER_PAGE = 50;
+
+const ProductsPage = async ({
+  params,
+  searchParams,
+}: {
+  params: Promise<Params>;
+}) => {
   const { locale } = await params;
   await setupSSR({ params });
 
+  const currentPage = parseInt(searchParams?.page as string, 10) || 0;
+
   const [{ data: products }, { data: page }, { data: site }] =
     await Promise.all([
-      getProducts({ limit: 60 }),
+      getProducts({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+      }),
       getPage({ slug: "shop" }),
       getSite(),
     ]);
@@ -35,6 +48,11 @@ const ProductsPage = async ({ params }: { params: Promise<Params> }) => {
   if (!site) {
     notFound();
   }
+
+  // Calculate total pages
+  const totalPages = products?.count
+    ? Math.ceil(products.count / ITEMS_PER_PAGE)
+    : 100;
 
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
@@ -63,6 +81,19 @@ const ProductsPage = async ({ params }: { params: Promise<Params> }) => {
             <ListProduct key={product.slug} product={product} site={site} />
           ))}
         </div>
+      ) : null}
+      {moreProducts?.length && totalPages > 1 ? (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={
+            // TODO: a quick hack. we need to update the API
+            (moreProducts.length ?? 0) + (topProducts?.length ?? 0) <
+            ITEMS_PER_PAGE
+              ? currentPage
+              : totalPages
+          }
+          baseUrl={`/shop`} // Use locale in base URL
+        />
       ) : null}
     </section>
   );

@@ -51,10 +51,11 @@ const ArchivePage = async ({
     : "archive";
 
   // Calculate total pages
-  const totalPages =
-    events && "count" in events
-      ? Math.ceil(events.count / ITEMS_PER_PAGE)
-      : 100;
+  // @ts-expect-error - this will change once we update the API
+  const totalPages = events?.count
+    ? // @ts-expect-error - this will change once we update the API
+      Math.ceil(events.count / ITEMS_PER_PAGE)
+    : 100;
 
   return (
     <TwoColumnLayout>

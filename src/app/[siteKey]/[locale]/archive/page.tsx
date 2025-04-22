@@ -1,4 +1,5 @@
 import { getGenerateMetadata } from "@/lib";
+import { Params } from "@/types";
 import {
   getEvents,
   getLocalizedContent,
@@ -18,11 +19,17 @@ export const generateMetadata = getGenerateMetadata(() =>
 
 const ITEMS_PER_PAGE = 50;
 
-const ArchivePage = async ({ params, searchParams }) => {
+const ArchivePage = async ({
+  params,
+  searchParams,
+}: {
+  params: Promise<Params>;
+  searchParams: Promise<{ page: string }>;
+}) => {
   const { locale } = await params;
   await setupSSR({ params });
 
-  const currentPage = parseInt(searchParams?.page as string, 10) || 0;
+  const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
 
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
     getEvents({

@@ -75,7 +75,10 @@ const ArchivePage = async ({ params, searchParams }) => {
         {events?.records.length && totalPages > 1 ? (
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={
+              // TODO: a quick hack. we need to update the API
+              events?.records.length < ITEMS_PER_PAGE ? currentPage : totalPages
+            }
             baseUrl={`/archive`} // Use locale in base URL
           />
         ) : null}

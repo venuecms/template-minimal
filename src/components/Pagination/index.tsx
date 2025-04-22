@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
@@ -16,7 +17,7 @@ export const Pagination = ({
   baseUrl,
   className,
 }: PaginationProps) => {
-  if (totalPages <= 1) {
+  if (totalPages < 1) {
     return null; // Don't render pagination if there's only one page or less
   }
 
@@ -27,7 +28,6 @@ export const Pagination = ({
   ) => {
     const href = `${baseUrl}?page=${page}`;
     const linkClassName = cn(
-      "px-3 py-1 border rounded hover:bg-muted",
       isDisabled && "pointer-events-none text-muted-foreground opacity-50",
     );
 
@@ -45,13 +45,19 @@ export const Pagination = ({
   return (
     <nav
       aria-label="Pagination"
-      className={cn("mt-8 flex items-center justify-center gap-4", className)}
+      className={cn("mt-8 flex items-center justify-between gap-4", className)}
     >
-      {renderLink(currentPage - 1, "Previous", currentPage <= 0)}
-      <span className="text-muted-foreground text-sm">
-        Page {currentPage + 1} of {totalPages}
-      </span>
-      {renderLink(currentPage + 1, "Next", currentPage >= totalPages)}
+      {renderLink(
+        currentPage - 1,
+        <ArrowLeft className="size-6" />,
+        currentPage <= 0,
+      )}
+
+      {renderLink(
+        currentPage + 1,
+        <ArrowRight className="size-6" />,
+        currentPage >= totalPages,
+      )}
     </nav>
   );
 };

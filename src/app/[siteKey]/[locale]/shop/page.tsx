@@ -29,11 +29,12 @@ const ProductsPage = async ({
   searchParams,
 }: {
   params: Promise<Params>;
+  searchParams: Promise<{ page: string }>;
 }) => {
   const { locale } = await params;
   await setupSSR({ params });
 
-  const currentPage = parseInt(searchParams?.page as string, 10) || 0;
+  const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
 
   const [{ data: products }, { data: page }, { data: site }] =
     await Promise.all([
@@ -85,14 +86,8 @@ const ProductsPage = async ({
       {moreProducts?.length && totalPages > 1 ? (
         <Pagination
           currentPage={currentPage}
-          totalPages={
-            // TODO: a quick hack. we need to update the API
-            (moreProducts.length ?? 0) + (topProducts?.length ?? 0) <
-            ITEMS_PER_PAGE
-              ? currentPage
-              : totalPages
-          }
-          baseUrl={`/shop`} // Use locale in base URL
+          totalPages={totalPages - 1}
+          baseUrl={`/shop`}
         />
       ) : null}
     </section>

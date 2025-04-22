@@ -44,9 +44,10 @@ const ArchivePage = async ({ params, searchParams }) => {
     : "archive";
 
   // Calculate total pages
-  const totalPages = events?.count
-    ? Math.ceil(events.count / ITEMS_PER_PAGE)
-    : 100;
+  const totalPages =
+    events && "count" in events
+      ? Math.ceil(events.count / ITEMS_PER_PAGE)
+      : 100;
 
   return (
     <TwoColumnLayout>

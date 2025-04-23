@@ -153,6 +153,8 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       </TwoColumnLayout>
       {site.name === "ELNA" ? (
         <section className="py-20">
+          <p className="pb-8 text-primary">Works</p>
+
           <div className="grid grid-cols-2 gap-8 pb-20 sm:max-w-full sm:grid-cols-4 xl:grid-cols-4">
             {topProducts?.length
               ? topProducts.map((product) => (
@@ -176,7 +178,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
             <span></span>
             <span></span>
             <Link className="flex w-full sm:relative sm:flex-row" href="/shop">
-              → see alla
+              → see all works
             </Link>
           </div>
         </section>

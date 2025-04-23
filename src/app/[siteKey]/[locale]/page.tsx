@@ -5,6 +5,7 @@ import {
   LocalizedContent,
   getEvents,
   getLocalizedContent,
+  getProducts,
   getSite,
 } from "@venuecms/sdk";
 import { getTranslations } from "next-intl/server";
@@ -17,6 +18,8 @@ import { EventFeatured } from "@/components/EventFeatured";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles, setupSSR } from "@/components/utils";
+
+import { ListProduct } from "./shop/page";
 
 export const generateMetadata = async ({
   params,
@@ -47,12 +50,17 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   const t = await getTranslations("events");
   const { locale } = await params;
 
-  const [{ data: site }, { data: events }, { data: featuredEvents }] =
-    await Promise.all([
-      getSite(),
-      getEvents({ limit: 6, upcoming: true }),
-      getEvents({ limit: 6, featured: true }),
-    ]);
+  const [
+    { data: site },
+    { data: events },
+    { data: featuredEvents },
+    { data: products },
+  ] = await Promise.all([
+    getSite(),
+    getEvents({ limit: 6, upcoming: true }),
+    getEvents({ limit: 6, featured: true }),
+    getProducts({ limit: 10 }),
+  ]);
 
   if (!site) {
     notFound();
@@ -71,6 +79,9 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       // It is essentially falling back onto the general instance site description which is not localized
       // and is used mostly for listing info about an instnace that is not on a website.
       { content: { content: site.description } as LocalizedContent };
+
+  const topProducts = products?.records.slice(0, 4);
+  const moreProducts = products?.records.slice(4);
 
   return (
     <>
@@ -128,6 +139,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
               ) : null}
             </section>
           ) : null}
+
           {content ? (
             <div className="flex sm:hidden">
               <VenueContent
@@ -139,6 +151,36 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
           ) : null}
         </ColumnRight>
       </TwoColumnLayout>
+      {site.name === "ELNA" ? (
+        <section className="py-20">
+          <div className="grid grid-cols-2 gap-8 pb-20 sm:max-w-full sm:grid-cols-4 xl:grid-cols-4">
+            {topProducts?.length
+              ? topProducts.map((product) => (
+                  <ListProduct
+                    key={product.slug}
+                    featured={true}
+                    product={product}
+                    site={site}
+                  />
+                ))
+              : "No products found"}
+          </div>
+          {moreProducts?.length ? (
+            <div className="grid grid-cols-2 gap-8 sm:max-w-full lg:grid-cols-[repeat(4,minmax(1rem,32rem))] xl:grid-cols-[repeat(6,minmax(1rem,32rem))]">
+              {moreProducts.map((product) => (
+                <ListProduct key={product.slug} product={product} site={site} />
+              ))}
+            </div>
+          ) : null}
+          <div className="w-full grid-cols-3 sm:grid">
+            <span></span>
+            <span></span>
+            <Link className="flex w-full sm:relative sm:flex-row" href="/shop">
+              → see alla
+            </Link>
+          </div>
+        </section>
+      ) : null}
     </>
   );
 };

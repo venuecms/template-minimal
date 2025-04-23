@@ -96,7 +96,7 @@ const ProductsPage = async ({
 
 export default ProductsPage;
 
-const ListProduct = ({
+export const ListProduct = ({
   product,
   site,
   featured,

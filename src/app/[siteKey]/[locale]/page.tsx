@@ -16,10 +16,9 @@ import { VenueContent } from "@/lib/utils/renderer";
 
 import { EventFeatured } from "@/components/EventFeatured";
 import { EventsList, ListEvent } from "@/components/EventList";
+import { ListProduct } from "@/components/ListProduct";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles, setupSSR } from "@/components/utils";
-
-import { ListProduct } from "./shop/page";
 
 export const generateMetadata = async ({
   params,
@@ -153,7 +152,9 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       </TwoColumnLayout>
       {site.name === "ELNA" ? (
         <section className="py-20">
-          <p className="pb-8 text-primary">Works</p>
+          <p className="pb-8 text-primary">
+            <Link href="/shop">Works</Link>
+          </p>
 
           <div className="grid grid-cols-2 gap-8 pb-20 sm:max-w-full sm:grid-cols-4 xl:grid-cols-4">
             {topProducts?.length

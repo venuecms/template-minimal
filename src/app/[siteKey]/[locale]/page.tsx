@@ -150,7 +150,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
           ) : null}
         </ColumnRight>
       </TwoColumnLayout>
-      {site.name === "ELNA" ? (
+      {site.name === "ELNA" || site.name === "infant tree" ? (
         <section className="py-20">
           <p className="pb-8 text-primary">
             <Link href="/shop">Works</Link>

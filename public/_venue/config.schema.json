@@ -53,7 +53,8 @@
         "Inter",
         "Atkinson_Hyperlegible_Next",
         "Oswald",
-        "Work_Sans"
+        "Work_Sans",
+        "Open_Sans"
       ],
       "default": "jost",
       "title": "Font"

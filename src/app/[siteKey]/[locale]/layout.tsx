@@ -20,6 +20,7 @@ import {
   Special_Elite,
   Work_Sans,
   Young_Serif,
+  Open_Sans,
 } from "next/font/google";
 import { notFound } from "next/navigation";
 
@@ -130,6 +131,12 @@ const IBMPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const OpenSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["300", "500"],
+  display: "swap",
+});
+
 const ThemeFonts = {
   Work_Sans: WorkSans.style,
   oswald: oswald.style,
@@ -147,6 +154,7 @@ const ThemeFonts = {
   Gothic_A1: GothicA1.style,
   jost: jost.style,
   IBM_Plex_Mono: IBMPlexMono.style,
+  Open_Sans: OpenSans.style,
   default: SchibstedGrotesk.style,
   custom: { fontFamily: "custom" },
 };

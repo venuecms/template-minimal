@@ -13,7 +13,11 @@ export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
             : "free";
 
         return ticket.externalLink ? (
-          <Link key={ticket.name} href={ticket.externalLink}>
+          <Link
+            className="border-b"
+            key={ticket.name}
+            href={ticket.externalLink}
+          >
             {ticketText} {ticket.name.toLowerCase()}
           </Link>
         ) : (

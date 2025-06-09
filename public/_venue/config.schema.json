@@ -27,7 +27,8 @@
         "silverGrey2",
         "darkGrey1",
         "eroPink",
-        "blackOnWhite"
+        "blackOnWhite",
+        "darkGreyCM"
       ],
       "default": "default",
       "title": "Theme"

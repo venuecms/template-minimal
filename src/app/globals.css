@@ -223,3 +223,12 @@ html.darkGrey1 {
     --nav: 0, 0%, 25%, 1;
     --overlay: 0, 0%, 84%, 0.7;
   }
+
+  html.darkGreyCM {
+  --background: 280, 5%, 12%, 1;
+  --primary: 340, 15%, 90%, 1;
+  --secondary: 193, 20%, 85%, 1;
+  --muted: 193, 4%, 70%, 1;
+  --nav: 193, 50%, 85%, 1;
+  --overlay: 280, 5%, 12%, 0.8;
+  }

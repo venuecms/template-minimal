@@ -21,7 +21,12 @@ export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
             {ticketText} {ticket.name.toLowerCase()}
           </Link>
         ) : (
-          <div key={ticket.name}>{ticketText}</div>
+          <div key={ticket.name}>
+            {ticketText}{" "}
+            {ticket.name.toLowerCase() !== "regular"
+              ? ticket.name.toLowerCase()
+              : ""}
+          </div>
         );
       })}
     </div>

@@ -18,14 +18,20 @@ const PagePage = async ({
   const { slug } = await params;
   await setupSSR({ params });
 
-  const { data: page } = await getPage({ slug });
-  const { data: pages } = await getPages();
+  try {
+    const { data: page, error } = await getPage({ slug });
+    console.log("page", error);
+    const { data: pages } = await getPages();
 
-  if (!page || !pages) {
+    if (!page || !pages) {
+      notFound();
+    }
+
+    return <Page page={page} pages={pages.records as Array<PageWithParent>} />;
+  } catch (error) {
+    console.error(error);
     notFound();
   }
-
-  return <Page page={page} pages={pages.records as Array<PageWithParent>} />;
 };
 
 export default PagePage;

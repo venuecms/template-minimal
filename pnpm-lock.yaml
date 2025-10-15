@@ -18,8 +18,8 @@ importers:
         specifier: ^5.71.5
         version: 5.71.5(react@19.0.0-rc-66855b96-20241106)
       '@venuecms/sdk':
-        specifier: ^0.0.25
-        version: 0.0.25
+        specifier: ^0.0.28
+        version: 0.0.28
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -183,6 +183,7 @@ packages:
 
   '@hey-api/client-fetch@0.5.7':
     resolution: {integrity: sha512-hLpID6NCs8+stbz935UyvyGOXY44oLBSOy7ZEpwXxj977A/0U41iihDQllDoCJrxtbe06DnDgwPOn6/xnRJ71w==}
+    deprecated: Starting with v0.73.0, this package is bundled directly inside @hey-api/openapi-ts.
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -587,8 +588,8 @@ packages:
   '@types/rss@0.0.32':
     resolution: {integrity: sha512-2oKNqKyUY4RSdvl5eZR1n2Q9yvw3XTe3mQHsFPn9alaNBxfPnbXBtGP8R0SV8pK1PrVnLul0zx7izbm5/gF5Qw==}
 
-  '@venuecms/sdk@0.0.25':
-    resolution: {integrity: sha512-D8cTRRg/6Kona4zZkzNsbXh2swvv8YgCoSqKdYPVPdlRavq+8hqFOK7+UvkRWG8vLofQx/pHx9tqdujPR7EtEw==}
+  '@venuecms/sdk@0.0.28':
+    resolution: {integrity: sha512-9P3KgCzDg2xaUMmRCqIzc58Fc+hLyM1yEkWf0XUAU0f7xIBftSMZDcnocL2bMlWCfYAdnh0YTaJ/aRtXf53iwQ==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1769,7 +1770,7 @@ snapshots:
 
   '@types/rss@0.0.32': {}
 
-  '@venuecms/sdk@0.0.25':
+  '@venuecms/sdk@0.0.28':
     dependencies:
       '@hey-api/client-fetch': 0.5.7
       zod: 3.24.1

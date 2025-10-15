@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { i18nConfig, routing } from "./lib/i18n";
 
+const handleI18nRouting = createMiddleware(routing);
+
 export default async function middleware(request: NextRequest) {
   const url = new URL(request.url);
   const host = request.headers.get("host");
@@ -43,8 +45,6 @@ export default async function middleware(request: NextRequest) {
 
   // only reroute if locale is missing. Otherwise we want to use the domain routing
   if (pathnameIsMissingLocale) {
-    const handleI18nRouting = createMiddleware(routing);
-
     const response = handleI18nRouting(request);
 
     return response;

@@ -23,6 +23,13 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  experimental: {
+    // Optimistic client cache for faster navigation
+    staleTimes: {
+      dynamic: 30, // Cache dynamic pages for 30 seconds
+      static: 180, // Cache static content for 3 minutes
+    },
+  },
 };
 
 export default withNextIntl(nextConfig);

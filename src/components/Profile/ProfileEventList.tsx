@@ -1,6 +1,7 @@
 import { getProfileEvents, getSite } from "@venuecms/sdk";
 
 import { EventsList, ListEvent } from "@/components/EventList";
+import { Skeleton } from "@/components/ui/Input/Skeleton";
 
 export const ProfileEventList = async ({
   header,
@@ -39,10 +40,10 @@ export const ProfileEventListSkeleton = ({
 }) => {
   return (
     <div className="flex flex-col gap-6">
-      <div className="h-4 w-1/4 bg-primary opacity-[3%]" />
+      <Skeleton className="w-1/4" />
       <EventsList>
         {Array.from({ length: numElements }).map((_, index) => (
-          <div key={index} className="h-16 w-[90%] bg-primary opacity-[3%]" />
+          <Skeleton key={index} className="h-16 w-[90%]" />
         ))}
       </EventsList>
     </div>

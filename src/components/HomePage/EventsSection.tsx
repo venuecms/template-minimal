@@ -1,11 +1,11 @@
-import { Suspense } from "react";
 import { LocalizedContent } from "@venuecms/sdk";
+import { Suspense } from "react";
 
 import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 
-import { EventsSkeleton } from "./LoadingSkeletons";
 import { EventsError } from "./ErrorFallbacks";
 import { EventsContent } from "./EventsContent";
+import { EventsSkeleton } from "./LoadingSkeletons";
 
 export function EventsSection({
   locale,
@@ -17,7 +17,7 @@ export function EventsSection({
   return (
     <ErrorBoundary fallback={<EventsError />}>
       <Suspense fallback={<EventsSkeleton />}>
-        <EventsContent locale={locale} siteContent={siteContent} />
+        <EventsContent siteContent={siteContent} />
       </Suspense>
     </ErrorBoundary>
   );

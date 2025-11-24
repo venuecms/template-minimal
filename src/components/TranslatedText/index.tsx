@@ -9,16 +9,18 @@ import { ReactNode } from "react";
  */
 export function TranslatedText({
   text,
+  namespace,
   values,
 }: {
   text: string;
+  namespace: string;
   /**
    * Optional values for interpolation
    * @example { count: 5 } for "Found {count} events"
    */
   values?: Record<string, string | number | boolean | null | undefined>;
 }): ReactNode {
-  const t = useTranslations(text);
+  const t = useTranslations(namespace);
 
   const translatedText = t(text, values);
 

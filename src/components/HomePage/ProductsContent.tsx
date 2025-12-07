@@ -1,4 +1,4 @@
-import { getProducts, getSite } from "@venuecms/sdk";
+import { cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { Link } from "@/lib/i18n";
 
@@ -6,8 +6,8 @@ import { ListProduct } from "@/components/ListProduct";
 
 export async function ProductsContent() {
   const [{ data: products }, { data: site }] = await Promise.all([
-    getProducts({ limit: 10 }),
-    getSite(),
+    cachedGetProducts({ limit: 10 }),
+    cachedGetSite(),
   ]);
 
   if (!site) return null;

@@ -1,10 +1,5 @@
-import {
-  LocalizedContent,
-  Page,
-  Site,
-  getLocalizedContent,
-  getPages,
-} from "@venuecms/sdk";
+import { LocalizedContent, Page, Site, getLocalizedContent } from "@venuecms/sdk";
+import { cachedGetPages } from "@/lib/utils";
 import { getLocale } from "next-intl/server";
 import { ReactNode } from "react";
 
@@ -26,7 +21,7 @@ export type RootPageContent = {
 
 export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const locale = await getLocale();
-  const { data: pages } = await getPages();
+  const { data: pages } = await cachedGetPages();
 
   // Defined in the custom fields for this template under public/_venue/config.schema.json
   const showSearch: boolean =

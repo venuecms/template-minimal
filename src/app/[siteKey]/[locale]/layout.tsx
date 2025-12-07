@@ -1,5 +1,5 @@
 import { Params } from "@/types";
-import { getSite } from "@venuecms/sdk";
+import { cachedGetSite } from "@/lib/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
@@ -169,7 +169,7 @@ const RootLayout = async ({
   const { locale, siteKey } = await params;
   await setupSSR({ params });
 
-  const { data: site } = await getSite();
+  const { data: site } = await cachedGetSite();
   if (!site) {
     notFound();
   }

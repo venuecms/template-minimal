@@ -1,4 +1,4 @@
-import { getEvents, getSite } from "@venuecms/sdk";
+import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventFeatured } from "@/components/EventFeatured";
 import { VenueImage } from "@/components/VenueImage";
@@ -13,8 +13,8 @@ export async function FeaturedEventsContent({
   noHeroOverlay?: boolean;
 }) {
   const [{ data: featuredEvents }, { data: site }] = await Promise.all([
-    getEvents({ limit: 6, featured: true }),
-    getSite(),
+    cachedGetEvents({ limit: 6, featured: true }),
+    cachedGetSite(),
   ]);
 
   if (!site) return null;

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  --background: 300, 1%, 5%, 1;
+  --primary: 120, 25%, 90%, 1;
+  --secondary: 120, 4%, 56%, 1;
+  --muted: 120, 4%, 33%, 0.8;
+}
+
 html.default {
   --background: 52, 32%, 94%, 1;
   --primary: 50, 1%, 10%, 1;
@@ -180,12 +187,12 @@ html.hundredK {
 }
 
 html.silverGrey1 {
---background: 300, 1%, 25%, 1;
---primary: 120, 25%, 90%, 1;
---secondary: 120, 4%, 56%, 1;
---muted: 120, 4%, 33%, 0.8;
---nav: 120, 25%, 90%, 1;
---overlay: 280, 5%, 12%, 0.8;
+  --background: 300, 1%, 25%, 1;
+  --primary: 120, 25%, 90%, 1;
+  --secondary: 120, 4%, 56%, 1;
+  --muted: 120, 4%, 33%, 0.8;
+  --nav: 120, 25%, 90%, 1;
+  --overlay: 280, 5%, 12%, 0.8;
 }
 
 html.silverGrey2 {
@@ -195,7 +202,7 @@ html.silverGrey2 {
   --muted: 50, 2%, 70%, 0.8;
   --nav: 51, 5%, 80%, 1;
   --overlay: 280, 5%, 12%, 0.8;
-  }
+}
 
 html.darkGrey1 {
   --background: 280, 5%, 12%, 1;
@@ -204,31 +211,31 @@ html.darkGrey1 {
   --muted: 120, 4%, 33%, 0.8;
   --nav: 120, 25%, 90%, 1;
   --overlay: 280, 5%, 12%, 0.8;
-  }
+}
 
-  html.eroPink {
-    --background: 0, 0%, 100%, 1;
-    --primary: 351, 88%, 62%, 1;
-    --secondary: 351, 88%, 62%, 0.8;
-    --muted: 351, 88%, 62%, 0.6;
-    --nav: 351, 88%, 62%, 1;
-    --overlay: 351, 88%, 62%, 0;
-    }
+html.eroPink {
+  --background: 0, 0%, 100%, 1;
+  --primary: 351, 88%, 62%, 1;
+  --secondary: 351, 88%, 62%, 0.8;
+  --muted: 351, 88%, 62%, 0.6;
+  --nav: 351, 88%, 62%, 1;
+  --overlay: 351, 88%, 62%, 0;
+}
 
-    html.blackOnWhite {
-    --background: 0, 0%, 100%, 1;
-    --primary: 0, 0%, 10%, 1;
-    --secondary: 0, 0%, 45%, 0.9;
-    --muted: 0, 0%, 55%, 0.6;
-    --nav: 0, 0%, 25%, 1;
-    --overlay: 0, 0%, 84%, 0.7;
-  }
+html.blackOnWhite {
+  --background: 0, 0%, 100%, 1;
+  --primary: 0, 0%, 10%, 1;
+  --secondary: 0, 0%, 45%, 0.9;
+  --muted: 0, 0%, 55%, 0.6;
+  --nav: 0, 0%, 25%, 1;
+  --overlay: 0, 0%, 84%, 0.7;
+}
 
-  html.darkGreyCM {
+html.darkGreyCM {
   --background: 280, 5%, 12%, 1;
   --primary: 340, 15%, 90%, 1;
   --secondary: 193, 20%, 85%, 1;
   --muted: 193, 4%, 70%, 1;
   --nav: 193, 50%, 85%, 1;
   --overlay: 280, 5%, 12%, 0.8;
-  }
+}

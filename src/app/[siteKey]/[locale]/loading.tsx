@@ -1,6 +1,6 @@
 import {
-  FeaturedEventsSkeleton,
   EventsSkeleton,
+  FeaturedEventsSkeleton,
   ProductsSkeleton,
 } from "@/components/HomePage/LoadingSkeletons";
 

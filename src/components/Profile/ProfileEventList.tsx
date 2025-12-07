@@ -1,4 +1,4 @@
-import { getProfileEvents, getSite } from "@venuecms/sdk";
+import { cachedGetProfileEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { Skeleton } from "@/components/ui/Input/Skeleton";
@@ -13,8 +13,8 @@ export const ProfileEventList = async ({
   filter?: { upcoming?: boolean; lt?: number; dir?: "asc" | "desc" };
 }) => {
   const [{ data: events }, { data: site }] = await Promise.all([
-    getProfileEvents({ slug, limit: 60, ...filter }),
-    getSite(),
+    cachedGetProfileEvents({ slug, limit: 60, ...filter }),
+    cachedGetSite(),
   ]);
 
   if (!site) {

@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-  transpilePackages: ["lucide-react"],
+  transpilePackages: ["lucide-react", "@venuecms/sdk"],
   images: {
     remotePatterns: [
       {

@@ -1,12 +1,12 @@
 import { Profile } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getProfile } from "@venuecms/sdk";
+import { cachedGetProfile } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
 import { setupSSR } from "@/components/utils";
 
-export const generateMetadata = getGenerateMetadata(getProfile);
+export const generateMetadata = getGenerateMetadata(cachedGetProfile);
 
 const ArtistPage = async ({
   params,
@@ -16,7 +16,7 @@ const ArtistPage = async ({
   const { slug } = await params;
   await setupSSR({ params });
 
-  const { data: profile } = await getProfile({ slug });
+  const { data: profile } = await cachedGetProfile({ slug });
 
   if (!profile) {
     notFound();

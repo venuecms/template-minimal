@@ -1,10 +1,7 @@
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
-import {
-  LocalizedContent,
-  getLocalizedContent,
-  getSite,
-} from "@venuecms/sdk";
+import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk";
+import { cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
 import { setupSSR } from "@/components/utils";
@@ -20,7 +17,7 @@ export const generateMetadata = async ({
   const { locale } = await params;
   await setupSSR({ params });
 
-  const { data: site } = await getSite();
+  const { data: site } = await cachedGetSite();
   if (!site) {
     return {};
   }
@@ -41,7 +38,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
   const { locale } = await params;
 
   // Only fetch critical site data - everything else streams
-  const { data: site } = await getSite();
+  const { data: site } = await cachedGetSite();
 
   if (!site) {
     notFound();

@@ -1,11 +1,7 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import {
-  getEvents,
-  getLocalizedContent,
-  getPage,
-  getSite,
-} from "@venuecms/sdk";
+import { getLocalizedContent } from "@venuecms/sdk";
+import { cachedGetEvents, cachedGetPage, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
 import { EventsList, ListEvent } from "@/components/EventList";
@@ -14,7 +10,7 @@ import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(() =>
-  getPage({ slug: "archive" }),
+  cachedGetPage({ slug: "archive" }),
 );
 
 const ITEMS_PER_PAGE = 50;
@@ -31,15 +27,20 @@ const ArchivePage = async ({
 
   const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
 
+  // Round down to nearest minute for better cache hits
+  const now = new Date();
+  now.setSeconds(0, 0);
+  const nowRoundedToMinute = now.getTime();
+
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
-    getEvents({
+    cachedGetEvents({
       page: currentPage,
       limit: ITEMS_PER_PAGE,
-      lt: new Date().getTime(),
+      lt: nowRoundedToMinute,
       dir: "desc",
     }),
-    getPage({ slug: "archive" }),
-    getSite(),
+    cachedGetPage({ slug: "archive" }),
+    cachedGetSite(),
   ]);
 
   if (!site) {

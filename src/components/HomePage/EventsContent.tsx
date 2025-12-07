@@ -1,4 +1,5 @@
-import { LocalizedContent, getEvents, getSite } from "@venuecms/sdk";
+import { LocalizedContent } from "@venuecms/sdk";
+import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { Link } from "@/lib/i18n";
 import { VenueContent } from "@/lib/utils/renderer";
@@ -14,8 +15,8 @@ export async function EventsContent({
   siteContent?: { content: LocalizedContent };
 }) {
   const [{ data: events }, { data: site }] = await Promise.all([
-    getEvents({ limit: 6, upcoming: true }),
-    getSite(),
+    cachedGetEvents({ limit: 6, upcoming: true }),
+    cachedGetSite(),
   ]);
 
   if (!site) {

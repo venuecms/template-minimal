@@ -1,14 +1,14 @@
 import { Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getPage, getPages } from "@venuecms/sdk";
+import { cachedGetPage, cachedGetPages } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
 import { PageWithParent } from "@/lib/utils/tree";
 
 import { setupSSR } from "@/components/utils";
 
-export const generateMetadata = getGenerateMetadata(getPage);
+export const generateMetadata = getGenerateMetadata(cachedGetPage);
 
 const PagePage = async ({
   params,
@@ -19,9 +19,9 @@ const PagePage = async ({
   await setupSSR({ params });
 
   try {
-    const { data: page, error } = await getPage({ slug });
+    const { data: page, error } = await cachedGetPage({ slug });
     console.log("page", error);
-    const { data: pages } = await getPages();
+    const { data: pages } = await cachedGetPages();
 
     if (!page || !pages) {
       notFound();

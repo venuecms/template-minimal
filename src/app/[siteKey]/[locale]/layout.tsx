@@ -1,8 +1,10 @@
 import { Params } from "@/types";
+import { listSiteDomains } from "@venuecms/sdk";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { Suspense } from "react";
 
+import { i18nConfig } from "@/lib/i18n/config";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { VenueProvider } from "@/lib/utils/VenueProvider";
 
@@ -16,7 +18,21 @@ import { setupSSR } from "@/components/utils";
 import "../../globals.css";
 import Loading from "./loading";
 
-export const runtime = "edge";
+export const generateStaticParams = async () => {
+  const { data } = await listSiteDomains();
+  const siteKeys = data?.records?.map((record) => record.siteKey) ?? [];
+
+  // Generate params for each siteKey + locale combination
+  return siteKeys.flatMap((siteKey) =>
+    i18nConfig.locales.map((locale) => ({
+      siteKey,
+      locale,
+    })),
+  );
+};
+
+// Allow dynamic params for sites not in generateStaticParams
+export const dynamicParams = true;
 
 const RootLayout = async ({
   children,

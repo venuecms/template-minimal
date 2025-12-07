@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { Params } from "@/types";
 import { cachedGetSite } from "@/lib/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
+import { NavigationProgress } from "@/components/NavigationProgress";
 import {
   Abel,
   Courier_Prime,
@@ -228,6 +230,9 @@ const RootLayout = async ({
             <ThemeProvider attribute="class" forcedTheme={themeId}>
               <VenueProvider siteKey={siteKey}>
                 <SearchProvider>
+                  <Suspense fallback={null}>
+                    <NavigationProgress />
+                  </Suspense>
                   <SiteHeader />
                   <SearchResultsLayout>{children}</SearchResultsLayout>
                 </SearchProvider>

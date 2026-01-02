@@ -8,6 +8,9 @@ import { cn } from "@/lib/utils";
 import { LocationLink } from "../LocationLink";
 import { VenueImage } from "../VenueImage";
 import { formatDateRange } from "../utils";
+import { ArrowUpRight } from "lucide-react";
+
+
 
 export const EventsList = ({
   children,
@@ -19,7 +22,7 @@ export const EventsList = ({
   return (
     <div
       className={cn(
-        "flex flex-col gap-x-8 text-sm sm:grid sm:grid-flow-row sm:grid-cols-2",
+        "flex flex-col gap-x-8 sm:grid sm:grid-flow-row sm:grid-cols-1",
         className,
       )}
     >
@@ -51,38 +54,48 @@ export const ListEvent = ({
   return (
     <div
       className={cn(
-        "flex break-inside-avoid flex-col gap-8 pb-8 sm:gap-0",
+        "flex break-inside-avoid flex-col text-lg gap-8 pt-4 pb-4 sm:gap-0 border-b border-muted first:pt-0 last:border-0",
         className,
       )}
     >
-      {withImage ? (
-        <div className={cn("w-full pb-3 sm:w-80 sm:max-w-full")}>
-          <Link href={`/events/${event.slug}`}>
-            <VenueImage image={event.image} aspect="video" />
-          </Link>
-        </div>
-      ) : null}
-      <div className="flex flex-col">
-        {event.startDate ? (
-          <div className="text-secondary">
+        {withImage ? (
+          <div className={cn("w-full pb-3 sm:w-80 sm:max-w-full")}>
             <Link href={`/events/${event.slug}`}>
-              {formatDateRange({
-                start: event.startDate,
-                end: event.endDate,
-                withTime: withTime && event.hasTime,
-                template: dateTemplate,
-                timeZone: site.timeZone!,
-              })}
+              <VenueImage image={event.image} aspect="video" />
             </Link>
           </div>
         ) : null}
-        <div className={cn("text-primary", isCancelled && "line-through")}>
-          <Link href={`/events/${event.slug}`}>{content.title}</Link>
+      <div className="group/event flex flex-col hover:brightness-150">
+        <div className="flex flex-row gap-4">
+          {event.startDate ? (
+            <div className="">
+              <Link href={`/events/${event.slug}`}>
+                {formatDateRange({
+                  start: event.startDate,
+                  end: event.endDate,
+                  withTime: withTime && event.hasTime,
+                  template: dateTemplate,
+                  timeZone: site.timeZone!,
+                })}
+              </Link>
+            </div>
+                ) : null}
+            <div className={cn("", isCancelled && "line-through")}>
+              {event.location && !event.location.isDefault ? (
+              <LocationLink location={event.location} />
+              ) : null}
+            </div>
         </div>
-        {event.location && !event.location.isDefault ? (
-          <LocationLink location={event.location} />
-        ) : null}
-        {isCancelled ? <div className="text-primary">Cancelled</div> : null}
+        <div className="flex flex-row gap-2">
+          <div className={cn("text-primary", isCancelled && "line-through")}>
+            <Link href={`/events/${event.slug}`}>{content.title} </Link>
+          </div>
+          <div className="hidden group-hover/event:inline"><ArrowUpRight />
+          </div>
+            {isCancelled ? 
+          <div className="text-primary">Cancelled
+          </div> : null}  
+        </div>
       </div>
     </div>
   );

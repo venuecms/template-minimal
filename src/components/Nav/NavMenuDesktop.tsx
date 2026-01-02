@@ -17,11 +17,11 @@ export const NavMenuDesktop = ({
   return (
     <nav className="relative hidden w-full items-center justify-between sm:flex">
       {!isActive ? (
-        <ol className="mr-8 flex items-center gap-8 text-sm text-nav">
+        <ul className="mr-8 flex-row items-center gap-8">
           {children}
-        </ol>
+        </ul>
       ) : null}
-      {showSearch ? <SearchInput /> : null}
+     {/*</nav> {showSearch ? <SearchInput /> : null}</div>*/}
     </nav>
   );
 };

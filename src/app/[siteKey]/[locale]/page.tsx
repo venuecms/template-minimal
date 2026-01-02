@@ -69,6 +69,8 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
       {/* Events section streams independently */}
       <EventsSection locale={locale} siteContent={{ content }} />
 
+artist template testing
+
       {/* Products section streams last */}
       <ProductsSection />
     </>

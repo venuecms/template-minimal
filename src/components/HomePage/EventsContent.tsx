@@ -8,6 +8,7 @@ import { EventsList, ListEvent } from "@/components/EventList";
 import { TranslatedText } from "@/components/TranslatedText";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles } from "@/components/utils";
+import { ArrowRight } from "lucide-react";
 
 export async function EventsContent({
   siteContent,
@@ -15,7 +16,7 @@ export async function EventsContent({
   siteContent?: { content: LocalizedContent };
 }) {
   const [{ data: events }, { data: site }] = await Promise.all([
-    cachedGetEvents({ limit: 6, upcoming: true }),
+    cachedGetEvents({ limit: 3, upcoming: true }),
     cachedGetSite(),
   ]);
 
@@ -24,8 +25,8 @@ export async function EventsContent({
   }
 
   return (
-    <TwoColumnLayout>
-      <ColumnLeft className="hidden text-sm text-secondary sm:flex">
+    <TwoColumnLayout className="text-lg">
+      <ColumnLeft className="hidden sm:flex">
         {siteContent?.content ? (
           <VenueContent
             className="flex flex-col gap-6"
@@ -42,14 +43,14 @@ export async function EventsContent({
                 <ListEvent key={event.id} event={event} site={site} />
               ))}
             </EventsList>
-            {events.records.length >= 6 ? (
-              <div className="w-full grid-cols-2 sm:grid">
+            {events.records.length >= 3 ? (
+              <div className="w-full grid-cols-1 pt-8 sm:grid hover:brightness-150">
                 <span></span>
-                <Link
-                  className="flex w-full sm:relative sm:flex-row"
+                <Link 
+                  className="flex w-full sm:relative sm:flex-row items-center"
                   href="/events"
                 >
-                  →{" "}
+                  <div className="pr-4"><ArrowRight /></div> {" "}
                   <TranslatedText
                     namespace="events"
                     text="see_all_upcoming_events"

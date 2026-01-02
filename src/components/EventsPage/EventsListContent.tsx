@@ -22,14 +22,14 @@ export async function EventsListContent({ locale }: { locale: string }) {
 
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary">
+      <ColumnLeft className="text-lg">
         <p className="pb-8 text-primary">{pageTitle}</p>
       </ColumnLeft>
       <ColumnRight>
         {events?.records.length ? (
-          <EventsList className="gap-y-12">
+          <EventsList className="gap-y-4">
             {events.records.map((event) => (
-              <ListEvent key={event.id} event={event} site={site} withImage />
+              <ListEvent key={event.id} event={event} site={site} />
             ))}
           </EventsList>
         ) : (

@@ -7,6 +7,10 @@ html {
   --primary: 120, 25%, 90%, 1;
   --secondary: 120, 4%, 56%, 1;
   --muted: 120, 4%, 33%, 0.8;
+  --third: 319, 100, 59, 1;
+  --type-size-02: 1.5rem;
+  --type-size-01: 1rem;
+  --type-size-00: 0.75rem;
 }
 
 html.default {
@@ -73,9 +77,11 @@ html.ahmed {
   --background: 60, 5%, 4%, 1;
   --primary: 50, 25%, 90%, 1;
   --secondary: 54, 4%, 55%, 1;
-  --muted: 47, 4%, 55%, 0.7;
+  --tertiary: 54, 4%, 55%, 0.5;
+  --muted: 47, 4%, 55%, 0.5;
   --nav: 50, 20%, 80%, 1;
-  --overlay: 50, 8%, 5%, 0.8;
+  --overlay: 2rem;
+  --size-02: 1.5rem;
 }
 
 html.frim {

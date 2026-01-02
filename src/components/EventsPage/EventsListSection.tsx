@@ -10,9 +10,9 @@ import { EventsListContent } from "./EventsListContent";
 function EventsListError() {
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary" />
+      <ColumnLeft className="text-lg" />
       <ColumnRight>
-        <p className="text-secondary">
+        <p className="">
           Unable to load events. Please try refreshing the page.
         </p>
       </ColumnRight>
@@ -23,13 +23,13 @@ function EventsListError() {
 function EventsListSkeleton() {
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary">
+      <ColumnLeft className="text-lg">
         <div className="pb-8">
           <Skeleton className="w-32" />
         </div>
       </ColumnLeft>
       <ColumnRight>
-        <EventsList className="gap-y-12">
+        <EventsList className="gap-y-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="flex flex-col gap-3 pb-8">
               <Skeleton className="aspect-video w-full sm:w-80" />

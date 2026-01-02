@@ -18,11 +18,11 @@ export const LocationLink = ({
     <a
       href={mapLink}
       target="_blank"
-      className={cn("flex items-center gap-2 text-secondary", className)}
+      className={cn("flex items-center gap-2", className)}
     >
       <LocationDisplay
         location={location}
-        icon={<MapPin className="size-4" />}
+        icon={<MapPin className="size-4 hidden" />}
       />{" "}
     </a>
   ) : (
@@ -47,9 +47,11 @@ const LocationDisplay = ({
   return (
     <div className="flex flex-row items-center gap-2">
       <span>
-        {locationContent.title}
+       
+  
+       
         {!isDefault
-          ? `${city ? `, ${city}` : ""} ${region ? `, ${region} ` : ""} ${country ? country : ""}`
+          ? `${city ? `${city}` : ""} ${region ? `, ${region} ` : ""} ${country ? country : ""}`
           : null}
       </span>
       {icon}

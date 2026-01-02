@@ -42,7 +42,9 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const menuItems = rootPageContents
     ? rootPageContents.map(({ page, content, isStatic }) => (
         <li key={page.slug}>
-          <Link href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
+          <Link 
+            className="hover:brightness-150"
+            href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
             {content.title}
           </Link>
         </li>

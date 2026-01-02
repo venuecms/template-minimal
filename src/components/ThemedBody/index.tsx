@@ -156,7 +156,7 @@ export const ThemedBody = async ({ children }: { children: ReactNode }) => {
   return (
     <ThemeProvider attribute="class" forcedTheme={themeId}>
       <div
-        className="flex min-h-screen flex-col"
+        className="flex flex-col sm:flex-row items-start min-h-screen "
         style={
           ThemeFonts[fontName as keyof typeof ThemeFonts] ?? ThemeFonts.default
         }

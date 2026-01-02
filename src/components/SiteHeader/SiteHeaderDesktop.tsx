@@ -10,10 +10,10 @@ export const SiteHeaderDesktop = async ({
   nav: ReactNode;
 }) => {
   return (
-    <header className="top-0 hidden min-h-20 items-center text-nav sm:flex lg:gap-40">
+    <header className="top-0 sticky hidden min-h-20 items-center text-nav sm:flex lg:gap-40 ">
       <TwoColumnLayout className="py-0 pt-7 md:py-7 lg:items-center lg:py-7">
-        <ColumnLeft>{logo}</ColumnLeft>
-        <ColumnRight className="items-center">{nav}</ColumnRight>
+        <ColumnLeft className="gap-8">{logo} {nav}</ColumnLeft>
+        <ColumnRight className="items-center"></ColumnRight>
       </TwoColumnLayout>
     </header>
   );

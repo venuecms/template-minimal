@@ -35,7 +35,7 @@ export default {
         sm: ["clamp(1.00rem, calc(0.92rem + 0.39vw), 1.25rem)", "1.5rem"],
         md: ["clamp(1.20rem, calc(1.02rem + 0.88vw), 1.77rem);", "1.5rem"],
         lg: ["clamp(1.44rem, calc(1.11rem + 1.65vw), 2.50rem);", "2.4rem"],
-        xl: ["clamp(1.73rem, calc(1.17rem + 2.80vw), 3.53rem", "2.5rem"],
+        xl: ["clamp(1.73rem, calc(1.17rem + 2.80vw), 3.53rem);", "2.5rem"],
       },
       fontWeight: {
         light: "300",

@@ -37,10 +37,11 @@ export const Product = ({
         <div className="flex flex-col gap-14">
           <div className="flex flex-col gap-10">
             <div>
-              {product.author ? (
+             
+              <div>{content.title}</div>
+               {product.author ? (
                 <div className={cn("text-secondary")}>{product.author}</div>
               ) : null}
-              <div>{content.title}</div>
             </div>
             {variants.length > 0 ? (
               <div className="flex flex-col gap-4 pt-2">

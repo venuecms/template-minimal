@@ -37,7 +37,6 @@ export const Product = ({
         <div className="flex flex-col gap-14">
           <div className="flex flex-col gap-10">
             <div>
-             
               <div>{content.title}</div>
                {product.author ? (
                 <div className={cn("text-secondary")}>{product.author}</div>
@@ -50,7 +49,7 @@ export const Product = ({
                     key={variant.productType?.type}
                     className="flex items-center gap-8"
                   >
-                    <div className="text-muted">
+                    <div className="text-secondary">
                       {variant.productType?.type}
                     </div>
                     <VariantPrice variant={variant} site={site} />
@@ -59,13 +58,14 @@ export const Product = ({
               </div>
             ) : null}
           </div>
-          <VenueImage image={product.image} />
+          
         </div>
       </ColumnLeft>
 
       <ColumnRight className="max-w-4xl">
+       <VenueImage image={product.image} />
         <VenueContent
-          className="flex flex-col gap-6 sm:pr-32"
+          className="flex flex-col gap-6"
           content={content}
           contentStyles={renderedStyles}
         />

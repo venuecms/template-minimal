@@ -6,7 +6,7 @@ export const ColumnRight = ({
 }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={cn("col-span-2 flex w-full flex-col", className)}
+      className={cn("col-span-2 flex w-full flex-col gap-8", className)}
       {...props}
     />
   );

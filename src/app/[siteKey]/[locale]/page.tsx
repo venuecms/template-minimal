@@ -59,6 +59,7 @@ const Home = async ({ params }: { params: Promise<Params> }) => {
 
   return (
     <>
+    <div className="flex flex-col">
       {/* Featured events stream in when ready */}
       <FeaturedEventsSection
         locale={locale}
@@ -73,6 +74,7 @@ artist template testing
 
       {/* Products section streams last */}
       <ProductsSection />
+    </div>
     </>
   );
 };

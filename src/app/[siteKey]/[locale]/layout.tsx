@@ -39,7 +39,7 @@ const RootLayout = async ({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
 
-      <body className="font-base m-auto bg-background px-6 font-regular text-primary text-lg antialiased sm:max-w-[96rem] sm:px-12">
+      <body className="font-base m-auto bg-background px-6 font-regular text-md text-primary antialiased sm:max-w-[120rem]">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <QueryProvider>
             <VenueProvider siteKey={siteKey}>

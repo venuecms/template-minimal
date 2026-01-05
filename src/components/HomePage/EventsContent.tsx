@@ -25,7 +25,7 @@ export async function EventsContent({
   }
 
   return (
-    <TwoColumnLayout className="text-lg">
+    <TwoColumnLayout className="">
       <ColumnLeft className="hidden sm:flex">
         {siteContent?.content ? (
           <VenueContent

@@ -54,7 +54,7 @@ export const ListEvent = ({
   return (
     <div
       className={cn(
-        "flex break-inside-avoid flex-col text-lg gap-8 pt-4 pb-4 sm:gap-0 border-b border-muted first:pt-0 last:border-0",
+        "flex break-inside-avoid flex-col gap-8 pt-4 pb-4 sm:gap-0 border-b border-muted first:pt-0 last:border-0",
         className,
       )}
     >
@@ -66,7 +66,7 @@ export const ListEvent = ({
           </div>
         ) : null}
       <div className="group/event flex flex-col hover:brightness-150">
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-8">
           {event.startDate ? (
             <div className="">
               <Link href={`/events/${event.slug}`}>

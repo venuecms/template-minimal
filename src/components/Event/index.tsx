@@ -54,13 +54,14 @@ export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
               <TicketList tickets={event.tickets} />
             ) : null}
           </div>
-          <VenueImage image={event.image} />
+          
         </div>
       </ColumnLeft>
 
       <ColumnRight className="max-w-4xl">
+      <VenueImage image={event.image} />
         <VenueContent
-          className="flex flex-col gap-6 sm:pr-32"
+          className="flex flex-col gap-6"
           content={content}
           contentStyles={renderedStyles}
         />

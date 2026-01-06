@@ -24,7 +24,7 @@ export const SiteLogo = ({
   return headerImage ? (
     <Link href="/">{headerImage}</Link>
   ) : (
-    <h1 className={cn("text-nav text-lg hover:brightness-150", className)}>
+    <h1 className={cn("text-nav text-lg hover:brightness-150 text-nowrap", className)}>
       <Link href="/">{name}</Link>
     </h1>
   );

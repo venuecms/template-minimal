@@ -2,6 +2,7 @@ import { cachedGetProfileEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { Skeleton } from "@/components/ui/Input/Skeleton";
+import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 
 export const ProfileEventList = async ({
   header,
@@ -22,14 +23,18 @@ export const ProfileEventList = async ({
   }
 
   return events?.records.length ? (
-    <div className="flex flex-col pt-12 gap-12">
-      <h2 className="text-secondary m-0 py-0">{header}</h2>
-      <EventsList>
+   <TwoColumnLayout>
+      <ColumnLeft>
+      <h2 className=" m-0 py-0">{header}</h2>
+      </ColumnLeft>
+      <ColumnRight>
+         <EventsList>
         {events.records.map((event) => (
           <ListEvent key={event.id} event={event} site={site} />
         ))}
-      </EventsList>
-    </div>
+        </EventsList>
+      </ColumnRight>
+    </TwoColumnLayout>
   ) : null;
 };
 
@@ -39,13 +44,15 @@ export const ProfileEventListSkeleton = ({
   numElements?: number;
 }) => {
   return (
-    <div className="flex flex-col gap-6">
+    <TwoColumnLayout>
+      <ColumnRight>
       <Skeleton className="w-1/4" />
       <EventsList>
         {Array.from({ length: numElements }).map((_, index) => (
           <Skeleton key={index} className="h-16 w-[90%]" />
         ))}
       </EventsList>
-    </div>
+      </ColumnRight>
+  </TwoColumnLayout>
   );
 };

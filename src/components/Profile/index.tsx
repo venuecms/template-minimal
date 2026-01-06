@@ -20,7 +20,8 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
   const { content } = getLocalizedContent(profile?.localizedContent, locale);
 
   return (
-    <TwoColumnLayout>
+    <div className="flex flex-col gap-6">
+      <TwoColumnLayout>
       <ColumnLeft>
         <div className="flex flex-col gap-6">
           <div>
@@ -37,7 +38,12 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           content={content}
           contentStyles={renderedStyles}
         />
-        <ErrorBoundary fallback={null}>
+        
+      </ColumnRight>
+      </TwoColumnLayout>
+
+    
+   <ErrorBoundary fallback={null}>
           <Suspense fallback={<ProfileEventListSkeleton numElements={1} />}>
             <ProfileEventList
               header={t("upcoming_events")}
@@ -55,7 +61,8 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
             />
           </Suspense>
         </ErrorBoundary>
-      </ColumnRight>
-    </TwoColumnLayout>
+
+</div>
+    
   );
 };

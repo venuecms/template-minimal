@@ -26,13 +26,14 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           <div>
             <div>{content.title}</div>
           </div>
-          <VenueImage image={profile.image} />
+         
         </div>
       </ColumnLeft>
 
       <ColumnRight className="max-w-5xl">
-        <VenueContent
-          className="flex flex-col gap-6 sm:pr-32"
+        <VenueImage image={profile.image} />
+         <VenueContent
+          className="flex flex-col gap-6"
           content={content}
           contentStyles={renderedStyles}
         />

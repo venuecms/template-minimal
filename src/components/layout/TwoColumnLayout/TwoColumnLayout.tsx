@@ -14,7 +14,9 @@ export const TwoColumnLayout = ({
         className,
       )}
     >
+      
       {children}
+      
     </div>
   );
 };

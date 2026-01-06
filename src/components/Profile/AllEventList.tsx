@@ -1,10 +1,9 @@
-import { cachedGetProfileEvents, cachedGetSite } from "@/lib/utils";
+import { cachedGetEvents, cachedGetProfileEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { Skeleton } from "@/components/ui/Input/Skeleton";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 
-export const ProfileEventList = async ({
+export const EventList = async ({
   header,
   slug,
   filter,
@@ -14,7 +13,7 @@ export const ProfileEventList = async ({
   filter?: { upcoming?: boolean; lt?: number; dir?: "asc" | "desc" };
 }) => {
   const [{ data: events }, { data: site }] = await Promise.all([
-    cachedGetProfileEvents({ slug, limit: 60, ...filter }),
+    cachedGetEvents({ limit: 60, ...filter }),
     cachedGetSite(),
   ]);
 
@@ -23,43 +22,30 @@ export const ProfileEventList = async ({
   }
 
   return events?.records.length ? (
-   <TwoColumnLayout>
-      
-          <ColumnLeft style={{
-             height: "fit-content",
-              width: "auto",
-              position: "sticky",
-              top: "1.5rem"
-            }}>
-      <h2 className=" m-0 py-0">{header}</h2>
-      
-      </ColumnLeft>
-      <ColumnRight>
-         <EventsList>
+    <div className="flex flex-col pt-12 gap-12">
+      <h2 className="text-secondary m-0 py-0">{header}</h2>
+      <EventsList>
         {events.records.map((event) => (
           <ListEvent key={event.id} event={event} site={site} />
         ))}
-        </EventsList>
-      </ColumnRight>
-    </TwoColumnLayout>
+      </EventsList>
+    </div>
   ) : null;
 };
 
-export const ProfileEventListSkeleton = ({
+export const EventListSkeleton = ({
   numElements = 2,
 }: {
   numElements?: number;
 }) => {
   return (
-    <TwoColumnLayout>
-      <ColumnRight>
+    <div className="flex flex-col gap-6">
       <Skeleton className="w-1/4" />
       <EventsList>
         {Array.from({ length: numElements }).map((_, index) => (
           <Skeleton key={index} className="h-16 w-[90%]" />
         ))}
       </EventsList>
-      </ColumnRight>
-  </TwoColumnLayout>
+    </div>
   );
 };

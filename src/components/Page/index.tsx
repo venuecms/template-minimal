@@ -39,13 +39,13 @@ export const Page = ({
         </div>
       </ColumnLeft>
 
-      <ColumnRight>
+      <ColumnRight className="gap-24">
         <VenueContent
           className="flex max-w-[42rem] flex-col gap-6"
           content={content}
           contentStyles={renderedStyles}
         />
-        <TwoSubColumnLayout>
+       <TwoSubColumnLayout>
           {artists.map(({ profile }) => (
             <ProfileCompact key={profile.slug} profile={profile} />
           ))}

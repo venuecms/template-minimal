@@ -75,7 +75,7 @@ const CreditWrapper = ({
   credit ? (
     <div className="flex flex-col gap-1">
       {children}
-      <div className="text-end text-xs text-muted opacity-60">{credit}</div>
+      {/*<div className="text-end text-xs text-secondary">{credit}</div>*/}
     </div>
   ) : (
     children

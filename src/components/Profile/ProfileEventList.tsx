@@ -22,8 +22,8 @@ export const ProfileEventList = async ({
   }
 
   return events?.records.length ? (
-    <div className="flex flex-col gap-6">
-      <h2 className="m-0 py-0">{header}</h2>
+    <div className="flex flex-col pt-12 gap-12">
+      <h2 className="text-secondary m-0 py-0">{header}</h2>
       <EventsList>
         {events.records.map((event) => (
           <ListEvent key={event.id} event={event} site={site} />

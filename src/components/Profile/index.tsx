@@ -22,7 +22,7 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
   return (
     <TwoColumnLayout>
       <ColumnLeft>
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-6">
           <div>
             <div>{content.title}</div>
           </div>

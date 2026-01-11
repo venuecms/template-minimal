@@ -45,11 +45,11 @@ const LocationDisplay = ({
   const { isDefault, country, city, region } = location;
 
   return (
-    <div className="flex flex-row items-center gap-2">
+    <div className="flex flex-row items-center gap-2 hover:brightness-125">
       <span>
         {locationContent.title}
         {!isDefault
-          ? `${city ? `, ${city}` : ""} ${region ? `, ${region} ` : ""} ${country ? country : ""}`
+          ? `${city ? `, ${city}` : ""} ${country ? country : ""}`
           : null}
       </span>
       {icon}

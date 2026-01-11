@@ -73,9 +73,9 @@ const CreditWrapper = ({
   credit?: string | null;
 }) =>
   credit ? (
-    <div className="flex flex-col gap-1">
+    <div className="relative">
       {children}
-      <div className="text-end text-xs text-muted opacity-60">{credit}</div>
+      <div className="text-end text-xs text-muted opacity-60 absolute bottom--1 right-0">{credit}</div>
     </div>
   ) : (
     children
@@ -100,3 +100,4 @@ const ImageWrapper = ({
     </div>
   </div>
 );
+

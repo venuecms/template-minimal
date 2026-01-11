@@ -23,7 +23,7 @@ export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
         </Link>
       </div>
 
-<div className="text-secondary">
+<div className="text-secondary hover:brightness-125">
         <Link href={`/artists/${profile.slug}`}>
         {content.title}
         </Link>

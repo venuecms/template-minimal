@@ -37,7 +37,7 @@ export const VenueImage = ({
                 src={imageUrl}
                 image={image}
                 className={className}
-              />
+               />
             </ImageWrapper>
           ) : (
             <Image

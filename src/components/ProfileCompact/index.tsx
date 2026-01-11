@@ -16,19 +16,16 @@ export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
 
   return (
     <div className="flex flex-col gap-6">
-
-<div>
+      <div>
         <Link href={`/artists/${profile.slug}`}>
         <VenueImage image={profile.image} aspect="video"/>
         </Link>
       </div>
-
-<div className="text-secondary hover:brightness-125">
+      <div className="text-secondary hover:brightness-125">
         <Link href={`/artists/${profile.slug}`}>
         {content.title}
         </Link>
       </div>
-      
       <VenueContent
         className="flex flex-col gap-6 pr-4"
         content={content}

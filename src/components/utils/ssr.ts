@@ -8,7 +8,7 @@ import { routing } from "@/lib/i18n";
 
 export const setupSSR = async ({ params }: { params: Promise<Params> }) => {
   const { siteKey, locale } = await params;
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale)) {
     notFound();
   }
 

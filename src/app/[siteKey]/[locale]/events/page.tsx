@@ -1,5 +1,6 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
+
 import { cachedGetPage } from "@/lib/utils";
 
 import { EventsListSection } from "@/components/EventsPage";

@@ -34,7 +34,11 @@ export const SearchInput = ({ className }: { className?: string }) => {
           isActive ? "w-full" : "w-0",
         )}
       >
+        <label className="sr-only" htmlFor="nav-search">
+          Search
+        </label>
         <Input
+          id="nav-search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           ref={inputRef}

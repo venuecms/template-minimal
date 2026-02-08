@@ -16,10 +16,7 @@ import { setupSSR } from "@/components/utils";
 import "../../globals.css";
 import Loading from "./loading";
 
-// NOTE: generateStaticParams is disabled because the SDK uses global state
-// via setConfig(), which causes race conditions when building multiple
-// siteKeys in parallel. Static generation would require the SDK to support
-// per-request configuration instead of global state.
+export const runtime = "edge";
 
 const RootLayout = async ({
   children,

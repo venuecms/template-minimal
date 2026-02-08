@@ -1,4 +1,7 @@
-import { Location as VenueLocation, getLocalizedContent } from "@venuecms/sdk";
+import {
+  LocationSlim as VenueLocation,
+  getLocalizedContent,
+} from "@venuecms/sdk";
 import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
 import { ReactNode } from "react";

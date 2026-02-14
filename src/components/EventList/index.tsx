@@ -76,13 +76,13 @@ export const ListEvent = ({
             </Link>
           </div>
         ) : null}
-        <div className={cn("text-primary", isCancelled && "line-through")}>
+        <div className={cn("text-primary hover:brightness-150 text-balance", isCancelled && "line-through")}>
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
         {event.location && !event.location.isDefault ? (
           <LocationLink location={event.location} />
         ) : null}
-        {isCancelled ? <div className="text-primary">Cancelled</div> : null}
+        {isCancelled ? <div className="">Cancelled</div> : null}
       </div>
     </div>
   );

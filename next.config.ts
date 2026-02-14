@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimistic client cache for faster navigation
     staleTimes: {
-      dynamic: 30, // Cache dynamic pages for 30 seconds
+      dynamic: 60,
       static: 180, // Cache static content for 3 minutes
     },
   },

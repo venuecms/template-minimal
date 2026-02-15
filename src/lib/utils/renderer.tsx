@@ -5,7 +5,7 @@
 import { VenueImage } from "@/components";
 import { LocalizedContent } from "@venuecms/sdk";
 import Markdown from "markdown-to-jsx";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 type ElementClasses = {
   text?: string;
@@ -252,7 +252,7 @@ export const ContentRender = (props: {
   node: RenderNode;
   handlers?: NodeHandlers;
   classes?: ContentStyles;
-}): JSX.Element => {
+}): React.JSX.Element => {
   const { node, handlers: handlerOverrides = {} } = props;
   const handlers = {
     ...getDefaultHandlers(props.classes),
@@ -260,7 +260,7 @@ export const ContentRender = (props: {
   };
 
   // recursively render child content
-  const children: JSX.Element[] = [];
+  const children: React.JSX.Element[] = [];
   node.content &&
     node.content.forEach((child, ix) => {
       children.push(
@@ -344,7 +344,7 @@ export interface NodeProps {
   node: RenderNode;
 }
 
-export type NodeHandler = (props: NodeProps) => JSX.Element;
+export type NodeHandler = (props: NodeProps) => React.JSX.Element;
 
 export interface NodeHandlers {
   readonly [attr: string]: NodeHandler;

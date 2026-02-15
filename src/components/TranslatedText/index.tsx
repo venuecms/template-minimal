@@ -18,7 +18,7 @@ export function TranslatedText({
    * Optional values for interpolation
    * @example { count: 5 } for "Found {count} events"
    */
-  values?: Record<string, string | number | boolean | null | undefined>;
+  values?: Record<string, string | number | Date>;
 }): ReactNode {
   const t = useTranslations(namespace);
 

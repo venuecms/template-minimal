@@ -17,12 +17,12 @@
     "date-fns": "^4.1.0",
     "lucide-react": "^0.460.0",
     "markdown-to-jsx": "^7.7.2",
-    "next": "15.5.7",
-    "next-intl": "^3.26.5",
+    "next": "16.1.6",
+    "next-intl": "^4.8.2",
     "next-themes": "^0.4.3",
-    "react": "19.0.0-rc-66855b96-20241106",
+    "react": "19.2.4",
     "react-accessible-treeview": "^2.10.0",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.2.4",
     "remove-markdown": "^0.6.0",
     "rss": "^1.2.2",
     "tailwind-merge": "^2.5.4",
@@ -32,8 +32,8 @@
     "@tanstack/react-query-devtools": "^5.71.5",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "@types/rss": "^0.0.32",
     "postcss": "^8",
     "prettier": "3.3.3",
@@ -41,5 +41,11 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.14",
+      "@types/react-dom": "19.2.3"
+    }
+  }
 }

@@ -6,7 +6,7 @@ import { i18nConfig, routing } from "./lib/i18n";
 
 const handleI18nRouting = createMiddleware(routing);
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const url = new URL(request.url);
   const host = request.headers.get("host");
 

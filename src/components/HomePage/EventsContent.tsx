@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import { LocalizedContent } from "@venuecms/sdk";
+import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk";
 import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { Link } from "@/lib/i18n";
@@ -10,11 +10,7 @@ import { TranslatedText } from "@/components/TranslatedText";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles } from "@/components/utils";
 
-export async function EventsContent({
-  siteContent,
-}: {
-  siteContent?: { content: LocalizedContent };
-}) {
+export async function EventsContent({ locale }: { locale: string }) {
   await connection();
 
   const [{ data: events }, { data: site }] = await Promise.all([
@@ -26,13 +22,18 @@ export async function EventsContent({
     return null;
   }
 
+  const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
+  const { content: siteContent } = webSiteSettings?.localizedContent?.length
+    ? getLocalizedContent(webSiteSettings.localizedContent, locale)
+    : { content: { content: site.description } as LocalizedContent };
+
   return (
     <TwoColumnLayout>
       <ColumnLeft className="hidden text-sm text-secondary sm:flex">
-        {siteContent?.content ? (
+        {siteContent ? (
           <VenueContent
             className="flex flex-col gap-6"
-            content={siteContent.content}
+            content={siteContent}
             contentStyles={renderedStyles}
           />
         ) : null}
@@ -63,11 +64,11 @@ export async function EventsContent({
           </section>
         ) : null}
 
-        {siteContent?.content ? (
+        {siteContent ? (
           <div className="flex sm:hidden">
             <VenueContent
               className="flex flex-col gap-6"
-              content={siteContent.content}
+              content={siteContent}
               contentStyles={renderedStyles}
             />
           </div>

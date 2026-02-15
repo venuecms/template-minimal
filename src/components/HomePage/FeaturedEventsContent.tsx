@@ -6,12 +6,8 @@ import { VenueImage } from "@/components/VenueImage";
 
 export async function FeaturedEventsContent({
   locale,
-  showHeroImage,
-  noHeroOverlay,
 }: {
   locale: string;
-  showHeroImage?: boolean;
-  noHeroOverlay?: boolean;
 }) {
   await connection();
 
@@ -22,6 +18,9 @@ export async function FeaturedEventsContent({
 
   if (!site) return null;
 
+  const templateSettings = (site?.settings?.publicSite?.template?.config ??
+    {}) as { showHeroImage?: boolean; noHeroOverlay?: boolean };
+  const { showHeroImage, noHeroOverlay } = templateSettings;
   const webSiteSettings = site.webSites ? site.webSites[0] : undefined;
 
   return (

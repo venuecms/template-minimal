@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { getLocalizedContent } from "@venuecms/sdk";
 import { cachedGetPage, cachedGetProducts, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
@@ -14,6 +15,8 @@ export async function ProductsListContent({
   locale: string;
   currentPage: number;
 }) {
+  await connection();
+
   const [{ data: products }, { data: page }, { data: site }] =
     await Promise.all([
       cachedGetProducts({

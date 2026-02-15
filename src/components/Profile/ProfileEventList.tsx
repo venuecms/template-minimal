@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { cachedGetProfileEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";
@@ -12,6 +13,8 @@ export const ProfileEventList = async ({
   slug: string;
   filter?: { upcoming?: boolean; lt?: number; dir?: "asc" | "desc" };
 }) => {
+  await connection();
+
   const [{ data: events }, { data: site }] = await Promise.all([
     cachedGetProfileEvents({ slug, limit: 60, ...filter }),
     cachedGetSite(),

@@ -37,6 +37,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  cacheComponents: true,
   experimental: {
     // Optimistic client cache for faster navigation
     staleTimes: {

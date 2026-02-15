@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventFeatured } from "@/components/EventFeatured";
@@ -12,6 +13,8 @@ export async function FeaturedEventsContent({
   showHeroImage?: boolean;
   noHeroOverlay?: boolean;
 }) {
+  await connection();
+
   const [{ data: featuredEvents }, { data: site }] = await Promise.all([
     cachedGetEvents({ limit: 6, featured: true }),
     cachedGetSite(),

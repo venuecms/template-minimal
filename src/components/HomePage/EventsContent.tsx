@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { LocalizedContent } from "@venuecms/sdk";
 import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
@@ -14,6 +15,8 @@ export async function EventsContent({
 }: {
   siteContent?: { content: LocalizedContent };
 }) {
+  await connection();
+
   const [{ data: events }, { data: site }] = await Promise.all([
     cachedGetEvents({ limit: 6, upcoming: true }),
     cachedGetSite(),

@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { Link } from "@/lib/i18n";
@@ -5,6 +6,8 @@ import { Link } from "@/lib/i18n";
 import { ListProduct } from "@/components/ListProduct";
 
 export async function ProductsContent() {
+  await connection();
+
   const [{ data: products }, { data: site }] = await Promise.all([
     cachedGetProducts({ limit: 10 }),
     cachedGetSite(),

@@ -16,44 +16,55 @@ import { setupSSR } from "@/components/utils";
 import "../../globals.css";
 import Loading from "./loading";
 
-export const runtime = "edge";
 
-const RootLayout = async ({
+const LayoutContent = async ({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<Params>;
+}) => {
+  const { locale, siteKey } = await params;
+  await setupSSR({ params });
+  const messages = await getMessages();
+
+  return (
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <QueryProvider>
+        <VenueProvider siteKey={siteKey}>
+          <SearchProvider>
+            <Suspense fallback={null}>
+              <NavigationProgress />
+            </Suspense>
+            <Suspense fallback={<Loading />}>
+              <ThemedBody>
+                <SiteHeader />
+                <SearchResultsLayout>{children}</SearchResultsLayout>
+              </ThemedBody>
+            </Suspense>
+          </SearchProvider>
+        </VenueProvider>
+      </QueryProvider>
+    </NextIntlClientProvider>
+  );
+};
+
+const RootLayout = ({
   children,
   params,
 }: Readonly<{
   children: React.ReactNode;
   params: Promise<Params>;
 }>) => {
-  const { locale, siteKey } = await params;
-  await setupSSR({ params });
-
-  const messages = await getMessages();
-
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
-
       <body className="font-base m-auto bg-background px-6 font-regular text-primary antialiased sm:max-w-[96rem] sm:px-12">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <QueryProvider>
-            <VenueProvider siteKey={siteKey}>
-              <SearchProvider>
-                <Suspense fallback={null}>
-                  <NavigationProgress />
-                </Suspense>
-                <Suspense fallback={<Loading />}>
-                  <ThemedBody>
-                    <SiteHeader />
-                    <SearchResultsLayout>{children}</SearchResultsLayout>
-                  </ThemedBody>
-                </Suspense>
-              </SearchProvider>
-            </VenueProvider>
-          </QueryProvider>
-        </NextIntlClientProvider>
+        <Suspense fallback={<Loading />}>
+          <LayoutContent params={params}>{children}</LayoutContent>
+        </Suspense>
       </body>
     </html>
   );

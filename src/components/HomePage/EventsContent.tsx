@@ -9,6 +9,8 @@ import { EventsList, ListEvent } from "@/components/EventList";
 import { TranslatedText } from "@/components/TranslatedText";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles } from "@/components/utils";
+import { ArrowRight } from "lucide-react";
+
 
 export async function EventsContent({ locale }: { locale: string }) {
   await connection();
@@ -47,13 +49,14 @@ export async function EventsContent({ locale }: { locale: string }) {
               ))}
             </EventsList>
             {events.records.length >= 6 ? (
-              <div className="w-full grid-cols-2 sm:grid">
+              <div className="w-full grid-cols-1 gap-12 sm:grid">
                 <span></span>
                 <Link
-                  className="flex w-full sm:relative sm:flex-row"
+                  className="flex w-full sm:relative sm:flex-row items-center gap-2 hover:brightness-125"
                   href="/events"
                 >
-                  →{" "}
+                 <ArrowRight className="h-4"/>
+                 {" "}
                   <TranslatedText
                     namespace="events"
                     text="see_all_upcoming_events"

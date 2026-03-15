@@ -50,9 +50,9 @@ export const formatDateRange = ({
     startDate.getFullYear() === endDate.getFullYear();
 
   if (isSameMonth) {
-    return `${format(new TZDate(start, timeZone), "d")}—${formatDate({ date: end, withTime: false, timeZone, template: "d MMMM yyyy" })} ${format(new TZDate(start, timeZone), `• h.mmaaa`).split(".00").join("")}`;
+    return `${format(new TZDate(start, timeZone), "d")}—${formatDate({ date: end, withTime: false, timeZone, template: "d MMMM yyyy" })}`;
   }
 
-  return `${format(new TZDate(start, timeZone), "d")}—${format(new TZDate(endDate, timeZone), "d")} ${format(new TZDate(startDate, timeZone), "MMMM")}
-       ${format(new TZDate(endDate, timeZone), "MMMM")} ${format(new TZDate(startDate, timeZone), "yyyy")} ${format(new TZDate(endDate, timeZone), "yyyy")}`;
+  return `${format(new TZDate(start, timeZone), "d")} ${format(new TZDate(startDate, timeZone), "MMMM")} — ${format(new TZDate(endDate, timeZone), "d")} 
+       ${format(new TZDate(endDate, timeZone), "MMMM")} ${format(new TZDate(endDate, timeZone), "yyyy")}`;
 };

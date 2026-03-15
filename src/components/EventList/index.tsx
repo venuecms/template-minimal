@@ -47,6 +47,10 @@ export const ListEvent = ({
 
   const { content } = getLocalizedContent(event.localizedContent, locale);
   const isCancelled = event.publishState === "CANCELLED";
+  const displayImage =
+    event.image ??
+    event.relations?.parents?.[0]?.image ??
+    artists?.[0]?.profile?.image;
 
   return (
     <div
@@ -58,7 +62,7 @@ export const ListEvent = ({
       {withImage ? (
         <div className={cn("w-full pb-3 sm:w-80 sm:max-w-full")}>
           <Link href={`/events/${event.slug}`}>
-            <VenueImage image={event.image} aspect="video" />
+            <VenueImage image={displayImage} aspect="video" />
           </Link>
         </div>
       ) : null}
@@ -76,7 +80,12 @@ export const ListEvent = ({
             </Link>
           </div>
         ) : null}
-        <div className={cn("text-primary hover:brightness-150 text-balance", isCancelled && "line-through")}>
+        <div
+          className={cn(
+            "text-balance text-primary hover:brightness-150",
+            isCancelled && "line-through",
+          )}
+        >
           <Link href={`/events/${event.slug}`}>{content.title}</Link>
         </div>
         {event.location && !event.location.isDefault ? (

@@ -25,7 +25,7 @@ export const LocationLink = ({
     >
       <LocationDisplay
         location={location}
-        icon={<MapPin className="size-4" />}
+        icon={<MapPin className="size-3" />}
       />{" "}
     </a>
   ) : (
@@ -48,14 +48,12 @@ const LocationDisplay = ({
   const { isDefault, country, city, region } = location;
 
   return (
-    <div className="flex flex-row items-center gap-2">
-      <span>
+   <div className="text-balance hover:brightness-150">
         {locationContent.title}
         {!isDefault
-          ? `${city ? `, ${city}` : ""} ${region ? `, ${region} ` : ""} ${country ? country : ""}`
+          ? `${city ? `, ${city}` : ""} ${country ? country : ""}`
           : null}
-      </span>
-      {icon}
+      <span className="inline-block px-2">{icon}</span>
     </div>
   );
 };

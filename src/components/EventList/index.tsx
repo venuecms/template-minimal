@@ -44,7 +44,7 @@ export const ListEvent = ({
   className?: string;
 }) => {
   const locale = useLocale();
-
+  const { location, artists } = event;
   const { content } = getLocalizedContent(event.localizedContent, locale);
   const isCancelled = event.publishState === "CANCELLED";
   const displayImage =

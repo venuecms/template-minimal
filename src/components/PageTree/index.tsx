@@ -37,12 +37,12 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
 
   const ancestorsOfCurrentpage = currentPage
     ? [
-        ...getAncestors(
-          flatPageTree as Array<NodeFlatMetadata>,
-          currentPage.id,
-        ),
+      ...getAncestors(
+        flatPageTree as Array<NodeFlatMetadata>,
         currentPage.id,
-      ]
+      ),
+      currentPage.id,
+    ]
     : [];
 
   return (
@@ -61,7 +61,8 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
           handleExpand,
         }) => {
           // @ts-ignore - ignoring as the typing is partially handled in the underlying library
-          const { localizedContent, slug } = element.metadata as Page;
+          const { localizedContent, slug, type, openInNewTab, linkUrl } =
+            (element.metadata as Page | undefined) ?? {};
           const { content } = getLocalizedContent(localizedContent, locale);
 
           if (
@@ -81,11 +82,12 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
               className="flex items-center gap-2"
             >
               <Link
-                href={`/p/${slug}`}
+                href={type === "LINK" && linkUrl ? linkUrl : `/p/${slug}`}
                 className={cn(
                   "name",
                   element.metadata?.id === currentPage?.id && "font-bold",
                 )}
+                target={type === "LINK" && openInNewTab ? "_blank" : "_self"}
               >
                 {content.title}
               </Link>

@@ -1,8 +1,9 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import { getLocalizedContent } from "@venuecms/sdk";
-import { cachedGetEvents, cachedGetPage, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
+
+import { cachedGetEvents, cachedGetPage, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { Pagination } from "@/components/Pagination";
@@ -52,10 +53,8 @@ const ArchivePage = async ({
     : "archive";
 
   // Calculate total pages
-  // @ts-expect-error - this will change once we update the API
   const totalPages = events?.count
-    ? // @ts-expect-error - this will change once we update the API
-      Math.ceil(events.count / ITEMS_PER_PAGE)
+    ? Math.ceil(events.count / ITEMS_PER_PAGE)
     : 100;
 
   return (

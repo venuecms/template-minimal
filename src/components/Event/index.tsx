@@ -27,6 +27,10 @@ export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
   const isCancelled = event.publishState === "CANCELLED";
+  const displayImage =
+    event.image ??
+    event.relations?.parents?.[0]?.image ??
+    artists?.find((artist) => !!artist.profile?.image)?.profile.image;
 
   return (
     <TwoColumnLayout>
@@ -54,7 +58,7 @@ export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
               <TicketList tickets={event.tickets} />
             ) : null}
           </div>
-          <VenueImage image={event.image} />
+          <VenueImage image={displayImage} />
         </div>
       </ColumnLeft>
 

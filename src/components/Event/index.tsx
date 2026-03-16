@@ -30,9 +30,7 @@ export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
   const displayImage =
     event.image ??
     event.relations?.parents?.[0]?.image ??
-    artists?.[0]?.profile?.image ??
-    artists?.[1]?.profile?.image ??
-    artists?.[2]?.profile?.image;
+    artists?.find((artist) => !!artist.profile?.image)?.profile.image;
 
   return (
     <TwoColumnLayout>

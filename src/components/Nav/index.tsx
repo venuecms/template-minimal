@@ -1,9 +1,14 @@
-import { LocalizedContent, Page, Site, getLocalizedContent } from "@venuecms/sdk";
-import { cachedGetPages } from "@/lib/utils";
+import {
+  LocalizedContent,
+  Page,
+  Site,
+  getLocalizedContent,
+} from "@venuecms/sdk";
 import { getLocale } from "next-intl/server";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
+import { cachedGetPages } from "@/lib/utils";
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { renderedStyles } from "../utils";
@@ -41,12 +46,19 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
 
   const menuItems = rootPageContents
     ? rootPageContents.map(({ page, content, isStatic }) => (
-        <li key={page.slug}>
-          <Link href={`${isStatic ? "/" : "/p/"}${page.slug}`}>
-            {content.title}
-          </Link>
-        </li>
-      ))
+      <li key={page.slug}>
+        <Link
+          href={
+            page.type === "LINK" && page.linkUrl
+              ? page.linkUrl
+              : `${isStatic ? "/" : "/p/"}${page.slug}`
+          }
+          target={page.type === "LINK" && page.linkUrl ? "_blank" : "_self"}
+        >
+          {content.title}
+        </Link>
+      </li>
+    ))
     : null;
 
   // Render the menu for desktop and mobile

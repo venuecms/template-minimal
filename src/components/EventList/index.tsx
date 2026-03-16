@@ -47,14 +47,12 @@ export const ListEvent = ({
   const { artists } = event;
   const { content } = getLocalizedContent(event.localizedContent, locale);
   const isCancelled = event.publishState === "CANCELLED";
-  const firstArtist =
-    artists?.[
-      artists.length - 1
-    ]; /* Artists come in reverse order, so the first artist is the last in the array */
   const displayImage =
     event.image ??
     event.relations?.parents?.[0]?.image ??
-    firstArtist?.profile?.image;
+    artists?.[0]?.profile?.image ??
+    artists?.[1]?.profile?.image ??
+    artists?.[2]?.profile?.image;
 
   return (
     <div

@@ -11,6 +11,8 @@ import {
   getProfile as getProfileSDK,
   getProfileEvents as getProfileEventsSDK,
   getEvent as getEventSDK,
+  getNews as getNewsSDK,
+  getNewsArticle as getNewsArticleSDK,
 } from "@venuecms/sdk";
 
 export function cn(...inputs: ClassValue[]) {
@@ -27,3 +29,5 @@ export const cachedGetProducts = cache(getProductsSDK);
 export const cachedGetProfile = cache(getProfileSDK);
 export const cachedGetProfileEvents = cache(getProfileEventsSDK);
 export const cachedGetEvent = cache(getEventSDK);
+export const cachedGetNews = cache(getNewsSDK);
+export const cachedGetNewsArticle = cache(getNewsArticleSDK);

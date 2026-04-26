@@ -1,5 +1,6 @@
 export * from "./Nav";
 export * from "./Event";
+export * from "./News";
 export * from "./Page";
 export * from "./Profile";
 export * from "./ProfileCompact";

@@ -4,6 +4,7 @@ import { useLocale } from "next-intl";
 import { VenueContent } from "@/lib/utils/renderer";
 import { PageWithParent } from "@/lib/utils/tree";
 
+import { NewsBlog } from "../News";
 import { PageTree } from "../PageTree";
 import { ProfileCompact } from "../ProfileCompact";
 import { VenueImage } from "../VenueImage";
@@ -23,6 +24,10 @@ export const Page = ({
   pages: Array<PageWithParent>;
 }) => {
   const locale = useLocale();
+
+  if (page.type === "NEWS") {
+    return <NewsBlog page={page} pages={pages} />;
+  }
 
   const { artists = [] } = page;
   const { content } = getLocalizedContent(page?.localizedContent, locale);

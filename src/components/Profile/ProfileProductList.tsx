@@ -27,9 +27,9 @@ export const ProfileProductList = async ({
 
   return products?.records.length ? (
     <div className="flex flex-col gap-6">
-      <h2 className="m-0 py-0 text-sm text-primary">{header}</h2>
+      <h2 className="m-0 hidden py-0 text-primary">{header}</h2>
       {/* TODO: This should use the shop page title */}
-      <div className="grid w-full grid-cols-1 gap-6 pb-6 md:grid-cols-3">
+      <div className="grid w-full grid-cols-1 gap-8 pb-6 md:grid-cols-2">
         {products.records.map((product) => (
           <ListProduct key={product.slug} product={product} site={site} />
         ))}

@@ -24,7 +24,7 @@ export const ListProduct = ({
   return (
     <div
       className={cn(
-        "flex break-inside-avoid flex-col gap-8 pb-8 sm:gap-0",
+        "flex break-inside-avoid flex-col gap-2 pb-8 sm:gap-0",
         className,
       )}
     >

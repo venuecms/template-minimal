@@ -1,17 +1,18 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { cache } from "react";
 import {
-  getSite as getSiteSDK,
+  getEvent as getEventSDK,
   getEvents as getEventsSDK,
   getPage as getPageSDK,
   getPages as getPagesSDK,
   getProduct as getProductSDK,
   getProducts as getProductsSDK,
-  getProfile as getProfileSDK,
   getProfileEvents as getProfileEventsSDK,
-  getEvent as getEventSDK,
+  getProfileProducts as getProfileProductsSDK,
+  getProfile as getProfileSDK,
+  getSite as getSiteSDK,
 } from "@venuecms/sdk";
+import { type ClassValue, clsx } from "clsx";
+import { cache } from "react";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,4 +27,5 @@ export const cachedGetProduct = cache(getProductSDK);
 export const cachedGetProducts = cache(getProductsSDK);
 export const cachedGetProfile = cache(getProfileSDK);
 export const cachedGetProfileEvents = cache(getProfileEventsSDK);
+export const cachedGetProfileProducts = cache(getProfileProductsSDK);
 export const cachedGetEvent = cache(getEventSDK);

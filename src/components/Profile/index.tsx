@@ -12,6 +12,7 @@ import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
 import { ErrorBoundary } from "../utils/ErrorBoundary";
 import { ProfileEventList, ProfileEventListSkeleton } from "./ProfileEventList";
+import { ProfileProductList } from "./ProfileProductList";
 
 export const Profile = ({ profile }: { profile: VenueProfile }) => {
   const locale = useLocale();
@@ -45,6 +46,13 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
             />
           </Suspense>
         </ErrorBoundary>
+
+        <ErrorBoundary fallback={null}>
+          <Suspense fallback={null}>
+            <ProfileProductList header={"Recordings"} slug={profile.slug} />
+          </Suspense>
+        </ErrorBoundary>
+
         <ErrorBoundary fallback={null}>
           <Suspense fallback={null}>
             <ProfileEventList

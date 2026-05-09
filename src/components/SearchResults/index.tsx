@@ -8,27 +8,37 @@ import {
   ReactNode,
   SetStateAction,
   Suspense,
-  useContext,
   useState,
 } from "react";
 
 import { Link } from "@/lib/i18n";
-import { VenueContext } from "@/lib/utils/VenueProvider";
 
-import { useSearchQuery, useSearchResults } from "../Search/provider";
+import {
+  SearchAllType,
+  useSearchQuery,
+  useSearchResults,
+} from "../Search/provider";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { Skeleton } from "../ui/Input/Skeleton";
 import { getExcerpt } from "../utils";
 import { ErrorBoundary } from "../utils/ErrorBoundary";
 
-type FilterType = "events" | "profiles" | "pages" | "products";
+type FilterType = SearchAllType | "all";
 
-const filterToPathMap = {
-  events: "events",
-  profiles: "artists",
-  pages: "p",
-  products: "shop",
+const typeToPathMap: Record<SearchAllType, string> = {
+  event: "events",
+  profile: "artists",
+  page: "p",
+  product: "shop",
 };
+
+const filterOptions: Array<{ value: FilterType; label: string }> = [
+  { value: "all", label: "all" },
+  { value: "event", label: "events" },
+  { value: "profile", label: "profiles" },
+  { value: "page", label: "pages" },
+  { value: "product", label: "shop" },
+];
 
 export const SearchResultsLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -45,9 +55,21 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
 
   const { reset } = useSearchQuery();
   const { isQueryEnabled, results } = useSearchResults();
-  const [currentFilter, setCurrentFilter] = useState<FilterType>("events");
+  const [currentFilter, setCurrentFilter] = useState<FilterType>("all");
 
-  const filteredResults = results?.[currentFilter] ?? [];
+  const records = results?.records ?? [];
+  const counts = records.reduce(
+    (acc, record) => {
+      acc[record.type] = (acc[record.type] ?? 0) + 1;
+      return acc;
+    },
+    {} as Record<SearchAllType, number>,
+  );
+
+  const filteredResults =
+    currentFilter === "all"
+      ? records
+      : records.filter((record) => record.type === currentFilter);
 
   return isQueryEnabled ? (
     <TwoColumnLayout>
@@ -55,41 +77,21 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
         <div className="flex flex-col gap-12">
           <div>filter</div>
           <ul className="flex flex-col gap-7">
-            <FilterSelect
-              setFilter={setCurrentFilter}
-              value="events"
-              currentValue={currentFilter}
-              results={results}
-            >
-              events
-            </FilterSelect>
-
-            <FilterSelect
-              setFilter={setCurrentFilter}
-              value="profiles"
-              currentValue={currentFilter}
-              results={results}
-            >
-              profiles
-            </FilterSelect>
-
-            <FilterSelect
-              setFilter={setCurrentFilter}
-              value="pages"
-              currentValue={currentFilter}
-              results={results}
-            >
-              pages
-            </FilterSelect>
-
-            <FilterSelect
-              setFilter={setCurrentFilter}
-              value="products"
-              currentValue={currentFilter}
-              results={results}
-            >
-              shop
-            </FilterSelect>
+            {filterOptions.map((option) => (
+              <FilterSelect
+                key={option.value}
+                setFilter={setCurrentFilter}
+                value={option.value}
+                currentValue={currentFilter}
+                count={
+                  option.value === "all"
+                    ? records.length
+                    : (counts[option.value] ?? 0)
+                }
+              >
+                {option.label}
+              </FilterSelect>
+            ))}
           </ul>
         </div>
       </ColumnLeft>
@@ -104,7 +106,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
             return (
               <div className="flex flex-col gap-3" key={result.id}>
                 <Link
-                  href={`/${filterToPathMap[currentFilter]}/${result.slug}`}
+                  href={`/${typeToPathMap[result.type]}/${result.slug}`}
                   onClick={reset}
                 >
                   <div className="text-secondary">{content.title}</div>
@@ -128,19 +130,19 @@ const FilterSelect = ({
   setFilter,
   value,
   currentValue,
-  results = {} as Record<FilterType, Array<any>>,
+  count,
 }: {
   children: ReactNode;
   setFilter: Dispatch<SetStateAction<FilterType>>;
   value: FilterType;
   currentValue: FilterType;
-  results: Record<FilterType, Array<any>>;
+  count: number;
 }) => {
   return (
     <li className="flex gap-8" onClick={() => setFilter(value)}>
       {currentValue === value ? <span>→</span> : null}
       {children}
-      <span>[ {results[value]?.length ?? 0} ]</span>
+      <span>[ {count} ]</span>
     </li>
   );
 };

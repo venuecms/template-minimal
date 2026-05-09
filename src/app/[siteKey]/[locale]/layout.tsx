@@ -32,7 +32,7 @@ const LayoutContent = async ({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <QueryProvider>
         <VenueProvider siteKey={siteKey}>
-          <SearchProvider>
+          <SearchProvider siteKey={siteKey}>
             <Suspense fallback={null}>
               <NavigationProgress />
             </Suspense>

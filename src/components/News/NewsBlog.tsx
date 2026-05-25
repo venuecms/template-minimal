@@ -9,6 +9,7 @@ import { PageTree } from "../PageTree";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
+import { NewsDateList } from "./NewsDateList";
 import { NewsListItem } from "./NewsListItem";
 
 export const NewsBlog = async ({
@@ -38,6 +39,7 @@ export const NewsBlog = async ({
             />
           ) : null}
           <PageTree pages={pages} />
+          <NewsDateList />
         </div>
       </ColumnLeft>
 

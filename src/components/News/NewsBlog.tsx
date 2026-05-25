@@ -45,7 +45,7 @@ export const NewsBlog = async ({
 
       <ColumnRight>
         {articles.length ? (
-          <div className="flex flex-col gap-x-8 sm:grid sm:grid-flow-row sm:grid-cols-2">
+          <div className="flex flex-col gap-x-8">
             {articles.map((article) => (
               <NewsListItem key={article.id} article={article} />
             ))}

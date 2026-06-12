@@ -10,16 +10,49 @@ export const renderedStyles = {
   a: "underline text-primary text-sm font-medium",
 };
 
-export const getExcerpt = (content?: string | null) => {
+const htmlEntities: Record<string, string> = {
+  "&amp;": "&",
+  "&lt;": "<",
+  "&gt;": ">",
+  "&quot;": '"',
+  "&#39;": "'",
+  "&apos;": "'",
+  "&nbsp;": " ",
+  "&mdash;": "—",
+  "&ndash;": "–",
+  "&hellip;": "…",
+  "&lsquo;": "‘",
+  "&rsquo;": "’",
+  "&ldquo;": "“",
+  "&rdquo;": "”",
+  "&copy;": "©",
+  "&trade;": "™",
+};
+
+const decodeHtmlEntities = (text: string) =>
+  text
+    .replace(/&#(x?)([0-9a-f]+);/gi, (_, hex, code) =>
+      String.fromCodePoint(parseInt(code, hex ? 16 : 10)),
+    )
+    .replace(/&\w+;/g, (entity) => htmlEntities[entity] || entity);
+
+export const getExcerpt = (content?: string | null, maxLength = 300) => {
   if (!content) {
     return "";
   }
 
-  const text = removeMarkdown(content);
+  const text = decodeHtmlEntities(
+    removeMarkdown(content)
+      .replace(/<[^>]*>/g, "")
+      .replace(/\\/g, ""),
+  )
+    .replace(/\s+/g, " ")
+    .trim();
 
-  if (text.length > 300) {
-    return `${text.slice(0, 300)}...`;
+  if (text.length <= maxLength) {
+    return text;
   }
 
-  return text;
+  const truncated = text.lastIndexOf(" ", maxLength);
+  return `${text.slice(0, truncated > 0 ? truncated : maxLength)}...`;
 };

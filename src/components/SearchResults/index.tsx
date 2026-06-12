@@ -109,7 +109,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
                 >
                   <div className="text-secondary">{content.title}</div>
                   <div>
-                    {content.shortContent ?? getExcerpt(content.content)}
+                    {content.shortContent || getExcerpt(content.content)}
                   </div>
                 </Link>
               </div>

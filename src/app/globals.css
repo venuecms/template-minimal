@@ -179,6 +179,8 @@ html.newLand {
 
 html.hundredK {
   --background: 345, 6%, 13%, 1;
+  --bg-product: 0, 0%, 60%, 1;
+  --bg-product-highlight: 37, 3%, 49%, 1;
   --primary: 50, 4%, 96%, 1;
   --secondary: 50, 4%, 80%, 1;
   --muted: 50, 2%, 70%, 0.8;

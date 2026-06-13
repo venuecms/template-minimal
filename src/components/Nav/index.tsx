@@ -46,25 +46,25 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
 
   const menuItems = rootPageContents
     ? rootPageContents.map(({ page, content, isStatic }) => (
-      <li key={page.slug}>
-        <Link
-          href={
-            page.type === "LINK" && page.linkUrl
-              ? page.linkUrl
-              : `${isStatic ? "/" : "/p/"}${page.slug}`
-          }
-          target={page.type === "LINK" && page.linkUrl ? "_blank" : "_self"}
-        >
-          {content.title}
-        </Link>
-      </li>
-    ))
+        <li key={page.slug}>
+          <Link
+            href={
+              page.type === "LINK" && page.linkUrl
+                ? page.linkUrl
+                : `${isStatic ? "/" : "/p/"}${page.slug}`
+            }
+            target={page.type === "LINK" && page.linkUrl ? "_blank" : "_self"}
+          >
+            {content.title}
+          </Link>
+        </li>
+      ))
     : null;
 
   // Render the menu for desktop and mobile
   return (
     <>
-      <NavMenuDesktop showSearch={showSearch}>{menuItems}</NavMenuDesktop>
+      <NavMenuDesktop showSearch={showSearch}></NavMenuDesktop>
       <NavMenuMobile
         logo={logo}
         footer={

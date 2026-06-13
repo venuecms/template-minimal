@@ -17,6 +17,8 @@ export default {
     extend: {
       colors: {
         background: "hsla(var(--background))",
+        product: "hsla(var(--bg-product))",
+        "product-highlight": "hsla(var(--bg-product-highlight))",
         black: "hsla(var(--black))",
         highlight: "hsla(var(highlight))",
         primary: "hsla(var(--primary))",

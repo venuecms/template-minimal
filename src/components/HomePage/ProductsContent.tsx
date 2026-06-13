@@ -1,7 +1,7 @@
 import { connection } from "next/server";
-import { cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { Link } from "@/lib/i18n";
+import { cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { ListProduct } from "@/components/ListProduct";
 
@@ -15,21 +15,12 @@ export async function ProductsContent() {
 
   if (!site) return null;
 
-  // Only show for specific sites
-  if (site.name !== "ELNA" && site.name !== "infant tree") {
-    return null;
-  }
-
-  const topProducts = products?.records.slice(0, 4);
+  const topProducts = products?.records.slice(0, 6);
   const moreProducts = products?.records.slice(4);
 
   return (
-    <section className="py-20">
-      <p className="pb-8 text-primary">
-        <Link href="/shop">Works</Link>
-      </p>
-
-      <div className="grid grid-cols-2 gap-8 pb-20 sm:max-w-full sm:grid-cols-4 xl:grid-cols-4">
+    <section className="flex flex-col gap-0.5 py-20">
+      <div className="grid grid-cols-2 gap-0.5 sm:max-w-full sm:grid-cols-3 xl:grid-cols-3">
         {topProducts?.length
           ? topProducts.map((product) => (
               <ListProduct
@@ -42,19 +33,15 @@ export async function ProductsContent() {
           : "No products found"}
       </div>
       {moreProducts?.length ? (
-        <div className="grid grid-cols-2 gap-8 sm:max-w-full lg:grid-cols-[repeat(4,minmax(1rem,32rem))] xl:grid-cols-[repeat(6,minmax(1rem,32rem))]">
-          {moreProducts.map((product) => (
-            <ListProduct key={product.slug} product={product} site={site} />
-          ))}
+        <div className="bg-product hover:bg-product-highlight col-span-3 w-full grid-cols-3 px-4 py-8 text-center transition duration-150">
+          <Link
+            className="flex w-full hover:opacity-70 sm:relative sm:flex-row sm:justify-center"
+            href="/shop"
+          >
+            see all records and books
+          </Link>
         </div>
       ) : null}
-      <div className="w-full grid-cols-3 sm:grid">
-        <span></span>
-        <span></span>
-        <Link className="flex w-full sm:relative sm:flex-row" href="/shop">
-          → see all works
-        </Link>
-      </div>
     </section>
   );
 }

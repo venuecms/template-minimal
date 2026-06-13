@@ -1,7 +1,8 @@
-import { connection } from "next/server";
 import { getLocalizedContent } from "@venuecms/sdk";
-import { cachedGetPage, cachedGetProducts, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
+
+import { cachedGetPage, cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { ListProduct } from "@/components/ListProduct";
 import { Pagination } from "@/components/Pagination";
@@ -40,12 +41,12 @@ export async function ProductsListContent({
     ? getLocalizedContent(page.localizedContent, locale).content.title
     : "Shop";
 
-  const topProducts = products?.records.slice(0, 4);
-  const moreProducts = products?.records.slice(4);
+  const topProducts = products?.records.slice(0, 99);
+  const moreProducts = products?.records.slice(99);
 
   return (
     <section className="py-20">
-      <div className="grid gap-8 pb-20 sm:max-w-full lg:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-0.5 pb-20 sm:max-w-full lg:grid-cols-3 xl:grid-cols-3">
         {topProducts?.length
           ? topProducts.map((product) => (
               <ListProduct

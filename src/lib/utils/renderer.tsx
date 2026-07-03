@@ -33,14 +33,18 @@ const marks = {
   link: "underline underline-offset-[3px] cursor-pointer",
 } as const;
 
-const elMarks = {
-  link: (props: any): ReactNode => {
-    const { class: className, ...rest } = props;
-    return <a {...rest} className={className} />;
-  },
-} as const;
-
 const getDefaultHandlers = (classes: ElementClasses = {}) => {
+  const elMarks = {
+    link: (props: any): ReactNode => {
+      const { class: attrClass, className: outerClassName, ...rest } = props;
+      const className =
+        [outerClassName, classes.a ?? marks.link, attrClass]
+          .filter(Boolean)
+          .join(" ") || undefined;
+      return <a {...rest} className={className} />;
+    },
+  } as const;
+
   const defaultHandlers: NodeHandlers = {
     text: (props) => {
       if (props.node.marks) {

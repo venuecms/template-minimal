@@ -6,6 +6,7 @@ import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
 import { VenueContent } from "@/lib/utils/renderer";
+
 import { VenueImage } from "../VenueImage";
 import { renderedStyles } from "../utils";
 
@@ -18,13 +19,11 @@ export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
     <div className="flex flex-col gap-6">
       <div>
         <Link href={`/artists/${profile.slug}`}>
-        <VenueImage image={profile.image} aspect="video"/>
+          <VenueImage image={profile.image} aspect="video" />
         </Link>
       </div>
       <div className="text-secondary hover:brightness-125">
-        <Link href={`/artists/${profile.slug}`}>
-        {content.title}
-        </Link>
+        <Link href={`/artists/${profile.slug}`}>{content.title}</Link>
       </div>
       <VenueContent
         className="flex flex-col gap-6 pr-4"

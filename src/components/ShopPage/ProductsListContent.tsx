@@ -1,7 +1,8 @@
-import { connection } from "next/server";
 import { getLocalizedContent } from "@venuecms/sdk";
-import { cachedGetPage, cachedGetProducts, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
+
+import { cachedGetPage, cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { ListProduct } from "@/components/ListProduct";
 import { Pagination } from "@/components/Pagination";

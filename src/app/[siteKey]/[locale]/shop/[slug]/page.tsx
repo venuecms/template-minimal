@@ -1,7 +1,8 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { cachedGetProduct, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
+
+import { cachedGetProduct, cachedGetSite } from "@/lib/utils";
 
 import { Product } from "@/components/Product";
 import { setupSSR } from "@/components/utils";

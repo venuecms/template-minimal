@@ -1,11 +1,12 @@
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
+
 import { cachedGetSite } from "@/lib/utils";
 
-import { setupSSR } from "@/components/utils";
-import { FeaturedEventsSection } from "@/components/HomePage/FeaturedEventsSection";
 import { EventsSection } from "@/components/HomePage/EventsSection";
+import { FeaturedEventsSection } from "@/components/HomePage/FeaturedEventsSection";
 import { ProductsSection } from "@/components/HomePage/ProductsSection";
+import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = async ({
   params,

@@ -1,4 +1,5 @@
 import { connection } from "next/server";
+
 import { cachedGetProfileEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";

@@ -37,12 +37,12 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
 
   const ancestorsOfCurrentpage = currentPage
     ? [
-      ...getAncestors(
-        flatPageTree as Array<NodeFlatMetadata>,
+        ...getAncestors(
+          flatPageTree as Array<NodeFlatMetadata>,
+          currentPage.id,
+        ),
         currentPage.id,
-      ),
-      currentPage.id,
-    ]
+      ]
     : [];
 
   return (

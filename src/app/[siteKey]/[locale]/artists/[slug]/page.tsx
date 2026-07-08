@@ -1,8 +1,9 @@
 import { Profile } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { cachedGetProfile } from "@/lib/utils";
 import { notFound } from "next/navigation";
+
+import { cachedGetProfile } from "@/lib/utils";
 
 import { setupSSR } from "@/components/utils";
 

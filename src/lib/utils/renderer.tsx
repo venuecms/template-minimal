@@ -167,14 +167,14 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
       const styles =
         typeof style === "string"
           ? style
-            ?.split(";")
-            .reduce((accum: Record<string, string>, style: string) => {
-              const [key, value] = style.split(":");
-              if (value !== undefined) {
-                return { ...accum, [key]: value.trim() };
-              }
-              return accum;
-            }, {})
+              ?.split(";")
+              .reduce((accum: Record<string, string>, style: string) => {
+                const [key, value] = style.split(":");
+                if (value !== undefined) {
+                  return { ...accum, [key]: value.trim() };
+                }
+                return accum;
+              }, {})
           : style;
 
       // Native iframely embeds carry aspectRatio (width / height). Prefer it:
@@ -224,9 +224,9 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
 
             ...(isVimeo && !styles?.height
               ? {
-                width: "100%",
-                aspectRatio: (rest as any).width / (rest as any).height,
-              }
+                  width: "100%",
+                  aspectRatio: (rest as any).width / (rest as any).height,
+                }
               : {}),
           }}
           frameBorder={frameborder}
@@ -258,14 +258,14 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           rel="noopener noreferrer"
           className={
             classes.linkCard ??
-            "my-4 block overflow-hidden border border-[color-mix(in_srgb,hsla(var(--muted)),transparent_75%)] no-underline transition-opacity hover:opacity-80"
+            "my-4 block overflow-hidden bg-card no-underline transition-opacity hover:opacity-80"
           }
         >
           {image ? (
             <img
               src={image}
               alt={title ?? ""}
-              className="aspect-video w-full border-b border-[color-mix(in_srgb,hsla(var(--muted)),transparent_75%)] object-cover"
+              className="aspect-video w-full object-cover"
             />
           ) : null}
           <div className="p-4">
@@ -278,9 +278,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
               <span className="text-xs text-secondary">{site}</span>
             ) : null}
             {description ? (
-              <p className="mt-2 text-sm text-secondary">
-                {description}
-              </p>
+              <p className="mt-2 text-sm text-secondary">{description}</p>
             ) : null}
           </div>
         </a>

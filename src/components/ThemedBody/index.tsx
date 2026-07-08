@@ -1,7 +1,4 @@
-import { ReactNode } from "react";
-import { cachedGetSite } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
-
 import {
   Abel,
   Courier_Prime,
@@ -13,14 +10,17 @@ import {
   Jost,
   Karla,
   Kosugi_Maru,
+  Open_Sans,
   Oswald,
   Outfit,
   Schibsted_Grotesk,
   Special_Elite,
   Work_Sans,
   Young_Serif,
-  Open_Sans,
 } from "next/font/google";
+import { ReactNode } from "react";
+
+import { cachedGetSite } from "@/lib/utils";
 
 const WorkSans = Work_Sans({
   subsets: ["latin"],

@@ -16,7 +16,6 @@ import { setupSSR } from "@/components/utils";
 import "../../globals.css";
 import Loading from "./loading";
 
-
 const LayoutContent = async ({
   children,
   params,

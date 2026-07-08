@@ -18,6 +18,7 @@ export default {
     extend: {
       colors: {
         background: "hsla(var(--background))",
+        card: "var(--card)",
         black: "hsla(var(--black))",
         highlight: "hsla(var(highlight))",
         primary: "hsla(var(--primary))",

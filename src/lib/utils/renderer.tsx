@@ -258,7 +258,7 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           rel="noopener noreferrer"
           className={
             classes.linkCard ??
-            "my-4 block overflow-hidden rounded-lg border bg-card no-underline transition-opacity hover:opacity-80"
+            "my-4 block overflow-hidden rounded-lg bg-card no-underline transition-opacity hover:opacity-80"
           }
         >
           {image ? (

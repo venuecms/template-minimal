@@ -48,11 +48,11 @@ const LocationDisplay = ({
   const { isDefault, country, city, region } = location;
 
   return (
-   <div className="text-balance hover:brightness-150">
-        {locationContent.title}
-        {!isDefault
-          ? `${city ? `, ${city}` : ""} ${country ? country : ""}`
-          : null}
+    <div className="text-balance hover:brightness-150">
+      {locationContent.title}
+      {!isDefault
+        ? `${city ? `, ${city}` : ""} ${country ? country : ""}`
+        : null}
       <span className="inline-block px-2">{icon}</span>
     </div>
   );

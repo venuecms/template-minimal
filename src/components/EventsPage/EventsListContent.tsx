@@ -1,7 +1,8 @@
-import { connection } from "next/server";
 import { getLocalizedContent } from "@venuecms/sdk";
-import { cachedGetEvents, cachedGetPage, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
+
+import { cachedGetEvents, cachedGetPage, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";

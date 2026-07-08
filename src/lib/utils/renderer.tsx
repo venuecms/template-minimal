@@ -19,6 +19,7 @@ type ElementClasses = {
   img?: string;
   image?: string;
   iframe?: string;
+  linkCard?: string;
   h1?: string;
   h2?: string;
   h3?: string;
@@ -33,14 +34,18 @@ const marks = {
   link: "underline underline-offset-[3px] cursor-pointer",
 } as const;
 
-const elMarks = {
-  link: (props: any): ReactNode => {
-    const { class: className, ...rest } = props;
-    return <a {...rest} className={className} />;
-  },
-} as const;
-
 const getDefaultHandlers = (classes: ElementClasses = {}) => {
+  const elMarks = {
+    link: (props: any): ReactNode => {
+      const { class: attrClass, className: outerClassName, ...rest } = props;
+      const className =
+        [outerClassName, classes.a ?? marks.link, attrClass]
+          .filter(Boolean)
+          .join(" ") || undefined;
+      return <a {...rest} className={className} />;
+    },
+  } as const;
+
   const defaultHandlers: NodeHandlers = {
     text: (props) => {
       if (props.node.marks) {
@@ -154,21 +159,43 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
         allowfullscreen,
         // @ts-ignore
         referrerpolicy,
+        // @ts-ignore
+        aspectRatio,
         ...rest
       } = props.node?.attrs ?? props; // TODO: why do we need to do this? we are getting different shapes at times and not sure why
 
       const styles =
         typeof style === "string"
           ? style
-            ?.split(";")
-            .reduce((accum: Record<string, string>, style: string) => {
-              const [key, value] = style.split(":");
-              if (value !== undefined) {
-                return { ...accum, [key]: value.trim() };
-              }
-              return accum;
-            }, {})
+              ?.split(";")
+              .reduce((accum: Record<string, string>, style: string) => {
+                const [key, value] = style.split(":");
+                if (value !== undefined) {
+                  return { ...accum, [key]: value.trim() };
+                }
+                return accum;
+              }, {})
           : style;
+
+      // Native iframely embeds carry aspectRatio (width / height). Prefer it:
+      // render a fluid, ratio-correct iframe with no per-provider guessing.
+      if (aspectRatio) {
+        return (
+          <iframe
+            src={src}
+            style={{
+              ...styles,
+              width: "100%",
+              aspectRatio: String(aspectRatio),
+              height: "auto",
+            }}
+            frameBorder={frameborder}
+            allowFullScreen={allowfullscreen}
+            referrerPolicy={referrerpolicy}
+            {...rest}
+          />
+        );
+      }
 
       // TODO: We need iframely. A hack for now to check and iron out some common quirks
       const isVideo = (() => {
@@ -197,9 +224,9 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
 
             ...(isVimeo && !styles?.height
               ? {
-                width: "100%",
-                aspectRatio: (rest as any).width / (rest as any).height,
-              }
+                  width: "100%",
+                  aspectRatio: (rest as any).width / (rest as any).height,
+                }
               : {}),
           }}
           frameBorder={frameborder}
@@ -207,6 +234,54 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           referrerPolicy={referrerpolicy}
           {...rest}
         />
+      );
+    },
+    // Rich link-preview card for non-embeddable URLs (metadata only).
+    linkCard: (props) => {
+      const {
+        // @ts-ignore
+        href,
+        // @ts-ignore
+        title,
+        // @ts-ignore
+        description,
+        // @ts-ignore
+        site,
+        // @ts-ignore
+        image,
+      } = props.node?.attrs ?? props;
+
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={
+            classes.linkCard ??
+            "my-4 block overflow-hidden bg-card no-underline transition-opacity hover:opacity-80"
+          }
+        >
+          {image ? (
+            <img
+              src={image}
+              alt={title ?? ""}
+              className="aspect-video w-full object-cover"
+            />
+          ) : null}
+          <div className="p-4">
+            {title ? (
+              <h3 className="mb-2 text-base font-semibold text-primary">
+                {title}
+              </h3>
+            ) : null}
+            {site ? (
+              <span className="text-xs text-secondary">{site}</span>
+            ) : null}
+            {description ? (
+              <p className="mt-2 text-sm text-secondary">{description}</p>
+            ) : null}
+          </div>
+        </a>
       );
     },
   } as const;

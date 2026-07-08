@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
-import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 import { EventsList } from "@/components/EventList";
+import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { Skeleton } from "@/components/ui/Input/Skeleton";
+import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 
 import { EventsListContent } from "./EventsListContent";
 

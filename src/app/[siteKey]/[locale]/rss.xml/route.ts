@@ -1,9 +1,10 @@
 import { Params } from "@/types";
 import { getLocalizedContent } from "@venuecms/sdk";
-import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 import { NextRequest } from "next/server";
 import removeMarkdown from "remove-markdown";
 import RSS from "rss";
+
+import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { formatDateRange, getPublicImage, setupSSR } from "@/components/utils";
 

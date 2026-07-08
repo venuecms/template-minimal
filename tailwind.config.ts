@@ -5,6 +5,7 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   safelist: [
     "font-bold",
@@ -17,6 +18,7 @@ export default {
     extend: {
       colors: {
         background: "hsla(var(--background))",
+        card: "var(--card)",
         black: "hsla(var(--black))",
         highlight: "hsla(var(highlight))",
         primary: "hsla(var(--primary))",

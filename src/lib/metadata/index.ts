@@ -5,8 +5,9 @@ import {
   type Site,
   getLocalizedContent,
 } from "@venuecms/sdk";
-import { cachedGetSite } from "@/lib/utils";
 import removeMarkdown from "remove-markdown";
+
+import { cachedGetSite } from "@/lib/utils";
 
 import { getPublicImage, setupSSR } from "@/components/utils";
 

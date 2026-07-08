@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
-import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 import { Skeleton } from "@/components/ui/Input/Skeleton";
+import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 
 import { ProductsListContent } from "./ProductsListContent";
 

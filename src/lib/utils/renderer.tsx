@@ -258,27 +258,27 @@ const getDefaultHandlers = (classes: ElementClasses = {}) => {
           rel="noopener noreferrer"
           className={
             classes.linkCard ??
-            "my-4 block overflow-hidden rounded-lg bg-card no-underline transition-opacity hover:opacity-80"
+            "my-4 block overflow-hidden border border-[color-mix(in_srgb,hsla(var(--muted)),transparent_75%)] no-underline transition-opacity hover:opacity-80"
           }
         >
           {image ? (
             <img
               src={image}
               alt={title ?? ""}
-              className="aspect-video w-full object-cover"
+              className="aspect-video w-full border-b border-[color-mix(in_srgb,hsla(var(--muted)),transparent_75%)] object-cover"
             />
           ) : null}
           <div className="p-4">
             {title ? (
-              <h3 className="mb-2 text-base font-semibold text-foreground">
+              <h3 className="mb-2 text-base font-semibold text-primary">
                 {title}
               </h3>
             ) : null}
             {site ? (
-              <span className="text-xs text-muted-foreground">{site}</span>
+              <span className="text-xs text-secondary">{site}</span>
             ) : null}
             {description ? (
-              <p className="mt-2 text-sm text-muted-foreground">
+              <p className="mt-2 text-sm text-secondary">
                 {description}
               </p>
             ) : null}

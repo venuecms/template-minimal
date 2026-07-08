@@ -1,5 +1,6 @@
-import { cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
+
+import { cachedGetSite } from "@/lib/utils";
 
 import { Nav } from "../Nav";
 import { SiteLogo } from "../SiteLogo";

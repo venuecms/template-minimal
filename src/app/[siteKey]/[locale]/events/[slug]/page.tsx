@@ -1,8 +1,9 @@
 import { Event } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { cachedGetEvent, cachedGetSite } from "@/lib/utils";
 import { notFound } from "next/navigation";
+
+import { cachedGetEvent, cachedGetSite } from "@/lib/utils";
 
 import { setupSSR } from "@/components/utils";
 

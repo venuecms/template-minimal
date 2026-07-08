@@ -1,16 +1,15 @@
-import { connection } from "next/server";
 import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk";
-import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
+import { connection } from "next/server";
 
 import { Link } from "@/lib/i18n";
+import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { TranslatedText } from "@/components/TranslatedText";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles } from "@/components/utils";
-import { ArrowRight } from "lucide-react";
-
 
 export async function EventsContent({ locale }: { locale: string }) {
   await connection();
@@ -52,11 +51,10 @@ export async function EventsContent({ locale }: { locale: string }) {
               <div className="w-full grid-cols-1 gap-12 sm:grid">
                 <span></span>
                 <Link
-                  className="flex w-full sm:relative sm:flex-row items-center gap-2 hover:brightness-125"
+                  className="flex w-full items-center gap-2 hover:brightness-125 sm:relative sm:flex-row"
                   href="/events"
                 >
-                 <ArrowRight className="h-4"/>
-                 {" "}
+                  <ArrowRight className="h-4" />{" "}
                   <TranslatedText
                     namespace="events"
                     text="see_all_upcoming_events"

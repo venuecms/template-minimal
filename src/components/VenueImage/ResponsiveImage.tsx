@@ -19,15 +19,15 @@ export const ResponsiveImage = async ({
 
   const remoteImageProps = src
     ? {
-      img: {
-        src,
-      },
-      base64: defaultBlur,
-    }
+        img: {
+          src,
+        },
+        base64: defaultBlur,
+      }
     : {
-      img: { src: fallback?.src || defaultBlur },
-      base64: defaultBlur,
-    };
+        img: { src: fallback?.src || defaultBlur },
+        base64: defaultBlur,
+      };
 
   // Handle image focusing
   const center = { x: 0.5, y: 0.5 };

@@ -1,7 +1,7 @@
 import { connection } from "next/server";
-import { cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { Link } from "@/lib/i18n";
+import { cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { ListProduct } from "@/components/ListProduct";
 

@@ -1,9 +1,9 @@
 import { Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { cachedGetPage, cachedGetPages } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
+import { cachedGetPage, cachedGetPages } from "@/lib/utils";
 import { PageWithParent } from "@/lib/utils/tree";
 
 import { setupSSR } from "@/components/utils";

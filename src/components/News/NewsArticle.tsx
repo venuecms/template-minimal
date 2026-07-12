@@ -7,6 +7,7 @@ import { VenueContent } from "@/lib/utils/renderer";
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
+import { NewsSidebar } from "./NewsSidebar";
 
 export const NewsArticle = ({ article }: { article: VenuePage }) => {
   const locale = useLocale();
@@ -20,15 +21,14 @@ export const NewsArticle = ({ article }: { article: VenuePage }) => {
   return (
     <TwoColumnLayout>
       <ColumnLeft>
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-2">
-            {date ? <div className="text-sm text-secondary">{date}</div> : null}
-            <h1 className="text-base">{content.title}</h1>
-          </div>
-          {article.image ? <VenueImage image={article.image} /> : null}
-        </div>
+        <NewsSidebar currentSlug={article.slug} />
       </ColumnLeft>
       <ColumnRight>
+        <div className="flex flex-col gap-2">
+          {date ? <div className="text-sm text-secondary">{date}</div> : null}
+          <h1 className="text-base">{content.title}</h1>
+        </div>
+        {article.image ? <VenueImage image={article.image} /> : null}
         <VenueContent
           className="flex max-w-[42rem] flex-col gap-6 text-sm"
           content={content}

@@ -1,40 +1,29 @@
-import { Page } from "@/components";
+import { NewsArticle } from "@/components";
 import { Params } from "@/types";
-import { type Page as VenuePage } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
-import { cachedGetPages } from "@/lib/utils";
-import { PageWithParent } from "@/lib/utils/tree";
+import { cachedGetNews, cachedGetNewsArticle } from "@/lib/utils";
 
 import { setupSSR } from "@/components/utils";
-
-const getLatestNewsPage = (pages: Array<VenuePage>) =>
-  pages
-    .filter((page) => page.type === "NEWS")
-    .sort((a, b) => {
-      const dateA = typeof a.date === "string" ? Date.parse(a.date) : 0;
-      const dateB = typeof b.date === "string" ? Date.parse(b.date) : 0;
-      return dateB - dateA;
-    })[0];
 
 const NewsPage = async ({ params }: { params: Promise<Params> }) => {
   await setupSSR({ params });
 
   try {
-    const { data: pages } = await cachedGetPages();
+    const { data: news } = await cachedGetNews({ limit: 60, dir: "desc" });
+    const latest = news?.records?.[0];
 
-    if (!pages) {
+    if (!latest?.slug) {
       notFound();
     }
 
-    const records = pages.records as Array<PageWithParent>;
-    const newsPage = getLatestNewsPage(records);
+    const { data: article } = await cachedGetNewsArticle({ slug: latest.slug });
 
-    if (!newsPage) {
+    if (!article) {
       notFound();
     }
 
-    return <Page page={newsPage} pages={records} />;
+    return <NewsArticle article={article} />;
   } catch (error) {
     console.error(error);
     notFound();

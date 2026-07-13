@@ -4,12 +4,12 @@ import {
   Site,
   getLocalizedContent,
 } from "@venuecms/sdk";
+import { VenueContent } from "@venuecms/sdk-next";
 import { getLocale } from "next-intl/server";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
 import { cachedGetPages } from "@/lib/utils";
-import { VenueContent } from "@/lib/utils/renderer";
 
 import { renderedStyles } from "../utils";
 import { NavMenuDesktop } from "./NavMenuDesktop";

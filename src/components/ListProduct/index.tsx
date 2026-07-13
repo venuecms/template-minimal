@@ -1,10 +1,9 @@
 import { Product, Site, getLocalizedContent } from "@venuecms/sdk";
+import { VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-
-import { VenueImage } from "../VenueImage";
 
 export const ListProduct = ({
   product,

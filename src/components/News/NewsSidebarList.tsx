@@ -10,6 +10,25 @@ export interface NewsSidebarItem {
   title: string;
 }
 
+const PagerButton = ({
+  label,
+  glyph,
+  onClick,
+}: {
+  label: string;
+  glyph: string;
+  onClick: () => void;
+}) => (
+  <button
+    type="button"
+    aria-label={label}
+    onClick={onClick}
+    className="flex justify-center text-secondary hover:text-primary lg:justify-start"
+  >
+    {glyph}
+  </button>
+);
+
 export const NewsSidebarList = ({
   items,
   currentSlug,
@@ -32,14 +51,11 @@ export const NewsSidebarList = ({
   return (
     <nav className="flex flex-col items-center gap-4 text-sm lg:items-start">
       {hasNewer ? (
-        <button
-          type="button"
-          aria-label="Show newer news"
+        <PagerButton
+          label="Show newer news"
+          glyph="↑"
           onClick={() => setPage((p) => Math.max(0, p - 1))}
-          className="flex justify-center text-secondary hover:text-primary lg:justify-start"
-        >
-          ↑
-        </button>
+        />
       ) : null}
 
       {visible.map((item) => (
@@ -56,14 +72,11 @@ export const NewsSidebarList = ({
       ))}
 
       {hasOlder ? (
-        <button
-          type="button"
-          aria-label="Show older news"
+        <PagerButton
+          label="Show older news"
+          glyph="↓"
           onClick={() => setPage((p) => p + 1)}
-          className="flex justify-center text-secondary hover:text-primary lg:justify-start"
-        >
-          ↓
-        </button>
+        />
       ) : null}
     </nav>
   );

@@ -1,48 +1,36 @@
-import { type Page as VenuePage, getLocalizedContent } from "@venuecms/sdk";
-import { format } from "date-fns";
+import { getLocalizedContent } from "@venuecms/sdk";
 import { getLocale } from "next-intl/server";
 
-import { Link } from "@/lib/i18n";
-import { cachedGetNews, cn } from "@/lib/utils";
+import { type NewsSidebarItem, NewsSidebarList } from "./NewsSidebarList";
+import { NEWS_PAGE_SIZE, getNewsRecords } from "./utils";
 
 export const NewsSidebar = async ({
   currentSlug,
 }: {
   currentSlug?: string;
 }) => {
-  const locale = await getLocale();
-  const { data: news } = await cachedGetNews({ limit: 60, dir: "desc" });
-  const articles = news?.records ?? [];
+  const [locale, records] = await Promise.all([getLocale(), getNewsRecords()]);
 
-  if (!articles.length) return null;
+  if (!records.length) return null;
+
+  const items: NewsSidebarItem[] = records.map((article) => ({
+    slug: article.slug ?? "",
+    title:
+      getLocalizedContent(article.localizedContent, locale).content.title ?? "",
+  }));
+
+  const currentIndex = currentSlug
+    ? records.findIndex((record) => record.slug === currentSlug)
+    : -1;
+  const initialPage =
+    currentIndex >= 0 ? Math.floor(currentIndex / NEWS_PAGE_SIZE) : 0;
 
   return (
-    <nav className="flex flex-col gap-4 text-sm">
-      {articles.map((article) => {
-        const { content } = getLocalizedContent(
-          article.localizedContent,
-          locale,
-        );
-        const date =
-          typeof article.date === "string"
-            ? format(new Date(article.date), "d MMMM yyyy")
-            : null;
-        const isActive = article.slug === currentSlug;
-
-        return (
-          <Link
-            key={article.id}
-            href={`/news/${article.slug}`}
-            className={cn(
-              "flex flex-col gap-1",
-              isActive ? "text-primary" : "text-secondary",
-            )}
-          >
-            {date ? <span className="text-xs">{date}</span> : null}
-            <span className="text-primary">{content.title}</span>
-          </Link>
-        );
-      })}
-    </nav>
+    <NewsSidebarList
+      items={items}
+      currentSlug={currentSlug}
+      initialPage={initialPage}
+      pageSize={NEWS_PAGE_SIZE}
+    />
   );
 };

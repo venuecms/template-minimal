@@ -1,6 +1,9 @@
 import {
   getEvent as getEventSDK,
   getEvents as getEventsSDK,
+  getNewsArticle as getNewsArticleSDK,
+  getNewsDates as getNewsDatesSDK,
+  getNews as getNewsSDK,
   getPage as getPageSDK,
   getPages as getPagesSDK,
   getProduct as getProductSDK,
@@ -8,9 +11,6 @@ import {
   getProfileEvents as getProfileEventsSDK,
   getProfile as getProfileSDK,
   getSite as getSiteSDK,
-  getNews as getNewsSDK,
-  getNewsArticle as getNewsArticleSDK,
-  getNewsDates as getNewsDatesSDK,
 } from "@venuecms/sdk";
 import { type ClassValue, clsx } from "clsx";
 import { cache } from "react";

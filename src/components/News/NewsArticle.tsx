@@ -1,17 +1,24 @@
 import { type Page as VenuePage, getLocalizedContent } from "@venuecms/sdk";
 import { format } from "date-fns";
-import { useLocale } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 import { VenueContent } from "@/lib/utils/renderer";
 
 import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
+import { NewsArticleNav } from "./NewsArticleNav";
 import { NewsSidebar } from "./NewsSidebar";
+import { getNewsRecords } from "./utils";
 
-export const NewsArticle = ({ article }: { article: VenuePage }) => {
-  const locale = useLocale();
+export const NewsArticle = async ({ article }: { article: VenuePage }) => {
+  const [locale, records] = await Promise.all([getLocale(), getNewsRecords()]);
   const { content } = getLocalizedContent(article?.localizedContent, locale);
+
+  const index = records.findIndex((record) => record.slug === article.slug);
+  const newerSlug = index > 0 ? records[index - 1]?.slug : null;
+  const olderSlug =
+    index >= 0 && index < records.length - 1 ? records[index + 1]?.slug : null;
 
   const date =
     typeof article.date === "string"
@@ -25,15 +32,14 @@ export const NewsArticle = ({ article }: { article: VenuePage }) => {
       </ColumnLeft>
       <ColumnRight className="gap-6">
         <h1 className="text-base text-secondary">{content.title}</h1>
-        {date ? (
-          <div className="text-sm text-muted">{date}</div>
-        ) : null}
+        {date ? <div className="text-sm text-muted">{date}</div> : null}
         {article.image ? <VenueImage image={article.image} /> : null}
         <VenueContent
           className="flex max-w-[42rem] flex-col gap-6 text-sm"
           content={content}
           contentStyles={renderedStyles}
         />
+        <NewsArticleNav newerSlug={newerSlug} olderSlug={olderSlug} />
       </ColumnRight>
     </TwoColumnLayout>
   );

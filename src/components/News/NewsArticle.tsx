@@ -33,7 +33,7 @@ export const NewsArticle = async ({
 
   return (
     <TwoColumnLayout>
-      <ColumnLeft>
+      <ColumnLeft className="order-last lg:order-none">
         <NewsSidebar currentSlug={article.slug} title={title} />
       </ColumnLeft>
       <ColumnRight className="gap-6">

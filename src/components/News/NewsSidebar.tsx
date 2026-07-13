@@ -29,7 +29,7 @@ export const NewsSidebar = async ({
 
   return (
     <div className="flex flex-col gap-[4.5rem]">
-      <h2 className="text-base text-secondary">{title}</h2>
+      <h2 className="hidden text-base text-secondary lg:block">{title}</h2>
       <NewsSidebarList
         items={items}
         currentSlug={currentSlug}

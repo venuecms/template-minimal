@@ -1,6 +1,9 @@
 import {
   getEvent as getEventSDK,
   getEvents as getEventsSDK,
+  getNewsArticle as getNewsArticleSDK,
+  getNewsDates as getNewsDatesSDK,
+  getNews as getNewsSDK,
   getPage as getPageSDK,
   getPages as getPagesSDK,
   getProduct as getProductSDK,
@@ -27,3 +30,6 @@ export const cachedGetProducts = cache(getProductsSDK);
 export const cachedGetProfile = cache(getProfileSDK);
 export const cachedGetProfileEvents = cache(getProfileEventsSDK);
 export const cachedGetEvent = cache(getEventSDK);
+export const cachedGetNews = cache(getNewsSDK);
+export const cachedGetNewsArticle = cache(getNewsArticleSDK);
+export const cachedGetNewsDates = cache(getNewsDatesSDK);

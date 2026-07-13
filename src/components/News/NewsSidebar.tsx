@@ -28,16 +28,14 @@ export const NewsSidebar = async ({
     currentIndex >= 0 ? Math.floor(currentIndex / NEWS_PAGE_SIZE) : 0;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-[4.5rem]">
       <h2 className="text-base text-secondary">{title}</h2>
-      <div className="mt-24">
-        <NewsSidebarList
-          items={items}
-          currentSlug={currentSlug}
-          initialPage={initialPage}
-          pageSize={NEWS_PAGE_SIZE}
-        />
-      </div>
+      <NewsSidebarList
+        items={items}
+        currentSlug={currentSlug}
+        initialPage={initialPage}
+        pageSize={NEWS_PAGE_SIZE}
+      />
     </div>
   );
 };

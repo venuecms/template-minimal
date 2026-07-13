@@ -20,8 +20,7 @@ const PagePage = async ({
   await setupSSR({ params });
 
   try {
-    const { data: page, error } = await cachedGetPage({ slug });
-    console.log("page", error);
+    const { data: page } = await cachedGetPage({ slug });
     const { data: pages } = await cachedGetPages();
 
     if (!page || !pages) {

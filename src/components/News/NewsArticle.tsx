@@ -23,11 +23,11 @@ export const NewsArticle = ({ article }: { article: VenuePage }) => {
       <ColumnLeft>
         <NewsSidebar currentSlug={article.slug} />
       </ColumnLeft>
-      <ColumnRight>
-        <div className="flex flex-col gap-2">
-          {date ? <div className="text-sm text-secondary">{date}</div> : null}
-          <h1 className="text-base">{content.title}</h1>
-        </div>
+      <ColumnRight className="gap-6">
+        <h1 className="text-base text-secondary">{content.title}</h1>
+        {date ? (
+          <div className="text-sm text-muted">{date}</div>
+        ) : null}
         {article.image ? <VenueImage image={article.image} /> : null}
         <VenueContent
           className="flex max-w-[42rem] flex-col gap-6 text-sm"

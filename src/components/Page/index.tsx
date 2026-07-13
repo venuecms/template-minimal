@@ -25,12 +25,12 @@ export const Page = ({
 }) => {
   const locale = useLocale();
 
-  if (page.type === "NEWS") {
-    return <NewsView />;
-  }
-
   const { artists = [] } = page;
   const { content } = getLocalizedContent(page?.localizedContent, locale);
+
+  if (page.type === "NEWS") {
+    return <NewsView title={content.title ?? undefined} />;
+  }
 
   return (
     <TwoColumnLayout>

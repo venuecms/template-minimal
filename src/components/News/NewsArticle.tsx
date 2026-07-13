@@ -11,7 +11,13 @@ import { NewsArticleNav } from "./NewsArticleNav";
 import { NewsSidebar } from "./NewsSidebar";
 import { getNewsRecords } from "./utils";
 
-export const NewsArticle = async ({ article }: { article: VenuePage }) => {
+export const NewsArticle = async ({
+  article,
+  title,
+}: {
+  article: VenuePage;
+  title?: string;
+}) => {
   const [locale, records] = await Promise.all([getLocale(), getNewsRecords()]);
   const { content } = getLocalizedContent(article?.localizedContent, locale);
 
@@ -28,7 +34,7 @@ export const NewsArticle = async ({ article }: { article: VenuePage }) => {
   return (
     <TwoColumnLayout>
       <ColumnLeft>
-        <NewsSidebar currentSlug={article.slug} />
+        <NewsSidebar currentSlug={article.slug} title={title} />
       </ColumnLeft>
       <ColumnRight className="gap-6">
         <h1 className="text-base text-secondary">{content.title}</h1>

@@ -7,7 +7,7 @@ import { getNewsRecords } from "./utils";
 
 // The canonical News view: latest article with the paginated sidebar. Shared by
 // the /news route and any page with type "NEWS".
-export const NewsView = async () => {
+export const NewsView = async ({ title }: { title?: string }) => {
   const records = await getNewsRecords();
   const latest = records[0];
 
@@ -21,5 +21,5 @@ export const NewsView = async () => {
     notFound();
   }
 
-  return <NewsArticle article={article} />;
+  return <NewsArticle article={article} title={title} />;
 };

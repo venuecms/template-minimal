@@ -6,8 +6,10 @@ import { NEWS_PAGE_SIZE, getNewsRecords } from "./utils";
 
 export const NewsSidebar = async ({
   currentSlug,
+  title = "News",
 }: {
   currentSlug?: string;
+  title?: string;
 }) => {
   const [locale, records] = await Promise.all([getLocale(), getNewsRecords()]);
 
@@ -26,11 +28,16 @@ export const NewsSidebar = async ({
     currentIndex >= 0 ? Math.floor(currentIndex / NEWS_PAGE_SIZE) : 0;
 
   return (
-    <NewsSidebarList
-      items={items}
-      currentSlug={currentSlug}
-      initialPage={initialPage}
-      pageSize={NEWS_PAGE_SIZE}
-    />
+    <div className="flex flex-col">
+      <h2 className="text-base text-secondary">{title}</h2>
+      <div className="mt-24">
+        <NewsSidebarList
+          items={items}
+          currentSlug={currentSlug}
+          initialPage={initialPage}
+          pageSize={NEWS_PAGE_SIZE}
+        />
+      </div>
+    </div>
   );
 };

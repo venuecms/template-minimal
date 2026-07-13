@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
 import { Link } from "@/lib/i18n";
@@ -37,9 +36,9 @@ export const NewsSidebarList = ({
           type="button"
           aria-label="Show newer news"
           onClick={() => setPage((p) => Math.max(0, p - 1))}
-          className="flex justify-center text-secondary hover:text-primary"
+          className="flex justify-start text-secondary hover:text-primary"
         >
-          <ChevronUp className="size-5" />
+          ↑
         </button>
       ) : null}
 
@@ -61,9 +60,9 @@ export const NewsSidebarList = ({
           type="button"
           aria-label="Show older news"
           onClick={() => setPage((p) => p + 1)}
-          className="flex justify-center text-secondary hover:text-primary"
+          className="flex justify-start text-secondary hover:text-primary"
         >
-          <ChevronDown className="size-5" />
+          ↓
         </button>
       ) : null}
     </nav>

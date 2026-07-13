@@ -1,6 +1,7 @@
-import { Page } from "@/components";
+import { NewsView, Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
+import { getLocalizedContent } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
 import { cachedGetPage, cachedGetPages } from "@/lib/utils";
@@ -15,16 +16,20 @@ const PagePage = async ({
 }: {
   params: Promise<{ slug: string } & Params>;
 }) => {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   await setupSSR({ params });
 
   try {
-    const { data: page, error } = await cachedGetPage({ slug });
-    console.log("page", error);
+    const { data: page } = await cachedGetPage({ slug });
     const { data: pages } = await cachedGetPages();
 
     if (!page || !pages) {
       notFound();
+    }
+
+    if (page.type === "NEWS") {
+      const { content } = getLocalizedContent(page.localizedContent, locale);
+      return <NewsView title={content.title ?? undefined} />;
     }
 
     return <Page page={page} pages={pages.records as Array<PageWithParent>} />;

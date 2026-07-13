@@ -30,13 +30,13 @@ export const NewsSidebarList = ({
   const hasOlder = page < totalPages - 1;
 
   return (
-    <nav className="flex flex-col gap-4 text-sm">
+    <nav className="flex flex-col items-center gap-4 text-sm lg:items-start">
       {hasNewer ? (
         <button
           type="button"
           aria-label="Show newer news"
           onClick={() => setPage((p) => Math.max(0, p - 1))}
-          className="flex justify-start text-secondary hover:text-primary"
+          className="flex justify-center text-secondary hover:text-primary lg:justify-start"
         >
           ↑
         </button>
@@ -60,7 +60,7 @@ export const NewsSidebarList = ({
           type="button"
           aria-label="Show older news"
           onClick={() => setPage((p) => p + 1)}
-          className="flex justify-start text-secondary hover:text-primary"
+          className="flex justify-center text-secondary hover:text-primary lg:justify-start"
         >
           ↓
         </button>

@@ -4,7 +4,6 @@ import { useLocale } from "next-intl";
 import { VenueContent } from "@/lib/utils/renderer";
 import { PageWithParent } from "@/lib/utils/tree";
 
-import { NewsView } from "../News";
 import { PageTree } from "../PageTree";
 import { ProfileCompact } from "../ProfileCompact";
 import { VenueImage } from "../VenueImage";
@@ -27,10 +26,6 @@ export const Page = ({
 
   const { artists = [] } = page;
   const { content } = getLocalizedContent(page?.localizedContent, locale);
-
-  if (page.type === "NEWS") {
-    return <NewsView title={content.title ?? undefined} />;
-  }
 
   return (
     <TwoColumnLayout>

@@ -2,12 +2,11 @@ import {
   type Profile as VenueProfile,
   getLocalizedContent,
 } from "@venuecms/sdk";
+import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
-import { VenueContent } from "@/lib/utils/renderer";
 
-import { VenueImage } from "../VenueImage";
 import { renderedStyles } from "../utils";
 
 export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {

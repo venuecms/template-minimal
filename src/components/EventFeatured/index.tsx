@@ -3,15 +3,14 @@ import {
   type Event as VenueEvent,
   getLocalizedContent,
 } from "@venuecms/sdk";
+import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { VenueContent } from "@/lib/utils/renderer";
 
 import { LocationLink } from "../LocationLink";
 import { TicketList } from "../TicketList";
-import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { formatDateRange } from "../utils";
 import { renderedStyles } from "../utils/styles";

@@ -1,10 +1,8 @@
 import { type Page as VenuePage, getLocalizedContent } from "@venuecms/sdk";
+import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
 
-import { VenueContent } from "@/lib/utils/renderer";
-
-import { VenueImage } from "../VenueImage";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
 import { NewsArticleNav } from "./NewsArticleNav";

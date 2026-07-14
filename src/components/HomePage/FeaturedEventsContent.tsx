@@ -1,9 +1,9 @@
+import { VenueImage } from "@venuecms/sdk-next";
 import { connection } from "next/server";
 
 import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventFeatured } from "@/components/EventFeatured";
-import { VenueImage } from "@/components/VenueImage";
 
 export async function FeaturedEventsContent({ locale }: { locale: string }) {
   await connection();

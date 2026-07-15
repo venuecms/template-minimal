@@ -4,10 +4,9 @@ import {
   MediaItem,
   type Site,
   getLocalizedContent,
-} from "@venuecms/sdk";
+} from "@venuecms/sdk-next";
+import { getSite } from "@venuecms/sdk-next";
 import removeMarkdown from "remove-markdown";
-
-import { cachedGetSite } from "@/lib/utils";
 
 import { getPublicImage, setupSSR } from "@/components/utils";
 
@@ -109,7 +108,7 @@ export const getGenerateMetadata =
       await setupSSR({ params });
 
       const [{ data: site }, { data: item }] = await Promise.all([
-        cachedGetSite(),
+        getSite(),
         getItem({ slug }),
       ]);
 

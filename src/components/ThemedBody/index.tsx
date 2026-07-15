@@ -1,3 +1,4 @@
+import { getSite } from "@venuecms/sdk-next";
 import { ThemeProvider } from "next-themes";
 import {
   Abel,
@@ -19,8 +20,6 @@ import {
   Young_Serif,
 } from "next/font/google";
 import { ReactNode } from "react";
-
-import { cachedGetSite } from "@/lib/utils";
 
 const WorkSans = Work_Sans({
   subsets: ["latin"],
@@ -146,7 +145,7 @@ const ThemeFonts = {
 };
 
 export const ThemedBody = async ({ children }: { children: ReactNode }) => {
-  const { data: site } = await cachedGetSite();
+  const { data: site } = await getSite();
 
   const templateSettings = (site?.settings?.publicSite?.template?.config ??
     {}) as { themeId: string; fontName: string };

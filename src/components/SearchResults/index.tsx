@@ -1,6 +1,6 @@
 "use client";
 
-import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk";
+import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 import {
   Dispatch,

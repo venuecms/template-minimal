@@ -1,6 +1,5 @@
+import { getNewsArticle } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
-
-import { cachedGetNewsArticle } from "@/lib/utils";
 
 import { NewsArticle } from "./NewsArticle";
 import { getNewsRecords } from "./utils";
@@ -15,7 +14,7 @@ export const NewsView = async ({ title }: { title?: string }) => {
     notFound();
   }
 
-  const { data: article } = await cachedGetNewsArticle({ slug: latest.slug });
+  const { data: article } = await getNewsArticle({ slug: latest.slug });
 
   if (!article) {
     notFound();

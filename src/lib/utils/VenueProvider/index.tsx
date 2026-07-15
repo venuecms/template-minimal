@@ -1,6 +1,6 @@
 "use client";
 
-import { Site, getSite, setConfig } from "@venuecms/sdk";
+import { Site, getSite, setConfig } from "@venuecms/sdk-next";
 import { ReactNode, createContext, useEffect, useState } from "react";
 
 export const VenueContext = createContext<Site | undefined>(undefined);

@@ -1,7 +1,6 @@
 import { VenueImage } from "@venuecms/sdk-next";
+import { getEvents, getSite } from "@venuecms/sdk-next";
 import { connection } from "next/server";
-
-import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { EventFeatured } from "@/components/EventFeatured";
 
@@ -9,8 +8,8 @@ export async function FeaturedEventsContent({ locale }: { locale: string }) {
   await connection();
 
   const [{ data: featuredEvents }, { data: site }] = await Promise.all([
-    cachedGetEvents({ limit: 6, featured: true }),
-    cachedGetSite(),
+    getEvents({ limit: 6, featured: true }),
+    getSite(),
   ]);
 
   if (!site) return null;

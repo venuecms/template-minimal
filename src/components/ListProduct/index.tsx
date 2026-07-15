@@ -1,4 +1,4 @@
-import { Product, Site, getLocalizedContent } from "@venuecms/sdk";
+import { Product, Site, getLocalizedContent } from "@venuecms/sdk-next";
 import { VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 

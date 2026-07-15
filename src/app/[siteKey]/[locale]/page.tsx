@@ -1,6 +1,7 @@
 import { getLocalizedMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getSite } from "@venuecms/sdk-next";
+
+import { cachedGetSite } from "@/lib/utils";
 
 import { EventsSection } from "@/components/HomePage/EventsSection";
 import { FeaturedEventsSection } from "@/components/HomePage/FeaturedEventsSection";
@@ -15,7 +16,7 @@ export const generateMetadata = async ({
   const { locale } = await params;
   await setupSSR({ params });
 
-  const { data: site } = await getSite();
+  const { data: site } = await cachedGetSite();
   if (!site) {
     return {};
   }

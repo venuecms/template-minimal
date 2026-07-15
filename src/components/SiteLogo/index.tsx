@@ -1,4 +1,4 @@
-import { Site } from "@venuecms/sdk-next";
+import { Site } from "@venuecms/sdk";
 import { VenueImage } from "@venuecms/sdk-next";
 
 import { Link } from "@/lib/i18n";

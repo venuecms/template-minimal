@@ -1,6 +1,6 @@
 "use client";
 
-import { Page, getLocalizedContent } from "@venuecms/sdk-next";
+import { Page, getLocalizedContent } from "@venuecms/sdk";
 import { ChevronRight } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useParams } from "next/navigation";

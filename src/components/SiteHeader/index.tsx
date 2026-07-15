@@ -1,5 +1,6 @@
-import { getSite } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
+
+import { cachedGetSite } from "@/lib/utils";
 
 import { Nav } from "../Nav";
 import { SiteLogo } from "../SiteLogo";
@@ -7,7 +8,7 @@ import { SiteHeaderDesktop } from "./SiteHeaderDesktop";
 import { SiteHeaderMobile } from "./SiteHeaderMobile";
 
 export const SiteHeader = async () => {
-  const { data: site } = await getSite();
+  const { data: site } = await cachedGetSite();
 
   if (!site) {
     return notFound();

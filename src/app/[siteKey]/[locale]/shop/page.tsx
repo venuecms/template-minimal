@@ -1,12 +1,13 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getPage } from "@venuecms/sdk-next";
+
+import { cachedGetPage } from "@/lib/utils";
 
 import { ProductsListSection } from "@/components/ShopPage";
 import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(() =>
-  getPage({ slug: "shop" }),
+  cachedGetPage({ slug: "shop" }),
 );
 
 const ProductsPage = async ({

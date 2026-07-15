@@ -1,4 +1,4 @@
-import { getLocalizedContent } from "@venuecms/sdk-next";
+import { getLocalizedContent } from "@venuecms/sdk";
 import { getLocale } from "next-intl/server";
 
 import { type NewsSidebarItem, NewsSidebarList } from "./NewsSidebarList";

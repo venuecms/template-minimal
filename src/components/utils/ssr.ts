@@ -1,6 +1,6 @@
 // Collects some common SSR setup functions that should be set on all pages
 import { Params } from "@/types";
-import { setConfig } from "@venuecms/sdk-next";
+import { setConfig } from "@venuecms/sdk";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 

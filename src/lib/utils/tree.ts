@@ -1,4 +1,4 @@
-import { Page } from "@venuecms/sdk-next";
+import { Page } from "@venuecms/sdk";
 
 export type PageWithParent = Page & { parentId?: string };
 export type PageWithParentAndChildren = PageWithParent & {

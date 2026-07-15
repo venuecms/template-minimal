@@ -1,12 +1,13 @@
 import { NewsArticle } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getNewsArticle } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
+
+import { cachedGetNewsArticle } from "@/lib/utils";
 
 import { setupSSR } from "@/components/utils";
 
-export const generateMetadata = getGenerateMetadata(getNewsArticle);
+export const generateMetadata = getGenerateMetadata(cachedGetNewsArticle);
 
 const NewsArticlePage = async ({
   params,
@@ -17,7 +18,7 @@ const NewsArticlePage = async ({
   await setupSSR({ params });
 
   try {
-    const { data: article } = await getNewsArticle({ slug });
+    const { data: article } = await cachedGetNewsArticle({ slug });
 
     if (!article) {
       notFound();

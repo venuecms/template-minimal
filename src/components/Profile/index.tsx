@@ -1,7 +1,7 @@
 import {
   type Profile as VenueProfile,
   getLocalizedContent,
-} from "@venuecms/sdk-next";
+} from "@venuecms/sdk";
 import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { useLocale, useTranslations } from "next-intl";
 import { Suspense } from "react";

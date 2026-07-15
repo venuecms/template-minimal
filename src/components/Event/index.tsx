@@ -2,7 +2,7 @@ import {
   Site,
   type Event as VenueEvent,
   getLocalizedContent,
-} from "@venuecms/sdk-next";
+} from "@venuecms/sdk";
 import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 

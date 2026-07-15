@@ -1,15 +1,15 @@
 import { NewsView, Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getLocalizedContent } from "@venuecms/sdk-next";
-import { getPage, getPages } from "@venuecms/sdk-next";
+import { getLocalizedContent } from "@venuecms/sdk";
 import { notFound } from "next/navigation";
 
+import { cachedGetPage, cachedGetPages } from "@/lib/utils";
 import { PageWithParent } from "@/lib/utils/tree";
 
 import { setupSSR } from "@/components/utils";
 
-export const generateMetadata = getGenerateMetadata(getPage);
+export const generateMetadata = getGenerateMetadata(cachedGetPage);
 
 const PagePage = async ({
   params,
@@ -20,8 +20,8 @@ const PagePage = async ({
   await setupSSR({ params });
 
   try {
-    const { data: page } = await getPage({ slug });
-    const { data: pages } = await getPages();
+    const { data: page } = await cachedGetPage({ slug });
+    const { data: pages } = await cachedGetPages();
 
     if (!page || !pages) {
       notFound();

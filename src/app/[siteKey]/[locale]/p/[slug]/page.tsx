@@ -27,7 +27,7 @@ const PagePage = async ({
       notFound();
     }
 
-    if (page.type === "NEWS") {
+    if (page.type === "NEWS" || page.type === "NEWSLIST") {
       const { content } = getLocalizedContent(page.localizedContent, locale);
       return <NewsView title={content.title ?? undefined} />;
     }

@@ -1,4 +1,4 @@
-import { type Event, type Site, getLocalizedContent } from "@venuecms/sdk";
+import { type Event, type Site, getLocalizedContent } from "@venuecms/sdk-next";
 import { VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 import { ReactNode } from "react";

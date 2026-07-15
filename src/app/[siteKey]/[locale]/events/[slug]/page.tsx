@@ -1,13 +1,12 @@
 import { Event } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
+import { getEvent, getSite } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
-
-import { cachedGetEvent, cachedGetSite } from "@/lib/utils";
 
 import { setupSSR } from "@/components/utils";
 
-export const generateMetadata = getGenerateMetadata(cachedGetEvent);
+export const generateMetadata = getGenerateMetadata(getEvent);
 
 const EventsPage = async ({
   params,
@@ -18,8 +17,8 @@ const EventsPage = async ({
   await setupSSR({ params });
 
   const [{ data: event }, { data: site }] = await Promise.all([
-    cachedGetEvent({ slug }),
-    cachedGetSite(),
+    getEvent({ slug }),
+    getSite(),
   ]);
 
   if (!event || !site) {

@@ -1,4 +1,4 @@
-import { TicketOnEvent } from "@venuecms/sdk";
+import { TicketOnEvent } from "@venuecms/sdk-next";
 import { useFormatter } from "next-intl";
 
 import { Link } from "@/lib/i18n";

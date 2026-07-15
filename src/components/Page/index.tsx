@@ -1,4 +1,7 @@
-import { type Page as VenuePage, getLocalizedContent } from "@venuecms/sdk";
+import {
+  type Page as VenuePage,
+  getLocalizedContent,
+} from "@venuecms/sdk-next";
 import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 

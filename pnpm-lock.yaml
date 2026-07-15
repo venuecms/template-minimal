@@ -25,8 +25,8 @@ importers:
         specifier: ^1.7.1
         version: 1.7.1
       '@venuecms/sdk-next':
-        specifier: ^1.6.1
-        version: 1.6.1(@swc/core@1.15.18)(@venuecms/sdk@1.7.1)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)
+        specifier: ^1.7.1
+        version: 1.7.1(@swc/core@1.15.18)(@venuecms/sdk@1.7.1)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1081,10 +1081,10 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
-  '@venuecms/sdk-next@1.6.1':
-    resolution: {integrity: sha512-OxVr+ofGu1SbFM8htnj7QZzqogc1hbVa2Kaq3y0bd3nYwQiyhLr2QyEtnP07vpoFAke3sw9z7XyJOLx6SQQaiA==}
+  '@venuecms/sdk-next@1.7.1':
+    resolution: {integrity: sha512-ZPEXGS+WeUjzBnQXA4bWgAJmsXG3QkVQVzCj87IJlqGhpqpUNNyx44hi/rKs8eDSZ1r9Xwebx7GdZtsTcXcAmQ==}
     peerDependencies:
-      '@venuecms/sdk': ^1.6.1
+      '@venuecms/sdk': ^1.7.1
       next: '>=14'
       react: '>=19'
 
@@ -2640,7 +2640,7 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@venuecms/sdk-next@1.6.1(@swc/core@1.15.18)(@venuecms/sdk@1.7.1)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)':
+  '@venuecms/sdk-next@1.7.1(@swc/core@1.15.18)(@venuecms/sdk@1.7.1)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)':
     dependencies:
       '@types/react': 19.2.14
       '@venuecms/sdk': 1.7.1

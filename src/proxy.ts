@@ -1,4 +1,4 @@
-import { getSiteKeyByDomain } from "@venuecms/sdk";
+import { getSiteKeyByDomain } from "@venuecms/sdk-next";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 

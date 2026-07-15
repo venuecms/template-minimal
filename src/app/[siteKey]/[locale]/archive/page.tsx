@@ -1,9 +1,8 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getLocalizedContent } from "@venuecms/sdk";
+import { getLocalizedContent } from "@venuecms/sdk-next";
+import { getEvents, getPage, getSite } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
-
-import { cachedGetEvents, cachedGetPage, cachedGetSite } from "@/lib/utils";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { Pagination } from "@/components/Pagination";
@@ -11,7 +10,7 @@ import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(() =>
-  cachedGetPage({ slug: "archive" }),
+  getPage({ slug: "archive" }),
 );
 
 const ITEMS_PER_PAGE = 50;
@@ -34,14 +33,14 @@ const ArchivePage = async ({
   const nowRoundedToMinute = now.getTime();
 
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
-    cachedGetEvents({
+    getEvents({
       page: currentPage,
       limit: ITEMS_PER_PAGE,
       lt: nowRoundedToMinute,
       dir: "desc",
     }),
-    cachedGetPage({ slug: "archive" }),
-    cachedGetSite(),
+    getPage({ slug: "archive" }),
+    getSite(),
   ]);
 
   if (!site) {

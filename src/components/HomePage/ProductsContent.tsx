@@ -1,7 +1,7 @@
+import { getProducts, getSite } from "@venuecms/sdk-next";
 import { connection } from "next/server";
 
 import { Link } from "@/lib/i18n";
-import { cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { ListProduct } from "@/components/ListProduct";
 
@@ -9,8 +9,8 @@ export async function ProductsContent() {
   await connection();
 
   const [{ data: products }, { data: site }] = await Promise.all([
-    cachedGetProducts({ limit: 10 }),
-    cachedGetSite(),
+    getProducts({ limit: 10 }),
+    getSite(),
   ]);
 
   if (!site) return null;

@@ -1,10 +1,9 @@
 import { Params } from "@/types";
-import { getLocalizedContent } from "@venuecms/sdk";
+import { getLocalizedContent } from "@venuecms/sdk-next";
+import { getEvents, getSite } from "@venuecms/sdk-next";
 import { NextRequest } from "next/server";
 import removeMarkdown from "remove-markdown";
 import RSS from "rss";
-
-import { cachedGetEvents, cachedGetSite } from "@/lib/utils";
 
 import { formatDateRange, getPublicImage, setupSSR } from "@/components/utils";
 
@@ -16,12 +15,12 @@ export const GET = async (
   await setupSSR({ params });
 
   const [{ data: events }, { data: site }] = await Promise.all([
-    cachedGetEvents({
+    getEvents({
       dir: "desc",
       limit: 20,
       page: 0,
     }),
-    cachedGetSite(),
+    getSite(),
   ]);
 
   if (!site || !events) {

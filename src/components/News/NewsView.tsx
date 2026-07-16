@@ -1,7 +1,7 @@
 import { getNewsArticle } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
 
-import { NewsArticle } from "./NewsArticle";
+import { NewsArticleWithSideBar } from "./NewsArticleWithSideBar";
 import { getNewsRecords } from "./utils";
 
 // The canonical News view: latest article with the paginated sidebar. Shared by
@@ -20,5 +20,5 @@ export const NewsView = async ({ title }: { title?: string }) => {
     notFound();
   }
 
-  return <NewsArticle article={article} title={title} />;
+  return <NewsArticleWithSideBar article={article} title={title} />;
 };

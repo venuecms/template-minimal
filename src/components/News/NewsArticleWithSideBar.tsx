@@ -12,7 +12,7 @@ import { NewsArticleNav } from "./NewsArticleNav";
 import { NewsSidebar } from "./NewsSidebar";
 import { getNewsRecords } from "./utils";
 
-export const NewsArticle = async ({
+export const NewsArticleWithSideBar = async ({
   article,
   title,
 }: {
@@ -34,7 +34,9 @@ export const NewsArticle = async ({
 
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="order-last lg:order-none"></ColumnLeft>
+      <ColumnLeft className="order-last lg:order-none">
+        <NewsSidebar currentSlug={article.slug} title={title} />
+      </ColumnLeft>
       <ColumnRight className="gap-6">
         <h1 className="text-base text-secondary">{content.title}</h1>
         {date ? <div className="text-sm text-muted">{date}</div> : null}

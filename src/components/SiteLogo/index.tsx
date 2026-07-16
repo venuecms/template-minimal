@@ -1,9 +1,8 @@
-import { Site } from "@venuecms/sdk";
+import { Site } from "@venuecms/sdk-next";
+import { VenueImage } from "@venuecms/sdk-next";
 
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-
-import { VenueImage } from "../VenueImage";
 
 export const SiteLogo = ({
   className,

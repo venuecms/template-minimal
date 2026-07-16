@@ -1,8 +1,7 @@
-import { getLocalizedContent } from "@venuecms/sdk";
+import { getLocalizedContent } from "@venuecms/sdk-next";
+import { getPage, getProducts, getSite } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
-
-import { cachedGetPage, cachedGetProducts, cachedGetSite } from "@/lib/utils";
 
 import { ListProduct } from "@/components/ListProduct";
 import { Pagination } from "@/components/Pagination";
@@ -20,12 +19,12 @@ export async function ProductsListContent({
 
   const [{ data: products }, { data: page }, { data: site }] =
     await Promise.all([
-      cachedGetProducts({
+      getProducts({
         page: currentPage,
         limit: ITEMS_PER_PAGE,
       }),
-      cachedGetPage({ slug: "shop" }),
-      cachedGetSite(),
+      getPage({ slug: "shop" }),
+      getSite(),
     ]);
 
   if (!site) {

@@ -1,13 +1,12 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
+import { getProduct, getSite } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
-
-import { cachedGetProduct, cachedGetSite } from "@/lib/utils";
 
 import { Product } from "@/components/Product";
 import { setupSSR } from "@/components/utils";
 
-export const generateMetadata = getGenerateMetadata(cachedGetProduct);
+export const generateMetadata = getGenerateMetadata(getProduct);
 
 const ProductPage = async ({
   params,
@@ -18,8 +17,8 @@ const ProductPage = async ({
   await setupSSR({ params });
 
   const [{ data: site }, { data: product }] = await Promise.all([
-    cachedGetSite(),
-    cachedGetProduct({ slug }),
+    getSite(),
+    getProduct({ slug }),
   ]);
 
   if (!product || !site) {

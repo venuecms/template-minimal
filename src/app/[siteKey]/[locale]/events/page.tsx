@@ -1,13 +1,12 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-
-import { cachedGetPage } from "@/lib/utils";
+import { getPage } from "@venuecms/sdk-next";
 
 import { EventsListSection } from "@/components/EventsPage";
 import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(() =>
-  cachedGetPage({ slug: "events" }),
+  getPage({ slug: "events" }),
 );
 
 const EventsPage = async ({ params }: { params: Promise<Params> }) => {

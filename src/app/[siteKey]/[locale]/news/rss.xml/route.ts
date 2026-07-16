@@ -1,10 +1,9 @@
 import { Params } from "@/types";
-import { getLocalizedContent } from "@venuecms/sdk";
+import { getLocalizedContent } from "@venuecms/sdk-next";
+import { getNews, getSite } from "@venuecms/sdk-next";
 import { NextRequest } from "next/server";
 import removeMarkdown from "remove-markdown";
 import RSS from "rss";
-
-import { cachedGetNews, cachedGetSite } from "@/lib/utils";
 
 import { getPublicImage, setupSSR } from "@/components/utils";
 
@@ -16,11 +15,11 @@ export const GET = async (
   await setupSSR({ params });
 
   const [{ data: news }, { data: site }] = await Promise.all([
-    cachedGetNews({
+    getNews({
       dir: "desc",
       limit: 20,
     }),
-    cachedGetSite(),
+    getSite(),
   ]);
 
   if (!site || !news) {

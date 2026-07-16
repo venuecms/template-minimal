@@ -2,16 +2,15 @@ import {
   Site,
   type Event as VenueEvent,
   getLocalizedContent,
-} from "@venuecms/sdk";
+} from "@venuecms/sdk-next";
+import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
-import { VenueContent } from "@/lib/utils/renderer";
 
 import { LocationLink } from "../LocationLink";
 import { ProfileCompact } from "../ProfileCompact";
 import { TicketList } from "../TicketList";
-import { VenueImage } from "../VenueImage";
 import {
   ColumnLeft,
   ColumnRight,

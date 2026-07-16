@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { SearchSiteResponse, searchSite } from "@venuecms/sdk";
+import { SearchSiteResponse, searchSite } from "@venuecms/sdk-next";
 import {
   Dispatch,
   PropsWithChildren,

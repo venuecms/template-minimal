@@ -18,16 +18,7 @@ export function EventsError() {
 }
 
 export function NewsError() {
-  return (
-    <TwoColumnLayout>
-      <ColumnLeft className="hidden text-sm text-secondary sm:flex" />
-      <ColumnRight>
-        <p className="text-secondary">
-          Unable to load news items. Please try refreshing the page.
-        </p>
-      </ColumnRight>
-    </TwoColumnLayout>
-  );
+  return null; // News is optional, so hide on error
 }
 
 export function ProductsError() {

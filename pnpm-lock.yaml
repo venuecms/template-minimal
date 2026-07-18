@@ -22,8 +22,8 @@ importers:
         specifier: ^5.90.21
         version: 5.90.21(react@19.2.4)
       '@venuecms/sdk-next':
-        specifier: ^1.9.0
-        version: 1.9.0(@swc/core@1.15.18)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)
+        specifier: ^1.10.0
+        version: 1.10.0(@swc/core@1.15.18)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1078,8 +1078,8 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
-  '@venuecms/sdk-next@1.9.0':
-    resolution: {integrity: sha512-w2iyY6ONOsqprAQXgfdZjaw9va19ETc9TlYnrgtRGx/Fs2hBGV/dF8Jsg8YbIvc2zods9jDfo37J967O14FIRw==}
+  '@venuecms/sdk-next@1.10.0':
+    resolution: {integrity: sha512-3fQG7vsRSx5NNOg28A4d2hgI7zsZeUAmgqx8Twcl8n8JLgTKVrDg5Gca6uzuPpIKrUfhwf6SxVbuhuTxP4+pIg==}
     peerDependencies:
       next: '>=14'
       react: '>=19'
@@ -2636,7 +2636,7 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@venuecms/sdk-next@1.9.0(@swc/core@1.15.18)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)':
+  '@venuecms/sdk-next@1.10.0(@swc/core@1.15.18)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.8)(react@19.2.4)(yaml@2.6.1)':
     dependencies:
       '@types/react': 19.2.14
       '@venuecms/sdk': 1.8.1

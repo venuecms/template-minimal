@@ -2,7 +2,9 @@ import {
   type Profile as VenueProfile,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { VenueContent, VenueImage } from "@venuecms/sdk-next";
+import { VenueContent } from "@venuecms/sdk-next";
+
+import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";

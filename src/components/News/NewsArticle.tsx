@@ -2,7 +2,9 @@ import {
   type Page as VenuePage,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { VenueContent, VenueImage } from "@venuecms/sdk-next";
+import { VenueContent } from "@venuecms/sdk-next";
+
+import { VenueImage } from "@/components/VenueImage";
 import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
 

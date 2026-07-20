@@ -1,18 +1,12 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getPage, getPages } from "@venuecms/sdk-next";
+import { getPage } from "@venuecms/sdk-next";
 import { VenueContent } from "@venuecms/sdk-next";
 import { getLocalizedContent } from "@venuecms/sdk-next";
-import { notFound } from "next/dist/client/components/navigation";
 
-import { PageWithParent } from "@/lib/utils/tree";
-
-import { NewsView } from "@/components/News/NewsView";
 import { ProductsListSection } from "@/components/ShopPage";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
+import { ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { renderedStyles, setupSSR } from "@/components/utils";
-
-import Page from "../page";
 
 export const generateMetadata = getGenerateMetadata(() =>
   getPage({ slug: "shop" }),

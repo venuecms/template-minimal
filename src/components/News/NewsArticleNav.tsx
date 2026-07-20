@@ -20,7 +20,7 @@ export const NewsArticleNav = ({
         <Link
           href={`/news/${newerSlug}`}
           aria-label="Newer article"
-          className="flex items-center text-secondary hover:text-primary"
+          className="flex items-center text-secondary transition-transform hover:-translate-x-1 hover:text-primary"
         >
           <ArrowLeft className="size-5" />
         </Link>
@@ -32,7 +32,7 @@ export const NewsArticleNav = ({
         <Link
           href={`/news/${olderSlug}`}
           aria-label="Older article"
-          className="flex items-center text-secondary hover:text-primary"
+          className="flex items-center text-secondary transition-transform hover:translate-x-1 hover:text-primary"
         >
           <ArrowRight className="size-5" />
         </Link>

@@ -1,4 +1,4 @@
-import { VenueImage } from "@venuecms/sdk-next";
+import { VenueImage } from "@/components/VenueImage";
 import { getEvents, getSite } from "@venuecms/sdk-next";
 import { connection } from "next/server";
 

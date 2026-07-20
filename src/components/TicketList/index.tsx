@@ -5,7 +5,7 @@ import { Link } from "@/lib/i18n";
 
 export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
   return (
-    <div className="flex gap-8">
+    <div className="flex flex-wrap gap-8">
       {tickets.map((ticket) => {
         const ticketText =
           ticket.price > 0
@@ -14,7 +14,7 @@ export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
 
         return ticket.externalLink ? (
           <Link
-            className="border-b"
+            className="text-nowrap underline underline-offset-8 hover:text-secondary"
             key={ticket.name}
             href={ticket.externalLink}
           >

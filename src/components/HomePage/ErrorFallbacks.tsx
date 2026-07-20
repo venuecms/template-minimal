@@ -17,6 +17,10 @@ export function EventsError() {
   );
 }
 
+export function NewsError() {
+  return null; // News is optional, so hide on error
+}
+
 export function ProductsError() {
   return null; // Products are optional and site-specific, so hide on error
 }

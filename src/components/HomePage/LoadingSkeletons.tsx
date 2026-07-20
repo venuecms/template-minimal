@@ -92,3 +92,45 @@ export function ProductsSkeleton() {
     </section>
   );
 }
+
+export function NewsSkeleton() {
+  return (
+    <div className="flex flex-col pb-16">
+      {/* Desktop layout */}
+      <TwoColumnLayout className="hidden">
+        <ColumnLeft>
+          <Skeleton className="aspect-square" />
+        </ColumnLeft>
+        <ColumnRight className="max-w-4xl gap-16">
+          <Skeleton className="w-48" />
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-5 w-1/2" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="w-2/3" />
+          </div>
+        </ColumnRight>
+      </TwoColumnLayout>
+
+      {/* Mobile layout */}
+      <div className="flex sm:hidden">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-1">
+            <Skeleton className="w-48" />
+            <Skeleton className="w-32" />
+          </div>
+          <Skeleton className="h-6 w-3/4" />
+          <Skeleton className="aspect-square" />
+          <div className="flex flex-col gap-2">
+            <Skeleton />
+            <Skeleton />
+            <Skeleton className="w-2/3" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

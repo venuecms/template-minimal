@@ -6,6 +6,7 @@ import { VenueContent, VenueImage } from "@venuecms/sdk-next";
 import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
 
+import { ProfileLink } from "../ProfileLink";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";
 import { NewsArticleNav } from "./NewsArticleNav";
@@ -21,7 +22,7 @@ export const NewsArticleWithSideBar = async ({
 }) => {
   const [locale, records] = await Promise.all([getLocale(), getNewsRecords()]);
   const { content } = getLocalizedContent(article?.localizedContent, locale);
-
+  const { artists = [] } = article;
   const index = records.findIndex((record) => record.slug === article.slug);
   const newerSlug = index > 0 ? records[index - 1]?.slug : null;
   const olderSlug =
@@ -49,6 +50,11 @@ export const NewsArticleWithSideBar = async ({
           content={content}
           contentStyles={renderedStyles}
         />
+        <div className="flex flex-col gap-2">
+          {artists.map(({ profile }) => (
+            <ProfileLink key={profile.slug} profile={profile} />
+          ))}
+        </div>
         <NewsArticleNav newerSlug={newerSlug} olderSlug={olderSlug} />
       </ColumnRight>
     </TwoColumnLayout>

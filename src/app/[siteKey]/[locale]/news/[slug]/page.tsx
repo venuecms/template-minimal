@@ -1,4 +1,4 @@
-import { NewsArticle } from "@/components";
+import { NewsArticle, NewsArticleWithSideBar } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import { getNewsArticle } from "@venuecms/sdk-next";
@@ -23,7 +23,7 @@ const NewsArticlePage = async ({
       notFound();
     }
 
-    return <NewsArticle article={article} />;
+    return <NewsArticleWithSideBar article={article} />;
   } catch (error) {
     console.error(error);
     notFound();

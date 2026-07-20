@@ -34,7 +34,7 @@ const ProductsPage = async ({
   const { content } = getLocalizedContent(page?.localizedContent, locale);
   return (
     <>
-      <TwoColumnLayout className="lg:py-8 lg:pb-0">
+      <TwoColumnLayout className="pb-0 lg:py-8 lg:pb-0">
         <ColumnRight>
           <VenueContent
             className="flex max-w-[42rem] flex-col gap-6 text-sm"

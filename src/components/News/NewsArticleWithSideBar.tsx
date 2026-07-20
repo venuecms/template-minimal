@@ -38,8 +38,11 @@ export const NewsArticleWithSideBar = async ({
         <NewsSidebar currentSlug={article.slug} title={title} />
       </ColumnLeft>
       <ColumnRight className="gap-6">
-        <h1 className="text-base text-secondary">{content.title}</h1>
-        {date ? <div className="text-sm text-muted">{date}</div> : null}
+        <div className="flex flex-col gap-0">
+          {" "}
+          <h1 className="text-base text-secondary">{content.title}</h1>
+          {date ? <div className="text-sm text-muted">{date}</div> : null}
+        </div>
         {article.image ? <VenueImage image={article.image} /> : null}
         <VenueContent
           className="flex max-w-[42rem] flex-col gap-6 text-sm"

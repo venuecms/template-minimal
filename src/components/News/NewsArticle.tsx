@@ -3,10 +3,10 @@ import {
   getLocalizedContent,
 } from "@venuecms/sdk-next";
 import { VenueContent } from "@venuecms/sdk-next";
-
-import { VenueImage } from "@/components/VenueImage";
 import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
+
+import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";
 import { ProfileLink } from "../ProfileLink";
@@ -43,11 +43,11 @@ export const NewsArticle = async ({
         <NewsSidebar currentSlug={article.slug} title={title} />
       </ColumnLeft>
       <ColumnRight className="gap-6">
-        <h1 className="text-base text-secondary">{content.title}</h1>
-        {date ? <div className="text-sm text-muted">{date}</div> : null}
+        <h1 className="text-secondary">{content.title}</h1>
+        {date ? <div className="text-muted">{date}</div> : null}
         {article.image ? <VenueImage image={article.image} /> : null}
         <VenueContent
-          className="flex max-w-[42rem] flex-col gap-6 text-sm"
+          className="flex max-w-[42rem] flex-col gap-6"
           content={content}
           contentStyles={renderedStyles}
         />

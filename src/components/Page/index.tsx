@@ -3,11 +3,11 @@ import {
   getLocalizedContent,
 } from "@venuecms/sdk-next";
 import { VenueContent } from "@venuecms/sdk-next";
-
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 
 import { PageWithParent } from "@/lib/utils/tree";
+
+import { VenueImage } from "@/components/VenueImage";
 
 import { PageTree } from "../PageTree";
 import { ProfileCompact } from "../ProfileCompact";
@@ -45,7 +45,7 @@ export const Page = ({
 
       <ColumnRight>
         <VenueContent
-          className="flex max-w-[42rem] flex-col gap-6 text-sm"
+          className="flex max-w-[42rem] flex-col gap-6"
           content={content}
           contentStyles={renderedStyles}
         />

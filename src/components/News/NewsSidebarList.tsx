@@ -49,7 +49,7 @@ export const NewsSidebarList = ({
   const hasOlder = page < totalPages - 1;
 
   return (
-    <nav className="flex flex-col items-center gap-4 text-sm lg:items-start">
+    <nav className="flex flex-col items-center gap-4 lg:items-start">
       {hasNewer ? (
         <PagerButton
           label="Show newer news"

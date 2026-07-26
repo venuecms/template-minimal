@@ -1,10 +1,11 @@
 import { type Event, type Site, getLocalizedContent } from "@venuecms/sdk-next";
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+
+import { VenueImage } from "@/components/VenueImage";
 
 import { LocationLink } from "../LocationLink";
 import { formatDateRange } from "../utils";
@@ -19,7 +20,7 @@ export const EventsList = ({
   return (
     <div
       className={cn(
-        "flex flex-col gap-x-8 text-sm sm:grid sm:grid-flow-row sm:grid-cols-2",
+        "flex flex-col gap-x-8 sm:grid sm:grid-flow-row sm:grid-cols-2",
         className,
       )}
     >

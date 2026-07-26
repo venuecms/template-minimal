@@ -10,7 +10,7 @@ import { EventsListContent } from "./EventsListContent";
 function EventsListError() {
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary" />
+      <ColumnLeft />
       <ColumnRight>
         <p className="text-secondary">
           Unable to load events. Please try refreshing the page.
@@ -23,7 +23,7 @@ function EventsListError() {
 function EventsListSkeleton() {
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary">
+      <ColumnLeft>
         <div className="pb-8">
           <Skeleton className="w-32" />
         </div>

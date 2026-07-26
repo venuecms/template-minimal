@@ -41,7 +41,7 @@ export const NavMenuMobile = ({
 
                 <div className="flex h-full flex-col justify-between pb-16 pt-6">
                   <ol
-                    className="flex flex-col gap-8 text-sm text-nav"
+                    className="flex flex-col gap-8 text-nav"
                     onClick={() => setOpen(false)}
                   >
                     {children}

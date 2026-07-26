@@ -30,7 +30,7 @@ export async function EventsContent({ locale }: { locale: string }) {
 
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="hidden text-sm text-secondary sm:flex">
+      <ColumnLeft className="hidden sm:flex">
         {siteContent ? (
           <VenueContent
             className="flex flex-col gap-6"

@@ -47,7 +47,7 @@ export function FeaturedEventsSkeleton() {
 export function EventsSkeleton() {
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="hidden text-sm text-secondary sm:flex">
+      <ColumnLeft className="hidden sm:flex">
         <div className="flex flex-col gap-2">
           <Skeleton />
           <Skeleton />

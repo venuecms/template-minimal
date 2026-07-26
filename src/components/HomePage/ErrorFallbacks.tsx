@@ -7,7 +7,7 @@ export function FeaturedEventsError() {
 export function EventsError() {
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="hidden text-sm text-secondary sm:flex" />
+      <ColumnLeft className="hidden sm:flex" />
       <ColumnRight>
         <p className="text-secondary">
           Unable to load events. Please try refreshing the page.

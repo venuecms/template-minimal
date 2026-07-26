@@ -14,7 +14,7 @@ export const NewsArticleNav = ({
   return (
     <nav
       aria-label="News pagination"
-      className="mt-8 flex items-center justify-between gap-4 text-sm"
+      className="mt-8 flex items-center justify-between gap-4"
     >
       {newerSlug ? (
         <Link

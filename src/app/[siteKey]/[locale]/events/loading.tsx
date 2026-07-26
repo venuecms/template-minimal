@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/Input/Skeleton";
 export default function Loading() {
   return (
     <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary">
+      <ColumnLeft>
         <div className="pb-8">
           <Skeleton className="w-32" />
         </div>

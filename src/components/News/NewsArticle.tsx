@@ -43,7 +43,7 @@ export const NewsArticle = async ({
         <NewsSidebar currentSlug={article.slug} title={title} />
       </ColumnLeft>
       <ColumnRight className="gap-6">
-        <h1 className="text-base text-secondary">{content.title}</h1>
+        <h1 className="text-secondary">{content.title}</h1>
         {date ? <div className="text-muted">{date}</div> : null}
         {article.image ? <VenueImage image={article.image} /> : null}
         <VenueContent

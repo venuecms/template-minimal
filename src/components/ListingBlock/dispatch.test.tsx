@@ -10,10 +10,11 @@ import { parseEventListingAttributes } from "./params";
  * node with its attributes intact. Without that, every listing block would be
  * dropped from the content with only a console warning.
  */
-const contentWith = (node: Record<string, unknown>) =>
-  ({
-    contentJSON: { type: "doc", content: [node] },
-  }) as unknown as LocalizedContent;
+const contentWith = (node: Record<string, unknown>): LocalizedContent => ({
+  siteId: "site-id",
+  locale: "en",
+  contentJSON: { type: "doc", content: [node] },
+});
 
 describe("VenueContent block dispatch", () => {
   it("routes a listing node to its handler with attributes intact", () => {

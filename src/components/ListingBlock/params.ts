@@ -3,17 +3,18 @@
  *
  * The platform's editor can drop an event/news/page/product/profile listing
  * into any rich-text content. Each block serializes the query params of its
- * public endpoint so a consumer can rebuild the API call, and it reaches us in
- * one of two shapes:
+ * public endpoint, and reaches us as a node in `contentJSON` whose `attrs`
+ * carry the block's own param names.
  *
- * - as a node in `contentJSON`, whose `attrs` use the block's own camelCase
- *   param names (`limit`, `orderBy`, `listingType`, …);
- * - as a `<div data-type="event-listing" data-limit="4" …>` in the markdown
- *   fallback, whose attributes are the `data-*` serialization.
+ * (A block also serializes itself to `<div data-type="event-listing"
+ * data-limit="4" …>` in the markdown fallback, but the SDK renderer only
+ * dispatches to custom components on the `contentJSON` path — its markdown
+ * path goes through markdown-to-jsx with tag-keyed overrides and never sees
+ * these node types. Reading the `data-*` spelling here would be dead code;
+ * supporting that path needs an SDK change first.)
  *
- * Both name the same params, so every reader below accepts either and every
- * value is validated here rather than trusted — an author-editable attribute
- * is untrusted input, and a bad one should drop out of the query instead of
+ * Values are validated rather than trusted: an author-editable attribute is
+ * untrusted input, and a bad one should drop out of the query instead of
  * reaching the endpoint.
  */
 import type {
@@ -25,15 +26,12 @@ import type {
 } from "@venuecms/sdk-next";
 
 /** Every TipTap node type this template renders as a listing. */
-export const LISTING_BLOCK_NODE_TYPES = [
-  "eventListing",
-  "newsListing",
-  "pageListing",
-  "productListing",
-  "profileListing",
-] as const;
-
-export type ListingBlockNodeType = (typeof LISTING_BLOCK_NODE_TYPES)[number];
+export type ListingBlockNodeType =
+  | "eventListing"
+  | "newsListing"
+  | "pageListing"
+  | "productListing"
+  | "profileListing";
 
 type NodeAttrs = Record<string, unknown>;
 
@@ -47,36 +45,23 @@ const PAGE_ORDER_BY = ["createdAt", "updatedAt"] as const;
 const PRODUCT_ORDER_BY = ["order", "createdAt", "updatedAt"] as const;
 const PROFILE_ORDER_BY = ["slug", "createdAt", "updatedAt"] as const;
 
-const EVENT_LISTING_TYPES = ["upcoming", "past", "all"] as const;
-const NEWS_LISTING_TYPES = ["all", "upcoming", "past"] as const;
+const LISTING_TYPES = ["upcoming", "past", "all"] as const;
 
 const PROFILE_TYPES = ["member"] as const;
 
-type EventListingType = (typeof EVENT_LISTING_TYPES)[number];
-type NewsListingType = (typeof NEWS_LISTING_TYPES)[number];
+type ListingType = (typeof LISTING_TYPES)[number];
 
 // Query shapes are read off the SDK's own signatures, so a param the endpoint
-// drops or renames surfaces here as a type error rather than a silent no-op.
+// drops or renames surfaces as a type error rather than a silent no-op. The
+// guard is the annotated local in each builder below: an object literal
+// assigned to an annotated target gets excess-property checked, and that is
+// what catches a param the endpoint no longer has. Returning the literal
+// straight out of the generic `compact` erases the check — don't.
 type EventsQuery = NonNullable<Parameters<typeof getEvents>[0]>;
 type NewsQuery = NonNullable<Parameters<typeof getNews>[0]>;
 type PagesQuery = NonNullable<Parameters<typeof getPages>[0]>;
 type ProductsQuery = NonNullable<Parameters<typeof getProducts>[0]>;
 type ProfilesQuery = NonNullable<Parameters<typeof getProfiles>[0]>;
-
-/**
- * Reads one param under either name. Only one shape is ever present, so the
- * `data-*` spelling simply wins when both somehow are.
- */
-const readAttr = (
-  attrs: NodeAttrs,
-  name: string,
-  dataName: string,
-): unknown => {
-  const dataValue = attrs[dataName];
-  return dataValue !== undefined && dataValue !== null
-    ? dataValue
-    : attrs[name];
-};
 
 // `limit=0` is falsy server-side — `take` drops out of the pagination and the
 // endpoint returns every record — so only positive limits are representable.
@@ -136,59 +121,81 @@ const optionalFlag = (value: boolean): true | undefined =>
 const optionalTags = (tags: string[]): string[] | undefined =>
   tags.length ? tags : undefined;
 
-export type EventListingAttributes = {
-  listingType: EventListingType;
-  limit: number | null;
-  page: number | null;
-  orderBy: (typeof EVENT_ORDER_BY)[number] | null;
+/** The filters every block shares; only the sortable columns differ. */
+type CommonFilters<Column extends string> = {
+  orderBy: Column | null;
   dir: Dir | null;
-  featured: boolean;
-  rootOnly: boolean;
   tags: string[];
   query: string | null;
-  lt: number | null;
-  gt: number | null;
-  legacyId: string | null;
 };
+
+const parseCommonFilters = <Column extends string>(
+  attrs: NodeAttrs,
+  columns: readonly Column[],
+): CommonFilters<Column> => ({
+  orderBy: toOption(attrs.orderBy, columns),
+  dir: toOption(attrs.dir, DIRS),
+  tags: toTags(attrs.tags),
+  query: toText(attrs.query),
+});
+
+type Pagination = { limit: number | null; page: number | null };
+
+const parsePagination = (attrs: NodeAttrs): Pagination => ({
+  limit: toNumber(attrs.limit, isValidLimit),
+  page: toNumber(attrs.page, isValidPage),
+});
+
+/**
+ * The `lt` bound a listing type implies: "past" means before now unless the
+ * author pinned an explicit bound, while "upcoming" and "all" leave it open.
+ * Shared by the two blocks that take a time window so they cannot drift on
+ * what "past" means.
+ */
+const resolveListingLt = (
+  listingType: ListingType,
+  lt: number | null,
+  now: number,
+): number | undefined =>
+  optional(listingType === "past" && lt == null ? now : lt);
+
+export type EventListingAttributes = CommonFilters<
+  (typeof EVENT_ORDER_BY)[number]
+> &
+  Pagination & {
+    listingType: ListingType;
+    featured: boolean;
+    rootOnly: boolean;
+    lt: number | null;
+    gt: number | null;
+    legacyId: string | null;
+  };
 
 export const parseEventListingAttributes = (
   attrs: NodeAttrs,
 ): EventListingAttributes => ({
-  listingType:
-    toOption(
-      readAttr(attrs, "listingType", "data-listing-type"),
-      EVENT_LISTING_TYPES,
-    ) ?? "upcoming",
-  limit: toNumber(readAttr(attrs, "limit", "data-limit"), isValidLimit),
-  page: toNumber(readAttr(attrs, "page", "data-page"), isValidPage),
-  orderBy: toOption(
-    readAttr(attrs, "orderBy", "data-order-by"),
-    EVENT_ORDER_BY,
-  ),
-  dir: toOption(readAttr(attrs, "dir", "data-dir"), DIRS),
-  featured: toFlag(readAttr(attrs, "featured", "data-featured")),
-  rootOnly: toFlag(readAttr(attrs, "rootOnly", "data-root-only")),
-  tags: toTags(readAttr(attrs, "tags", "data-tags")),
-  query: toText(readAttr(attrs, "query", "data-query")),
-  lt: toNumber(readAttr(attrs, "lt", "data-lt"), isValidTimestamp),
-  gt: toNumber(readAttr(attrs, "gt", "data-gt"), isValidTimestamp),
-  legacyId: toText(readAttr(attrs, "legacyId", "data-legacy-id")),
+  ...parseCommonFilters(attrs, EVENT_ORDER_BY),
+  ...parsePagination(attrs),
+  listingType: toOption(attrs.listingType, LISTING_TYPES) ?? "upcoming",
+  featured: toFlag(attrs.featured),
+  rootOnly: toFlag(attrs.rootOnly),
+  lt: toNumber(attrs.lt, isValidTimestamp),
+  gt: toNumber(attrs.gt, isValidTimestamp),
+  legacyId: toText(attrs.legacyId),
 });
 
 /**
  * `listingType` is the one attribute that is not a param: the endpoint takes a
- * time window, so "past" becomes `lt=<now>` computed at render time and
+ * time window, so "past" becomes `lt=<now>` resolved at render time and
  * "upcoming" becomes the `upcoming` flag. "all" applies no window.
  */
 export const buildEventListingQuery = (
   attrs: EventListingAttributes,
   now: number,
-): EventsQuery =>
-  compact({
+): EventsQuery => {
+  const query: EventsQuery = {
     upcoming: attrs.listingType === "upcoming" ? true : undefined,
-    lt: optional(
-      attrs.listingType === "past" && attrs.lt == null ? now : attrs.lt,
-    ),
+    lt: resolveListingLt(attrs.listingType, attrs.lt, now),
     gt: optional(attrs.gt),
     limit: optional(attrs.limit),
     page: optional(attrs.page),
@@ -199,49 +206,40 @@ export const buildEventListingQuery = (
     tags: optionalTags(attrs.tags),
     query: optional(attrs.query),
     legacyId: optional(attrs.legacyId),
-  });
+  };
 
-export type NewsListingAttributes = {
-  listingType: NewsListingType;
-  limit: number | null;
-  page: number | null;
-  orderBy: (typeof NEWS_ORDER_BY)[number] | null;
-  dir: Dir | null;
-  featured: boolean;
-  tags: string[];
-  query: string | null;
-  lt: number | null;
-  gt: number | null;
+  return compact(query);
 };
+
+export type NewsListingAttributes = CommonFilters<
+  (typeof NEWS_ORDER_BY)[number]
+> &
+  Pagination & {
+    listingType: ListingType;
+    featured: boolean;
+    lt: number | null;
+    gt: number | null;
+  };
 
 export const parseNewsListingAttributes = (
   attrs: NodeAttrs,
 ): NewsListingAttributes => ({
-  listingType:
-    toOption(
-      readAttr(attrs, "listingType", "data-listing-type"),
-      NEWS_LISTING_TYPES,
-    ) ?? "all",
-  limit: toNumber(readAttr(attrs, "limit", "data-limit"), isValidLimit),
-  page: toNumber(readAttr(attrs, "page", "data-page"), isValidPage),
-  orderBy: toOption(readAttr(attrs, "orderBy", "data-order-by"), NEWS_ORDER_BY),
-  dir: toOption(readAttr(attrs, "dir", "data-dir"), DIRS),
-  featured: toFlag(readAttr(attrs, "featured", "data-featured")),
-  tags: toTags(readAttr(attrs, "tags", "data-tags")),
-  query: toText(readAttr(attrs, "query", "data-query")),
-  lt: toNumber(readAttr(attrs, "lt", "data-lt"), isValidTimestamp),
-  gt: toNumber(readAttr(attrs, "gt", "data-gt"), isValidTimestamp),
+  ...parseCommonFilters(attrs, NEWS_ORDER_BY),
+  ...parsePagination(attrs),
+  // Unlike events, a news listing shows every article by default.
+  listingType: toOption(attrs.listingType, LISTING_TYPES) ?? "all",
+  featured: toFlag(attrs.featured),
+  lt: toNumber(attrs.lt, isValidTimestamp),
+  gt: toNumber(attrs.gt, isValidTimestamp),
 });
 
 export const buildNewsListingQuery = (
   attrs: NewsListingAttributes,
   now: number,
-): NewsQuery =>
-  compact({
+): NewsQuery => {
+  const query: NewsQuery = {
     upcoming: attrs.listingType === "upcoming" ? true : undefined,
-    lt: optional(
-      attrs.listingType === "past" && attrs.lt == null ? now : attrs.lt,
-    ),
+    lt: resolveListingLt(attrs.listingType, attrs.lt, now),
     gt: optional(attrs.gt),
     limit: optional(attrs.limit),
     page: optional(attrs.page),
@@ -250,108 +248,89 @@ export const buildNewsListingQuery = (
     featured: optionalFlag(attrs.featured),
     tags: optionalTags(attrs.tags),
     query: optional(attrs.query),
-  });
+  };
 
-export type PageListingAttributes = {
-  orderBy: (typeof PAGE_ORDER_BY)[number] | null;
-  dir: Dir | null;
-  featured: boolean;
-  tags: string[];
-  query: string | null;
+  return compact(query);
 };
 
 /**
- * The pages block carries no `limit`/`page`: the pages read returns every page
- * so parent paths resolve, and paginating it would promise a page size the
- * endpoint silently ignores.
+ * The pages block carries no `limit`/`page` and does not serialize them: the
+ * pages read returns every page so parent paths resolve, so accepting a page
+ * size here would promise one the endpoint silently ignores.
  */
+export type PageListingAttributes = CommonFilters<
+  (typeof PAGE_ORDER_BY)[number]
+> & {
+  featured: boolean;
+};
+
 export const parsePageListingAttributes = (
   attrs: NodeAttrs,
 ): PageListingAttributes => ({
-  orderBy: toOption(readAttr(attrs, "orderBy", "data-order-by"), PAGE_ORDER_BY),
-  dir: toOption(readAttr(attrs, "dir", "data-dir"), DIRS),
-  featured: toFlag(readAttr(attrs, "featured", "data-featured")),
-  tags: toTags(readAttr(attrs, "tags", "data-tags")),
-  query: toText(readAttr(attrs, "query", "data-query")),
+  ...parseCommonFilters(attrs, PAGE_ORDER_BY),
+  featured: toFlag(attrs.featured),
 });
 
 export const buildPageListingQuery = (
   attrs: PageListingAttributes,
-): PagesQuery =>
-  compact({
+): PagesQuery => {
+  const query: PagesQuery = {
     orderBy: optional(attrs.orderBy),
     dir: optional(attrs.dir),
     featured: optionalFlag(attrs.featured),
     tags: optionalTags(attrs.tags),
     query: optional(attrs.query),
-  });
+  };
 
-export type ProductListingAttributes = {
-  limit: number | null;
-  page: number | null;
-  orderBy: (typeof PRODUCT_ORDER_BY)[number] | null;
-  dir: Dir | null;
-  tags: string[];
-  query: string | null;
+  return compact(query);
 };
+
+export type ProductListingAttributes = CommonFilters<
+  (typeof PRODUCT_ORDER_BY)[number]
+> &
+  Pagination;
 
 export const parseProductListingAttributes = (
   attrs: NodeAttrs,
 ): ProductListingAttributes => ({
-  limit: toNumber(readAttr(attrs, "limit", "data-limit"), isValidLimit),
-  page: toNumber(readAttr(attrs, "page", "data-page"), isValidPage),
-  orderBy: toOption(
-    readAttr(attrs, "orderBy", "data-order-by"),
-    PRODUCT_ORDER_BY,
-  ),
-  dir: toOption(readAttr(attrs, "dir", "data-dir"), DIRS),
-  tags: toTags(readAttr(attrs, "tags", "data-tags")),
-  query: toText(readAttr(attrs, "query", "data-query")),
+  ...parseCommonFilters(attrs, PRODUCT_ORDER_BY),
+  ...parsePagination(attrs),
 });
 
 export const buildProductListingQuery = (
   attrs: ProductListingAttributes,
-): ProductsQuery =>
-  compact({
+): ProductsQuery => {
+  const query: ProductsQuery = {
     limit: optional(attrs.limit),
     page: optional(attrs.page),
     orderBy: optional(attrs.orderBy),
     dir: optional(attrs.dir),
     tags: optionalTags(attrs.tags),
     query: optional(attrs.query),
-  });
+  };
 
-export type ProfileListingAttributes = {
-  limit: number | null;
-  page: number | null;
-  orderBy: (typeof PROFILE_ORDER_BY)[number] | null;
-  dir: Dir | null;
-  type: (typeof PROFILE_TYPES)[number] | null;
-  tags: string[];
-  query: string | null;
+  return compact(query);
 };
+
+export type ProfileListingAttributes = CommonFilters<
+  (typeof PROFILE_ORDER_BY)[number]
+> &
+  Pagination & {
+    type: (typeof PROFILE_TYPES)[number] | null;
+  };
 
 export const parseProfileListingAttributes = (
   attrs: NodeAttrs,
 ): ProfileListingAttributes => ({
-  limit: toNumber(readAttr(attrs, "limit", "data-limit"), isValidLimit),
-  page: toNumber(readAttr(attrs, "page", "data-page"), isValidPage),
-  orderBy: toOption(
-    readAttr(attrs, "orderBy", "data-order-by"),
-    PROFILE_ORDER_BY,
-  ),
-  dir: toOption(readAttr(attrs, "dir", "data-dir"), DIRS),
-  // Not `data-type`: that attribute marks the node itself for TipTap's parser,
-  // so the block serializes its own `type` param under `data-profile-type`.
-  type: toOption(readAttr(attrs, "type", "data-profile-type"), PROFILE_TYPES),
-  tags: toTags(readAttr(attrs, "tags", "data-tags")),
-  query: toText(readAttr(attrs, "query", "data-query")),
+  ...parseCommonFilters(attrs, PROFILE_ORDER_BY),
+  ...parsePagination(attrs),
+  type: toOption(attrs.type, PROFILE_TYPES),
 });
 
 export const buildProfileListingQuery = (
   attrs: ProfileListingAttributes,
-): ProfilesQuery =>
-  compact({
+): ProfilesQuery => {
+  const query: ProfilesQuery = {
     limit: optional(attrs.limit),
     page: optional(attrs.page),
     orderBy: optional(attrs.orderBy),
@@ -359,11 +338,17 @@ export const buildProfileListingQuery = (
     type: optional(attrs.type),
     tags: optionalTags(attrs.tags),
     query: optional(attrs.query),
-  });
+  };
+
+  return compact(query);
+};
 
 /**
- * Now, rounded down to the minute. A listing windowed on "now" would otherwise
- * miss the request-level cache on every render.
+ * Now, rounded down to the minute.
+ *
+ * The SDK reads through fetch with a revalidate window, keyed by URL, so an
+ * `lt` that ticks every second would give every request a URL the data cache
+ * has never seen. Rounding keeps the window stable between renders.
  */
 export const minuteRoundedNow = () => {
   const now = new Date();

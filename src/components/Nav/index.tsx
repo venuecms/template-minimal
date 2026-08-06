@@ -13,16 +13,13 @@ import { Link } from "@/lib/i18n";
 import { VenueContent } from "@/components/VenueContent";
 
 import { renderedStyles } from "../utils";
+import { resolvePageHref } from "../utils/pageHref";
 import { NavMenuDesktop } from "./NavMenuDesktop";
 import { NavMenuMobile } from "./NavMenuMobile";
-
-// Static slugs are reserved slugs in the nav that should not be redirected to a /p/[slug] but routed direct instead.
-const StaticSlugs = ["events", "archive", "shop"];
 
 export type RootPageContent = {
   page: Page;
   content: LocalizedContent;
-  isStatic: boolean;
 };
 
 export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
@@ -42,24 +39,20 @@ export const Nav = async ({ logo, site }: { logo: ReactNode; site: Site }) => {
   const rootPageContents = rootPages?.map((page) => ({
     page,
     content: getLocalizedContent(page.localizedContent, locale).content,
-    isStatic: StaticSlugs.includes(page.slug),
   }));
 
   const menuItems = rootPageContents
-    ? rootPageContents.map(({ page, content, isStatic }) => (
-        <li key={page.slug}>
-          <Link
-            href={
-              page.type === "LINK" && page.linkUrl
-                ? page.linkUrl
-                : `${isStatic ? "/" : "/p/"}${page.slug}`
-            }
-            target={page.type === "LINK" && page.linkUrl ? "_blank" : "_self"}
-          >
-            {content.title}
-          </Link>
-        </li>
-      ))
+    ? rootPageContents.map(({ page, content }) => {
+        const { href, target } = resolvePageHref(page);
+
+        return (
+          <li key={page.slug}>
+            <Link href={href} target={target}>
+              {content.title}
+            </Link>
+          </li>
+        );
+      })
     : null;
 
   // Render the menu for desktop and mobile

@@ -15,6 +15,7 @@ import {
   getProfiles,
   getSite,
 } from "@venuecms/sdk-next";
+import { connection } from "next/server";
 import { ReactNode, Suspense } from "react";
 
 import { EventsList, ListEvent } from "@/components/EventList";
@@ -22,6 +23,7 @@ import { ListProduct } from "@/components/ListProduct";
 import { ListPage, PagesList } from "@/components/PageList";
 import { ProfileCompact } from "@/components/ProfileCompact";
 import { TwoSubColumnLayout } from "@/components/layout";
+import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 
 import type { ListingBlockNodeType } from "./params";
 import {
@@ -47,6 +49,11 @@ const nodeAttrs = (node: RenderNode): Record<string, unknown> =>
   node.attrs ?? {};
 
 const EventListingBlock = async ({ node }: NodeProps) => {
+  // A listing is request-time data, and the "past" window reads the clock —
+  // both of which have to be marked dynamic before they run, or the prerender
+  // bails out under cacheComponents.
+  await connection();
+
   const attrs = parseEventListingAttributes(nodeAttrs(node));
 
   const [{ data: events }, { data: site }] = await Promise.all([
@@ -54,8 +61,9 @@ const EventListingBlock = async ({ node }: NodeProps) => {
     getSite(),
   ]);
 
-  // An empty or failed listing renders nothing: it sits mid-prose, where an
-  // error or an empty-state message would read as content the author wrote.
+  // An empty listing renders nothing: it sits mid-prose, where an empty-state
+  // message would read as content the author wrote. A failed one is caught by
+  // the ErrorBoundary in listingBlock() below, to the same effect.
   if (!site || !events?.records.length) {
     return null;
   }
@@ -70,42 +78,54 @@ const EventListingBlock = async ({ node }: NodeProps) => {
 };
 
 const NewsListingBlock = async ({ node }: NodeProps) => {
-  const attrs = parseNewsListingAttributes(nodeAttrs(node));
-  const { data: news } = await getNews(
-    buildNewsListingQuery(attrs, minuteRoundedNow()),
-  );
+  await connection();
 
-  if (!news?.records.length) {
+  const attrs = parseNewsListingAttributes(nodeAttrs(node));
+
+  const [{ data: news }, { data: site }] = await Promise.all([
+    getNews(buildNewsListingQuery(attrs, minuteRoundedNow())),
+    getSite(),
+  ]);
+
+  if (!site || !news?.records.length) {
     return null;
   }
 
   return (
     <PagesList className="py-4">
       {news.records.map((article) => (
-        <ListPage key={article.id} page={article} withDate />
+        <ListPage key={article.id} page={article} site={site} withDate />
       ))}
     </PagesList>
   );
 };
 
 const PageListingBlock = async ({ node }: NodeProps) => {
-  const attrs = parsePageListingAttributes(nodeAttrs(node));
-  const { data: pages } = await getPages(buildPageListingQuery(attrs));
+  await connection();
 
-  if (!pages?.records.length) {
+  const attrs = parsePageListingAttributes(nodeAttrs(node));
+
+  const [{ data: pages }, { data: site }] = await Promise.all([
+    getPages(buildPageListingQuery(attrs)),
+    getSite(),
+  ]);
+
+  if (!site || !pages?.records.length) {
     return null;
   }
 
   return (
     <PagesList className="py-4">
       {pages.records.map((page) => (
-        <ListPage key={page.id} page={page} />
+        <ListPage key={page.id} page={page} site={site} />
       ))}
     </PagesList>
   );
 };
 
 const ProductListingBlock = async ({ node }: NodeProps) => {
+  await connection();
+
   const attrs = parseProductListingAttributes(nodeAttrs(node));
 
   const [{ data: products }, { data: site }] = await Promise.all([
@@ -127,6 +147,8 @@ const ProductListingBlock = async ({ node }: NodeProps) => {
 };
 
 const ProfileListingBlock = async ({ node }: NodeProps) => {
+  await connection();
+
   const attrs = parseProfileListingAttributes(nodeAttrs(node));
   const { data: profiles } = await getProfiles(buildProfileListingQuery(attrs));
 
@@ -149,21 +171,24 @@ const ProfileListingBlock = async ({ node }: NodeProps) => {
  * The handler cannot fetch: it has to return an element the renderer then
  * awaits. Suspending it separately keeps the surrounding prose streaming — a
  * block sits mid-content, so without a boundary the whole article would wait
- * on the listing's request.
+ * on the listing's request. The ErrorBoundary is what keeps a listing that
+ * throws from taking the article down with it; Suspense does not catch errors.
  */
 const listingBlock =
   (Block: (props: NodeProps) => Promise<ReactNode>): NodeHandler =>
   ({ node }) => (
-    <Suspense fallback={null}>
-      <Block node={node} />
-    </Suspense>
+    <ErrorBoundary fallback={null}>
+      <Suspense fallback={null}>
+        <Block node={node} />
+      </Suspense>
+    </ErrorBoundary>
   );
 
 /**
  * The listing node types, mapped to their renderer. Pass as `components` to
  * VenueContent so the blocks resolve wherever content is rendered.
  *
- * Keyed by the node-type list rather than typed as the renderer's open-ended
+ * Keyed by the node-type union rather than typed as the renderer's open-ended
  * NodeHandlers: an unhandled type is dropped from the content silently, so a
  * block added to the contract should fail to compile until it renders.
  */

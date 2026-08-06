@@ -2,12 +2,12 @@ import {
   type Page as VenuePage,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { VenueContent } from "@venuecms/sdk-next";
-
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 
 import { PageWithParent } from "@/lib/utils/tree";
+
+import { VenueContent } from "@/components/VenueContent";
+import { VenueImage } from "@/components/VenueImage";
 
 import { PageTree } from "../PageTree";
 import { ProfileCompact } from "../ProfileCompact";

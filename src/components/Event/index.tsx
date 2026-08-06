@@ -3,12 +3,12 @@ import {
   type Event as VenueEvent,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { VenueContent } from "@venuecms/sdk-next";
-
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
+
+import { VenueContent } from "@/components/VenueContent";
+import { VenueImage } from "@/components/VenueImage";
 
 import { LocationLink } from "../LocationLink";
 import { ProfileCompact } from "../ProfileCompact";

@@ -2,12 +2,15 @@ import {
   type Profile as VenueProfile,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
+// Deliberately the SDK renderer, not @/components/VenueContent: this bio is
+// itself what a profile listing renders, so resolving listing blocks here would
+// let a profile listing nest inside its own results.
 import { VenueContent } from "@venuecms/sdk-next";
-
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
+
+import { VenueImage } from "@/components/VenueImage";
 
 import { renderedStyles } from "../utils";
 

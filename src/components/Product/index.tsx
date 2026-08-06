@@ -4,12 +4,12 @@ import {
   Product as VenueProduct,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { VenueContent } from "@venuecms/sdk-next";
-
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
+
+import { VenueContent } from "@/components/VenueContent";
+import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";
 import {

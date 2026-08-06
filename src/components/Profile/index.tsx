@@ -2,11 +2,11 @@ import {
   type Profile as VenueProfile,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { VenueContent } from "@venuecms/sdk-next";
-
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale, useTranslations } from "next-intl";
 import { Suspense } from "react";
+
+import { VenueContent } from "@/components/VenueContent";
+import { VenueImage } from "@/components/VenueImage";
 
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { renderedStyles } from "../utils";

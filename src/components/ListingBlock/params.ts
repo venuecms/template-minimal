@@ -91,14 +91,17 @@ const toFlag = (value: unknown): boolean => value === true || value === "true";
 const toText = (value: unknown): string | null =>
   typeof value === "string" && value !== "" ? value : null;
 
+// Tags are trimmed: a comma-separated list an author typed by hand ("jazz,
+// live") would otherwise send a space-prefixed tag that matches no record and
+// silently empty the listing.
 const toTags = (value: unknown): string[] => {
-  if (Array.isArray(value)) {
-    return value.filter(
-      (tag): tag is string => typeof tag === "string" && !!tag,
-    );
-  }
+  const tags = Array.isArray(value)
+    ? value.filter((tag): tag is string => typeof tag === "string")
+    : typeof value === "string"
+      ? value.split(",")
+      : [];
 
-  return typeof value === "string" ? value.split(",").filter(Boolean) : [];
+  return tags.map((tag) => tag.trim()).filter(Boolean);
 };
 
 const toOption = <T extends string>(
@@ -254,9 +257,11 @@ export const buildNewsListingQuery = (
 };
 
 /**
- * The pages block carries no `limit`/`page` and does not serialize them: the
- * pages read returns every page so parent paths resolve, so accepting a page
- * size here would promise one the endpoint silently ignores.
+ * The pages block has no `limit`/`page` and never serializes them, so there is
+ * nothing to read here. The endpoint's schema does accept both, but the pages
+ * read applies them only to news listings — regular pages must all come back
+ * for parent-path resolution — so the editor deliberately omits them rather
+ * than offer a page size the API drops.
  */
 export type PageListingAttributes = CommonFilters<
   (typeof PAGE_ORDER_BY)[number]

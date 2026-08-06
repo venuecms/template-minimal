@@ -10,7 +10,6 @@ import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 import { formatDate } from "../utils/date";
-import { resolvePageHref } from "../utils/pageHref";
 
 export const PagesList = ({
   children,
@@ -24,23 +23,29 @@ export const PagesList = ({
 
 /**
  * A page or news article as a dated title link. News and page listings share
- * this: both endpoints return the same record shape, and only the route and
- * whether a date is worth showing differ.
+ * this: both endpoints return the same record shape.
+ *
+ * The caller supplies the link, because the two listings route the same record
+ * differently — a news article belongs to /news/<slug>, while the identical
+ * record reached as a page belongs to /p/<slug>.
  */
 export const ListPage = ({
   page,
   site,
+  href,
+  target = "_self",
   withDate,
   className,
 }: {
   page: VenuePage;
   site: Site;
+  href: string;
+  target?: "_blank" | "_self";
   withDate?: boolean;
   className?: string;
 }) => {
   const locale = useLocale();
   const { content } = getLocalizedContent(page.localizedContent, locale);
-  const { href, target } = resolvePageHref(page);
 
   const date =
     withDate && typeof page.date === "string"

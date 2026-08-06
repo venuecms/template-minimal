@@ -24,6 +24,10 @@ import { ListPage, PagesList } from "@/components/PageList";
 import { ProfileCompact } from "@/components/ProfileCompact";
 import { TwoSubColumnLayout } from "@/components/layout";
 import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
+import {
+  resolveNewsArticleHref,
+  resolvePageHref,
+} from "@/components/utils/pageHref";
 
 import type { ListingBlockNodeType } from "./params";
 import {
@@ -94,7 +98,13 @@ const NewsListingBlock = async ({ node }: NodeProps) => {
   return (
     <PagesList className="py-4">
       {news.records.map((article) => (
-        <ListPage key={article.id} page={article} site={site} withDate />
+        <ListPage
+          key={article.id}
+          page={article}
+          site={site}
+          href={resolveNewsArticleHref(article.slug)}
+          withDate
+        />
       ))}
     </PagesList>
   );
@@ -117,7 +127,12 @@ const PageListingBlock = async ({ node }: NodeProps) => {
   return (
     <PagesList className="py-4">
       {pages.records.map((page) => (
-        <ListPage key={page.id} page={page} site={site} />
+        <ListPage
+          key={page.id}
+          page={page}
+          site={site}
+          {...resolvePageHref(page)}
+        />
       ))}
     </PagesList>
   );

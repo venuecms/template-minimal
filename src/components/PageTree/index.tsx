@@ -63,12 +63,19 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
           handleExpand,
         }) => {
           // @ts-ignore - ignoring as the typing is partially handled in the underlying library
-          const { localizedContent, slug, type, openInNewTab, linkUrl } =
-            (element.metadata as Page | undefined) ?? {};
+          const {
+            localizedContent,
+            slug,
+            type,
+            parentId,
+            openInNewTab,
+            linkUrl,
+          } = (element.metadata as Page | undefined) ?? {};
           const { content } = getLocalizedContent(localizedContent, locale);
           const { href, target } = resolvePageHref({
             slug: slug ?? "",
             type,
+            parentId,
             linkUrl,
             openInNewTab,
           });

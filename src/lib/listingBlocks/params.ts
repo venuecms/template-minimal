@@ -1,5 +1,5 @@
 /**
- * The listing blocks' attribute contract, as read by this template.
+ * The listing blocks' attribute contract.
  *
  * The platform's editor can drop an event/news/page/product/profile listing
  * into any rich-text content. Each block serializes the query params of its
@@ -25,15 +25,18 @@ import type {
   getProfiles,
 } from "@venuecms/sdk-next";
 
-/** Every TipTap node type this template renders as a listing. */
-export type ListingBlockNodeType =
-  | "eventListing"
-  | "newsListing"
-  | "pageListing"
-  | "productListing"
-  | "profileListing";
+/** Every TipTap node type rendered as a listing. */
+export const LISTING_BLOCK_NODE_TYPES = [
+  "eventListing",
+  "newsListing",
+  "pageListing",
+  "productListing",
+  "profileListing",
+] as const;
 
-type NodeAttrs = Record<string, unknown>;
+export type ListingBlockNodeType = (typeof LISTING_BLOCK_NODE_TYPES)[number];
+
+export type NodeAttrs = Record<string, unknown>;
 
 type Dir = "asc" | "desc";
 

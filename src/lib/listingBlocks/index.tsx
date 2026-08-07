@@ -7,12 +7,11 @@
  * is destined for @venuecms/sdk-next, where it has to serve every template, so
  * the renderers arrive on `contentStyles` alongside the class names:
  *
- *   <VenueContent
- *     contentStyles={{
- *       ...renderedStyles,
- *       eventListing: ({ records, site }) => <EventList ... />,
- *     }}
- *   />
+ *   // the one map a template holds, class names and listings together
+ *   const contentComponents = {
+ *     ...renderedStyles,
+ *     eventListing: ({ records, site }) => <EventList ... />,
+ *   };
  *
  * The template's own listings live in @/components/ListingBlock. The one thing
  * this layer still reaches back for is ErrorBoundary, a generic utility the SDK
@@ -90,6 +89,19 @@ export type ListingRenderer<Type extends ListingBlockNodeType> = (
  */
 export type ListingRenderers = {
   [Type in ListingBlockNodeType]?: ListingRenderer<Type>;
+};
+
+/**
+ * The same map with every listing required.
+ *
+ * A template that means to render all of them annotates its map with this, so
+ * a listing type added to the contract fails to compile until it has a
+ * renderer. Without it the missing key is legal, `listingHandlers` registers
+ * nothing for that type, and an author's block is dropped from the published
+ * page with only a console warning.
+ */
+export type AllListingRenderers = {
+  [Type in ListingBlockNodeType]: ListingRenderer<Type>;
 };
 
 /**
@@ -205,6 +217,11 @@ const listingBlock = <Type extends ListingBlockNodeType>(
  *
  * A listing left off the map is left unregistered rather than given a handler
  * that renders nothing, so the SDK keeps whatever it would do with that node.
+ *
+ * Built per render rather than memoised: the SDK's renderer resolves to the
+ * server build under the app router (only its CJS entry is "use client"), so
+ * the handlers are minted once per request and the fresh component identities
+ * never reach a client reconciliation that could remount them.
  */
 export const listingHandlers = (
   renderers: ListingRenderers,

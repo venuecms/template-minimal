@@ -14,6 +14,8 @@
  * rendered. Content nested inside a listing passes plain `renderedStyles`
  * instead — without the listing entries, a listing cannot recurse into itself.
  */
+import type { AllListingRenderers } from "@/lib/listingBlocks";
+
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ListProduct } from "@/components/ListProduct";
 import { ListPage, PagesList } from "@/components/PageList";
@@ -26,7 +28,10 @@ import {
 } from "@/components/utils/pageHref";
 import { renderedStyles } from "@/components/utils/styles";
 
-export const contentComponents: ContentComponents = {
+// Annotated with AllListingRenderers as well, so a listing type added to the
+// contract fails to compile here until this template can render it — rather
+// than being dropped from published content with a console warning.
+export const contentComponents: ContentComponents & AllListingRenderers = {
   ...renderedStyles,
 
   eventListing: ({ records, site }) =>

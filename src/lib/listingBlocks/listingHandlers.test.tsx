@@ -30,7 +30,7 @@ vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
 
 const { VenueContent } = await import("@venuecms/sdk-next");
 const { listingHandlers } = await import("./index");
-type ListingRenderers = import("./index").ListingRenderers;
+type AllListingRenderers = import("./index").AllListingRenderers;
 const { LISTING_BLOCK_NODE_TYPES } = await import("./params");
 
 const records = (...titles: string[]) => ({
@@ -58,9 +58,11 @@ const label = (type: string, ids: Array<string | undefined>) => (
  * Names each injected renderer so a test can tell which one was reached.
  *
  * Spelled out per type rather than generated, so `records` keeps the concrete
- * record type the contract promises for that listing.
+ * record type the contract promises for that listing. Typed as the all-required
+ * map so a listing type added to the contract fails to compile here, which is
+ * what makes "covers every listing node type" able to catch an unregistered one.
  */
-const stubRenderers = (): ListingRenderers => ({
+const stubRenderers = (): AllListingRenderers => ({
   eventListing: ({ records }) =>
     label(
       "eventListing",

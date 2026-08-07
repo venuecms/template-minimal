@@ -8,9 +8,11 @@ import type { ListingRenderers } from "@/lib/listingBlocks";
 import { listingHandlers } from "@/lib/listingBlocks";
 
 /**
- * The keys the renderer only ever reads a class name from.
+ * The keys the renderer only ever reads a class name from — the SDK's own
+ * ElementClasses, spelled out so a typo is a compile error rather than a class
+ * that silently never lands.
  *
- * It dispatches a node by its TipTap type — `heading`, `paragraph`,
+ * The renderer dispatches a node by its TipTap type — `heading`, `paragraph`,
  * `bulletList` — and reads the class off the tag name that node renders as, so
  * the two are different vocabularies. A component under `h1` would never be
  * reached, because the node's type is `heading`; and moving `p` from a class
@@ -19,6 +21,7 @@ import { listingHandlers } from "@/lib/listingBlocks";
  * quietly renders unstyled.
  */
 type StyleOnlyNode =
+  | "text"
   | "p"
   | "h1"
   | "h2"
@@ -27,7 +30,13 @@ type StyleOnlyNode =
   | "ol"
   | "li"
   | "code"
-  | "a";
+  | "a"
+  | "heading"
+  | "hardBreak"
+  | "img"
+  | "image"
+  | "iframe"
+  | "linkCard";
 
 /**
  * One entry per node, in a single map: a string is the class name put on the

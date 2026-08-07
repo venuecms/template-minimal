@@ -8,12 +8,16 @@ export default defineConfig({
       "next/image": fileURLToPath(
         new URL("./test/stubs/next-image.tsx", import.meta.url),
       ),
+      "next/navigation": fileURLToPath(
+        new URL("./test/stubs/next-navigation.ts", import.meta.url),
+      ),
     },
   },
   test: {
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
-    // Let vite process the SDK's prebuilt ESM rather than letting Node resolve
-    // it natively, so the alias above reaches its transitive next/image import.
-    server: { deps: { inline: ["@venuecms/sdk-next"] } },
+    // Let vite process these packages' prebuilt ESM rather than letting Node
+    // resolve them natively, so the aliases above reach their transitive
+    // next/image and next/navigation imports.
+    server: { deps: { inline: ["@venuecms/sdk-next", "next-intl"] } },
   },
 });

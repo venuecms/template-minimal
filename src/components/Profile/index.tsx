@@ -5,11 +5,11 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { Suspense } from "react";
 
+import { contentComponents } from "@/components/ListingBlock";
 import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
-import { renderedStyles } from "../utils";
 import { ErrorBoundary } from "../utils/ErrorBoundary";
 import { ProfileEventList, ProfileEventListSkeleton } from "./ProfileEventList";
 
@@ -34,7 +34,7 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
         <VenueContent
           className="flex flex-col gap-6 sm:pr-32"
           content={content}
-          contentStyles={renderedStyles}
+          contentStyles={contentComponents}
         />
         <ErrorBoundary fallback={null}>
           <Suspense fallback={<ProfileEventListSkeleton numElements={1} />}>

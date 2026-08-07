@@ -8,6 +8,7 @@ import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
+import { contentComponents } from "@/components/ListingBlock";
 import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
@@ -18,7 +19,6 @@ import {
   TwoColumnLayout,
   TwoSubColumnLayout,
 } from "../layout";
-import { renderedStyles } from "../utils/styles";
 
 export const Product = ({
   product,
@@ -67,7 +67,7 @@ export const Product = ({
         <VenueContent
           className="flex flex-col gap-6 sm:pr-32"
           content={content}
-          contentStyles={renderedStyles}
+          contentStyles={contentComponents}
         />
         <TwoSubColumnLayout>
           {artists.map(({ profile }) => (

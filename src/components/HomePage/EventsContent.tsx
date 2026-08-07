@@ -6,10 +6,10 @@ import { connection } from "next/server";
 import { Link } from "@/lib/i18n";
 
 import { EventsList, ListEvent } from "@/components/EventList";
+import { contentComponents } from "@/components/ListingBlock";
 import { TranslatedText } from "@/components/TranslatedText";
 import { VenueContent } from "@/components/VenueContent";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
-import { renderedStyles } from "@/components/utils";
 
 export async function EventsContent({ locale }: { locale: string }) {
   await connection();
@@ -35,7 +35,7 @@ export async function EventsContent({ locale }: { locale: string }) {
           <VenueContent
             className="flex flex-col gap-6"
             content={siteContent}
-            contentStyles={renderedStyles}
+            contentStyles={contentComponents}
           />
         ) : null}
       </ColumnLeft>
@@ -70,7 +70,7 @@ export async function EventsContent({ locale }: { locale: string }) {
             <VenueContent
               className="flex flex-col gap-6"
               content={siteContent}
-              contentStyles={renderedStyles}
+              contentStyles={contentComponents}
             />
           </div>
         ) : null}

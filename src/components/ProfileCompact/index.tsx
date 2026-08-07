@@ -2,17 +2,17 @@ import {
   type Profile as VenueProfile,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-// Deliberately the SDK renderer, not @/components/VenueContent: this bio is
-// itself what a profile listing renders, so resolving listing blocks here would
-// let a profile listing nest inside its own results.
-import { VenueContent } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
 
+import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
-import { renderedStyles } from "../utils";
+// Deliberately plain `renderedStyles` rather than `contentComponents`: this bio
+// is itself what a profile listing renders, so a map carrying the listing
+// blocks would let a profile listing nest inside its own results.
+import { renderedStyles } from "../utils/styles";
 
 export const ProfileCompact = ({ profile }: { profile: VenueProfile }) => {
   const locale = useLocale();

@@ -5,13 +5,13 @@ import {
 import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
 
+import { contentComponents } from "@/components/ListingBlock";
 import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";
 import { ProfileLink } from "../ProfileLink";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
-import { renderedStyles } from "../utils";
 import { NewsArticleNav } from "./NewsArticleNav";
 import { NewsSidebar } from "./NewsSidebar";
 import { getNewsRecords } from "./utils";
@@ -49,7 +49,7 @@ export const NewsArticle = async ({
         <VenueContent
           className="flex max-w-[42rem] flex-col gap-6 text-sm"
           content={content}
-          contentStyles={renderedStyles}
+          contentStyles={contentComponents}
         />
         <div className="flex flex-col gap-2">
           {artists.map(({ profile }) => (

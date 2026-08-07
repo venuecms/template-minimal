@@ -23,11 +23,13 @@ import { EventsList, ListEvent } from "@/components/EventList";
 import { ListProduct } from "@/components/ListProduct";
 import { ListPage, PagesList } from "@/components/PageList";
 import { ProfileCompact } from "@/components/ProfileCompact";
+import type { ContentComponents } from "@/components/VenueContent";
 import { TwoSubColumnLayout } from "@/components/layout";
 import {
   resolveNewsArticleHref,
   resolvePageHref,
 } from "@/components/utils/pageHref";
+import { renderedStyles } from "@/components/utils/styles";
 
 const EventListing = ({ records, site }: ListingProps<Event>) =>
   records.length ? (
@@ -93,5 +95,15 @@ export const listingComponents: ListingComponents = {
   profileListing: ProfileListing,
 };
 
-/** Pass to VenueContent's `components` prop. */
-export const listingBlockComponents = createListingBlocks(listingComponents);
+/**
+ * What this template renders content with: the prose class names, plus the
+ * listing blocks as components on the same map.
+ *
+ * Pass this to VenueContent's `contentStyles` anywhere editor content is
+ * rendered. Content nested inside a listing passes plain `renderedStyles`
+ * instead — without the listing entries, a listing cannot recurse into itself.
+ */
+export const contentComponents: ContentComponents = {
+  ...renderedStyles,
+  ...createListingBlocks(listingComponents),
+};

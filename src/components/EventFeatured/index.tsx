@@ -8,6 +8,7 @@ import { useLocale } from "next-intl";
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+import { contentComponents } from "@/components/ListingBlock";
 import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
@@ -15,7 +16,6 @@ import { LocationLink } from "../LocationLink";
 import { TicketList } from "../TicketList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { formatDateRange } from "../utils";
-import { renderedStyles } from "../utils/styles";
 
 export const EventFeatured = ({
   event,
@@ -66,7 +66,7 @@ export const EventFeatured = ({
             <VenueContent
               className="flex max-w-xl flex-col gap-6"
               content={content}
-              contentStyles={renderedStyles}
+              contentStyles={contentComponents}
             />
           </Link>
         </ColumnRight>
@@ -94,7 +94,10 @@ export const EventFeatured = ({
           </Link>
           <div className="text-xl">
             <Link href={`/events/${event.slug}`}>
-              <VenueContent content={content} contentStyles={renderedStyles} />
+              <VenueContent
+                content={content}
+                contentStyles={contentComponents}
+              />
             </Link>
           </div>
         </div>

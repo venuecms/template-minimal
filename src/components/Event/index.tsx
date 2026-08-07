@@ -7,6 +7,7 @@ import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
+import { contentComponents } from "@/components/ListingBlock";
 import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
@@ -20,7 +21,6 @@ import {
   TwoSubColumnLayout,
 } from "../layout";
 import { formatDateRange } from "../utils";
-import { renderedStyles } from "../utils/styles";
 
 export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
   const locale = useLocale();
@@ -67,7 +67,7 @@ export const Event = ({ event, site }: { event: VenueEvent; site: Site }) => {
         <VenueContent
           className="flex flex-col gap-6 sm:pr-32"
           content={content}
-          contentStyles={renderedStyles}
+          contentStyles={contentComponents}
         />
         <TwoSubColumnLayout>
           {artists.map(({ profile }) => (

@@ -6,6 +6,7 @@ import { useLocale } from "next-intl";
 
 import { PageWithParent } from "@/lib/utils/tree";
 
+import { contentComponents } from "@/components/ListingBlock";
 import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
@@ -17,7 +18,6 @@ import {
   TwoColumnLayout,
   TwoSubColumnLayout,
 } from "../layout";
-import { renderedStyles } from "../utils";
 
 export const Page = ({
   page,
@@ -47,7 +47,7 @@ export const Page = ({
         <VenueContent
           className="flex max-w-[42rem] flex-col gap-6 text-sm"
           content={content}
-          contentStyles={renderedStyles}
+          contentStyles={contentComponents}
         />
         <TwoSubColumnLayout>
           {artists.map(({ profile }) => (

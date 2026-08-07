@@ -12,8 +12,11 @@ import { Link } from "@/lib/i18n";
 
 import { VenueContent } from "@/components/VenueContent";
 
-import { renderedStyles } from "../utils";
 import { resolvePageHref } from "../utils/pageHref";
+// The site description is a markdown string, not TipTap JSON, and the SDK
+// renders those down a path that never consults components — so listing blocks
+// could not resolve here even if this passed `contentComponents`.
+import { renderedStyles } from "../utils/styles";
 import { NavMenuDesktop } from "./NavMenuDesktop";
 import { NavMenuMobile } from "./NavMenuMobile";
 

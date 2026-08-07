@@ -92,7 +92,10 @@ const stubRenderers = (): AllListingRenderers => ({
 
 const renderContent = async (content: LocalizedContent) => {
   const stream = await renderToReadableStream(
-    <VenueContent content={content} components={listingHandlers(stubRenderers())} />,
+    <VenueContent
+      content={content}
+      components={listingHandlers(stubRenderers())}
+    />,
     // A listing that throws is expected in one test; React reports it to
     // onError, and the default handler would fail the run.
     { onError: () => {} },
@@ -167,9 +170,9 @@ describe("listingHandlers", () => {
     // Renderers are optional, so a template can opt out of a listing type. It
     // has to stay unregistered rather than register a handler that renders
     // nothing, or the SDK could not fall back to its own renderer.
-    expect(
-      Object.keys(listingHandlers({ eventListing: () => null })),
-    ).toEqual(["eventListing"]);
+    expect(Object.keys(listingHandlers({ eventListing: () => null }))).toEqual([
+      "eventListing",
+    ]);
   });
 
   it("keeps the surrounding content when a listing fails", async () => {

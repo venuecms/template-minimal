@@ -8,20 +8,23 @@ import type { ListingRenderers } from "@/lib/listingBlocks";
 import { listingHandlers } from "@/lib/listingBlocks";
 
 /**
- * The keys the renderer only ever reads a class name from — the SDK's own
- * ElementClasses, spelled out so a typo is a compile error rather than a class
- * that silently never lands.
+ * The keys the renderer only ever reads a class name from.
  *
- * The renderer dispatches a node by its TipTap type — `heading`, `paragraph`,
+ * It dispatches a node by its TipTap type — `heading`, `paragraph`,
  * `bulletList` — and reads the class off the tag name that node renders as, so
  * the two are different vocabularies. A component under `h1` would never be
  * reached, because the node's type is `heading`; and moving `p` from a class
  * name to a component would drop its class without rendering the component.
  * Typing these class-only makes that a compile error rather than a node that
  * quietly renders unstyled.
+ *
+ * These are the keys the SDK actually applies, which is narrower than the
+ * ElementClasses it declares: `text` is read into a discarded expression,
+ * `heading` defers to h1/h2/h3, `hardBreak` renders a bare <br>, and the
+ * youtube embed ignores `iframe`. Leaving those four out keeps a class that
+ * would never land a compile error instead of a silent no-op.
  */
 type StyleOnlyNode =
-  | "text"
   | "p"
   | "h1"
   | "h2"
@@ -31,11 +34,8 @@ type StyleOnlyNode =
   | "li"
   | "code"
   | "a"
-  | "heading"
-  | "hardBreak"
   | "img"
   | "image"
-  | "iframe"
   | "linkCard";
 
 /**

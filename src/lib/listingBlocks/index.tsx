@@ -108,9 +108,11 @@ export type AllListingRenderers = {
  * How one listing type turns a node's attributes into records: parse the
  * attributes, then query the endpoint they describe.
  *
- * The mapped-type annotation is what pairs each entry with its own record type,
- * so an entry wired to the wrong endpoint fails to compile here rather than
- * reaching a renderer typed for something else.
+ * The mapped-type annotation pairs each entry with its own record type, so an
+ * entry wired to an endpoint that lists something else fails to compile here
+ * rather than reaching a renderer typed for another record. It cannot catch a
+ * news/page swap, since both list the same record; the routing test is what
+ * covers that pair.
  *
  * `now` is a parameter rather than a call inside each query so the clock stays
  * out of the query builders and a test can pin it. It is read once per block,
@@ -226,25 +228,27 @@ const listingBlock = <Type extends ListingBlockNodeType>(
 export const listingHandlers = (
   renderers: ListingRenderers,
 ): Record<string, NodeHandler> => {
-  const handlers: Record<string, NodeHandler> = {};
-
-  const add = <Type extends ListingBlockNodeType>(
+  const build = <Type extends ListingBlockNodeType>(
     nodeType: Type,
     render: ListingRenderer<Type> | undefined,
-  ) => {
-    if (render) {
-      handlers[nodeType] = listingBlock(nodeType, render);
-    }
-  };
+  ) => (render ? listingBlock(nodeType, render) : undefined);
 
   // Spelled out per type rather than looped, so each renderer keeps the record
   // type its own key promises — iterating the node types would widen every
-  // renderer to the union and lose the pairing.
-  add("eventListing", renderers.eventListing);
-  add("newsListing", renderers.newsListing);
-  add("pageListing", renderers.pageListing);
-  add("productListing", renderers.productListing);
-  add("profileListing", renderers.profileListing);
+  // renderer to the union and lose the pairing. Annotated with every node type
+  // so a listing added to the contract fails to compile until it is wired here
+  // too; a bare list of calls would let it ship unregistered.
+  const handlers: Record<ListingBlockNodeType, NodeHandler | undefined> = {
+    eventListing: build("eventListing", renderers.eventListing),
+    newsListing: build("newsListing", renderers.newsListing),
+    pageListing: build("pageListing", renderers.pageListing),
+    productListing: build("productListing", renderers.productListing),
+    profileListing: build("profileListing", renderers.profileListing),
+  };
 
-  return handlers;
+  return Object.fromEntries(
+    Object.entries(handlers).filter(
+      (entry): entry is [string, NodeHandler] => entry[1] !== undefined,
+    ),
+  );
 };

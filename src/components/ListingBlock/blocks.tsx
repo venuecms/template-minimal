@@ -50,18 +50,14 @@ import {
   resolvePageHref,
 } from "@/components/utils/pageHref";
 
-/**
- * A listing is request-time data, and a "past" window reads the clock — both of
- * which have to be marked dynamic before they run, or the prerender bails out
- * under cacheComponents.
- *
- * Called by each block rather than once above them, because each block is its
- * own dynamic boundary now that it does its own fetching.
- */
-const beginRequest = () => connection();
+// Each block opens with `await connection()`. A listing is request-time data,
+// and a "past" window reads the clock — both have to be marked dynamic before
+// they run, or the prerender bails out under cacheComponents. It sits in every
+// block rather than once above them because each block is its own dynamic
+// boundary now that it does its own fetching.
 
 export const EventListingBlock = async (params: EventListingAttributes) => {
-  await beginRequest();
+  await connection();
 
   const [events, { data: site }] = await Promise.all([
     getEvents(buildEventListingQuery(params, minuteRoundedNow())),
@@ -87,7 +83,7 @@ export const EventListingBlock = async (params: EventListingAttributes) => {
 };
 
 export const NewsListingBlock = async (params: NewsListingAttributes) => {
-  await beginRequest();
+  await connection();
 
   const [news, { data: site }] = await Promise.all([
     getNews(buildNewsListingQuery(params, minuteRoundedNow())),
@@ -116,7 +112,7 @@ export const NewsListingBlock = async (params: NewsListingAttributes) => {
 };
 
 export const PageListingBlock = async (params: PageListingAttributes) => {
-  await beginRequest();
+  await connection();
 
   const [pages, { data: site }] = await Promise.all([
     getPages(buildPageListingQuery(params)),
@@ -132,14 +128,19 @@ export const PageListingBlock = async (params: PageListingAttributes) => {
   return (
     <PagesList className="py-4">
       {records.map((page) => (
-        <ListPage key={page.id} page={page} site={site} {...resolvePageHref(page)} />
+        <ListPage
+          key={page.id}
+          page={page}
+          site={site}
+          {...resolvePageHref(page)}
+        />
       ))}
     </PagesList>
   );
 };
 
 export const ProductListingBlock = async (params: ProductListingAttributes) => {
-  await beginRequest();
+  await connection();
 
   const [products, { data: site }] = await Promise.all([
     getProducts(buildProductListingQuery(params)),
@@ -166,7 +167,7 @@ export const ProductListingBlock = async (params: ProductListingAttributes) => {
  * still renders on a site this template cannot read, where the others cannot.
  */
 export const ProfileListingBlock = async (params: ProfileListingAttributes) => {
-  await beginRequest();
+  await connection();
 
   const { data } = await getProfiles(buildProfileListingQuery(params));
   const records = data?.records ?? [];

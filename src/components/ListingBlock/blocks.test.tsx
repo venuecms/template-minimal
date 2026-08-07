@@ -6,6 +6,7 @@
  * This is where the endpoint call lives now — @/lib/listingBlocks only hands
  * over the params — so this is where the query contract is pinned.
  */
+import type { LocalizedContent } from "@venuecms/sdk-next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
@@ -17,8 +18,9 @@ const getPages = vi.fn();
 const getProducts = vi.fn();
 const getProfiles = vi.fn();
 const getSite = vi.fn();
+const connection = vi.fn(() => Promise.resolve());
 
-vi.mock("next/server", () => ({ connection: () => Promise.resolve() }));
+vi.mock("next/server", () => ({ connection: () => connection() }));
 
 vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@venuecms/sdk-next")>()),
@@ -37,6 +39,8 @@ const {
   ProductListingBlock,
   ProfileListingBlock,
 } = await import("./blocks");
+const { VenueContent } = await import("@/components/VenueContent");
+const { contentComponents } = await import("./index");
 const {
   parseEventListingAttributes,
   parseNewsListingAttributes,
@@ -63,15 +67,30 @@ const listed = (...titles: string[]) => ({
   },
 });
 
-const renderBlock = async (block: ReactNode) => {
+const renderBlock = async (block: ReactNode, onError?: () => void) => {
   const stream = await renderToReadableStream(
     <NextIntlClientProvider locale="en" messages={{}}>
       {block}
     </NextIntlClientProvider>,
+    // A block whose endpoint rejects is expected in one test; React reports it
+    // to onError, and the default handler would fail the run.
+    onError ? { onError } : undefined,
   );
   await stream.allReady;
   return new Response(stream).text();
 };
+
+const contentWith = (...nodes: Array<Record<string, unknown>>) =>
+  ({
+    siteId: "site-id",
+    locale: "en",
+    contentJSON: { type: "doc", content: nodes },
+  }) as LocalizedContent;
+
+const paragraph = (text: string) => ({
+  type: "paragraph",
+  content: [{ type: "text", text }],
+});
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -177,6 +196,48 @@ describe("listing blocks", () => {
     expect(html).toContain("A record");
   });
 
+  it.each([
+    [
+      "an event listing",
+      () => <EventListingBlock {...parseEventListingAttributes({})} />,
+    ],
+    [
+      "a news listing",
+      () => <NewsListingBlock {...parseNewsListingAttributes({})} />,
+    ],
+    [
+      "a page listing",
+      () => <PageListingBlock {...parsePageListingAttributes({})} />,
+    ],
+    [
+      "a product listing",
+      () => <ProductListingBlock {...parseProductListingAttributes({})} />,
+    ],
+    [
+      "a profile listing",
+      () => <ProfileListingBlock {...parseProfileListingAttributes({})} />,
+    ],
+  ])("marks %s dynamic before it reads anything", async (_label, block) => {
+    // A listing is request-time data, and next.config sets cacheComponents, so
+    // a block that skips this is resolved during the prerender and frozen into
+    // the shell. Nothing but this asserts it — the call is per-block now that
+    // each block owns its own request.
+    await renderBlock(block());
+
+    expect(connection).toHaveBeenCalled();
+  });
+
+  it("keeps a failed endpoint contained in the block that called it", async () => {
+    // The SDK usually reports a bad request in-band as empty data, but a
+    // network failure still rejects. The block must be what throws, so the
+    // boundaries @/lib/listingBlocks puts around it can catch it.
+    getEvents.mockRejectedValue(new Error("endpoint is down"));
+
+    await expect(
+      renderBlock(<EventListingBlock {...parseEventListingAttributes({})} />),
+    ).rejects.toThrow("endpoint is down");
+  });
+
   it("renders a profile listing without reading the site", async () => {
     // Profiles are the one listing that needs no site, so it does not fetch
     // one — a profile card still renders where the others cannot.
@@ -189,5 +250,53 @@ describe("listing blocks", () => {
 
     expect(html).toContain("An artist");
     expect(getSite).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * The whole feature, end to end: an author's block in real content, through the
+ * real map and the real dispatch layer, to a rendered listing.
+ *
+ * The pieces are tested apart above; this is what pins them together — that
+ * `contentComponents` wires each node type to the block that queries that node
+ * type's endpoint, which nothing else asserts.
+ */
+describe("listing blocks in content", () => {
+  it("resolves a block an author placed in content", async () => {
+    getEvents.mockResolvedValue(listed("First gig"));
+
+    const html = await renderBlock(
+      <VenueContent
+        content={contentWith({
+          type: "eventListing",
+          attrs: { limit: "3", tags: "jazz" },
+        })}
+        contentStyles={contentComponents}
+      />,
+    );
+
+    expect(html).toContain("First gig");
+    expect(getEvents).toHaveBeenCalledWith(
+      expect.objectContaining({ limit: 3, tags: ["jazz"] }),
+    );
+  });
+
+  it("keeps the article when a listing's endpoint is down", async () => {
+    getEvents.mockRejectedValue(new Error("endpoint is down"));
+
+    const html = await renderBlock(
+      <VenueContent
+        content={contentWith(
+          paragraph("Prose before"),
+          { type: "eventListing" },
+          paragraph("Prose after"),
+        )}
+        contentStyles={contentComponents}
+      />,
+      () => {},
+    );
+
+    expect(html).toContain("Prose before");
+    expect(html).toContain("Prose after");
   });
 });

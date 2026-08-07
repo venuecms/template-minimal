@@ -25,7 +25,7 @@
  * ErrorBoundary, a generic utility the SDK would supply itself — not a
  * rendering choice.
  */
-import type { NodeHandler } from "@venuecms/sdk-next";
+import type { NodeHandler, NodeProps } from "@venuecms/sdk-next";
 import { ReactNode, Suspense } from "react";
 
 import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
@@ -134,18 +134,27 @@ const parseAttributes: {
  * A node's attribute bag is typed loosely because a TipTap node may carry
  * anything, and is only ever read through the parsers, which validate it.
  */
-const listingBlock =
-  <Type extends ListingBlockNodeType>(
-    nodeType: Type,
-    render: ListingRenderer<Type>,
-  ): NodeHandler =>
-  ({ node }) => (
+const listingBlock = <Type extends ListingBlockNodeType>(
+  nodeType: Type,
+  render: ListingRenderer<Type>,
+): NodeHandler => {
+  // Parsing and calling the entry belong in a component of their own, so both
+  // run while the subtree under the boundaries renders. Calling `render` inline
+  // as a child expression would instead run it while this handler's own element
+  // is being built — outside the boundaries it appears to sit inside — and a
+  // synchronous throw would escape them and take the whole document with it.
+  const Listing = ({ node }: NodeProps) => (
+    <>{render(parseAttributes[nodeType](node.attrs ?? {}))}</>
+  );
+
+  return ({ node }) => (
     <ErrorBoundary fallback={null}>
       <Suspense fallback={null}>
-        {render(parseAttributes[nodeType](node.attrs ?? {}))}
+        <Listing node={node} />
       </Suspense>
     </ErrorBoundary>
   );
+};
 
 /**
  * The supplied entries wrapped into the handlers VenueContent passes to the

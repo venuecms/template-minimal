@@ -42,11 +42,14 @@ type StyleOnlyNode =
  * One entry per node, in a single map: a string is the class name put on the
  * renderer the SDK already has, a function renders a listing block.
  *
- * A listing entry is a plain function of the block's records — the fetch behind
- * it (reading the block's filters off the node, calling the endpoint) is this
- * wrapper's job, so a template only says what the records look like:
+ * A listing entry is a plain function of the block's parameters, already parsed
+ * off the node and validated. It returns the component that resolves its own
+ * records — nothing here calls an endpoint:
  *
- *   eventListing: ({ records, site }) => <EventsList>...</EventsList>
+ *   eventListing: (params) => <EventListingBlock {...params} />
+ *
+ * That component owns its request, so it is also what marks itself dynamic
+ * (`await connection()`) before reading request-time data.
  *
  * Key it by TipTap node type (`p`, `eventListing`), not by the tag it renders
  * as. Only the listing types take a function: a node type the SDK already

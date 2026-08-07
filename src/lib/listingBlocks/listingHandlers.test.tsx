@@ -20,7 +20,14 @@ const getProducts = vi.fn();
 const getProfiles = vi.fn();
 const getSite = vi.fn();
 
-const endpoints = { getEvents, getNews, getPages, getProducts, getProfiles, getSite };
+const endpoints = {
+  getEvents,
+  getNews,
+  getPages,
+  getProducts,
+  getProfiles,
+  getSite,
+};
 
 vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@venuecms/sdk-next")>()),
@@ -207,6 +214,30 @@ describe("listingHandlers", () => {
         paragraph("Prose after"),
       ),
       { ...stubRenderers(), eventListing: () => <Failing /> },
+    );
+
+    expect(html).toContain("Prose before");
+    expect(html).toContain("Prose after");
+  });
+
+  it("keeps the surrounding content when an entry throws synchronously", async () => {
+    // An entry runs inside the boundaries, not while they are being built. If
+    // it is called eagerly as a JSX argument the throw escapes them both and
+    // fatals the whole document — losing the prose either side of the block,
+    // not just the listing. This layer is destined for the SDK, where the entry
+    // is another template's code.
+    const html = await renderContent(
+      contentWith(
+        paragraph("Prose before"),
+        { type: "eventListing" },
+        paragraph("Prose after"),
+      ),
+      {
+        ...stubRenderers(),
+        eventListing: () => {
+          throw new Error("a template's entry blew up");
+        },
+      },
     );
 
     expect(html).toContain("Prose before");

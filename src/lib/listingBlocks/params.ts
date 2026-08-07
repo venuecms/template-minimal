@@ -6,13 +6,6 @@
  * public endpoint, and reaches us as a node in `contentJSON` whose `attrs`
  * carry the block's own param names.
  *
- * (A block also serializes itself to `<div data-type="event-listing"
- * data-limit="4" …>` in the markdown fallback, but the SDK renderer only
- * dispatches to custom components on the `contentJSON` path — its markdown
- * path goes through markdown-to-jsx with tag-keyed overrides and never sees
- * these node types. Reading the `data-*` spelling here would be dead code;
- * supporting that path needs an SDK change first.)
- *
  * Values are validated rather than trusted: an author-editable attribute is
  * untrusted input, and a bad one should drop out of the query instead of
  * reaching the endpoint.

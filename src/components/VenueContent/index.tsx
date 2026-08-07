@@ -75,12 +75,10 @@ type VenueContentProps = Omit<
  *
  * Import this rather than the SDK's VenueContent anywhere content the editor
  * produced is rendered, and pass `contentComponents` from @/components/
- * ListingBlock to get this template's listings. Two deliberate exceptions:
+ * ListingBlock to get this template's listings. One deliberate exception:
  * content nested inside a listing (a profile bio in a profile listing) passes
  * plain `renderedStyles`, since a map without the listing entries is what stops
- * a listing recursing into its own container; and content that is a markdown
- * string rather than TipTap JSON, which the SDK renders down a path that never
- * consults components at all.
+ * a listing recursing into its own container.
  *
  * Nothing here imports a component: this stays a rendering-agnostic seam, and
  * what a listing looks like arrives on the map.

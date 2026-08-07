@@ -4,10 +4,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * The one map a caller passes carries both kinds of entry: a string styles the
- * default renderer for that node type, a function renders a listing block off
- * the records fetched for it. These pin that both reach the SDK correctly,
- * since it takes them as two separate props — and that a listing entry never
- * has to say anything about fetching.
+ * default renderer for that node type, a function renders a listing block from
+ * the parameters the block carries. These pin that both reach the SDK correctly,
+ * since it takes them as two separate props — and that rendering content never
+ * calls an endpoint itself.
  */
 const getEvents = vi.fn();
 const getSite = vi.fn();
@@ -59,26 +59,38 @@ describe("VenueContent", () => {
     expect(html).toContain("Prose");
   });
 
-  it("renders a listing entry off the records fetched for the block", async () => {
-    getEvents.mockResolvedValue({
-      data: { records: [{ id: "first" }, { id: "second" }] },
-    });
-
+  it("hands a listing entry the parameters the block carries", async () => {
     const html = await renderStream(
       <VenueContent
-        content={contentWith({ type: "eventListing" })}
+        content={contentWith({
+          type: "eventListing",
+          attrs: { limit: "3", tags: "jazz" },
+        })}
         contentStyles={{
-          eventListing: ({ records }) => (
-            <p>{records.map((event) => event.id).join(",")}</p>
-          ),
+          eventListing: ({ limit, tags }) => <p>{`${limit}:${tags.join()}`}</p>,
         }}
       />,
     );
 
-    expect(html).toContain("first,second");
+    expect(html).toContain("3:jazz");
   });
 
-  it("queries the endpoint with the filters the block carries", async () => {
+  it("lets a listing entry resolve its own records", async () => {
+    // The entry owns the fetch, so the wrapper has to render whatever it
+    // returns — including a component that suspends on its own request.
+    const Resolving = async () => <p>{(await Promise.resolve(["Gig"]))[0]}</p>;
+
+    const html = await renderStream(
+      <VenueContent
+        content={contentWith({ type: "eventListing" })}
+        contentStyles={{ eventListing: () => <Resolving /> }}
+      />,
+    );
+
+    expect(html).toContain("Gig");
+  });
+
+  it("queries no endpoint on the caller's behalf", async () => {
     await renderStream(
       <VenueContent
         content={contentWith({
@@ -89,9 +101,8 @@ describe("VenueContent", () => {
       />,
     );
 
-    expect(getEvents).toHaveBeenCalledWith(
-      expect.objectContaining({ limit: 3, tags: ["jazz"] }),
-    );
+    expect(getEvents).not.toHaveBeenCalled();
+    expect(getSite).not.toHaveBeenCalled();
   });
 
   it("keeps string entries working alongside a listing entry", async () => {

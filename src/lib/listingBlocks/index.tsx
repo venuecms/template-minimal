@@ -1,19 +1,22 @@
 /**
  * The query half of the listing blocks an author can drop into rich-text
  * content: it reads a block's filters off the node, calls the matching
- * endpoint, and hands the records to a component the caller supplies.
+ * endpoint, and hands the records to a render function the caller supplies.
  *
  * Nothing here knows what a listing looks like. That is deliberate — this layer
  * is destined for @venuecms/sdk-next, where it has to serve every template, so
- * the components arrive as an argument the same way `contentStyles` does:
+ * the renderers arrive on `contentStyles` alongside the class names:
  *
- *   // once, at module scope — see the note on createListingBlocks below
- *   const blocks = createListingBlocks(listingComponents);
- *   <VenueContent components={blocks} />
+ *   <VenueContent
+ *     contentStyles={{
+ *       ...renderedStyles,
+ *       eventListing: ({ records, site }) => <EventList ... />,
+ *     }}
+ *   />
  *
- * The template's own list components live in @/components/ListingBlock. The one
- * thing this layer still reaches back for is ErrorBoundary, a generic utility
- * the SDK would supply itself — not a rendering choice.
+ * The template's own listings live in @/components/ListingBlock. The one thing
+ * this layer still reaches back for is ErrorBoundary, a generic utility the SDK
+ * would supply itself — not a rendering choice.
  */
 import type {
   Event,
@@ -33,7 +36,7 @@ import {
   getSite,
 } from "@venuecms/sdk-next";
 import { connection } from "next/server";
-import { ComponentType, Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 
 import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 
@@ -53,10 +56,10 @@ import {
 } from "./params";
 
 /**
- * What every injected list component receives.
+ * What every listing renderer receives.
  *
  * `records` may be empty: whether that renders an empty state or nothing at all
- * is a rendering decision, so it belongs to the component, not to this layer.
+ * is a rendering decision, so it belongs to the renderer, not to this layer.
  */
 export type ListingProps<Item> = {
   records: Item[];
@@ -72,61 +75,69 @@ type ListingRecord = {
   profileListing: Profile;
 };
 
+/** What a caller puts on `contentStyles` under a listing node type. */
+export type ListingRenderer<Type extends ListingBlockNodeType> = (
+  props: ListingProps<ListingRecord[Type]>,
+) => ReactNode;
+
 /**
- * The list components a caller has to supply, one per listing node type.
+ * The renderers a caller may supply, keyed by listing node type.
  *
- * Keyed off ListingBlockNodeType so the set stays exactly the contract: a key
+ * Every key is optional: a template that has no way to render one listing type
+ * should leave it off rather than register a renderer that draws nothing.
+ * Keying off ListingBlockNodeType keeps the set exactly the contract — a key
  * that is not a listing type fails to compile rather than sitting here unused.
  */
-export type ListingComponents = {
-  [Type in ListingBlockNodeType]: ComponentType<
-    ListingProps<ListingRecord[Type]>
-  >;
+export type ListingRenderers = {
+  [Type in ListingBlockNodeType]?: ListingRenderer<Type>;
 };
 
 /**
  * How one listing type turns a node's attributes into records: parse the
  * attributes, then query the endpoint they describe.
  *
+ * The mapped-type annotation is what pairs each entry with its own record type,
+ * so an entry wired to the wrong endpoint fails to compile here rather than
+ * reaching a renderer typed for something else.
+ *
  * `now` is a parameter rather than a call inside each query so the clock stays
  * out of the query builders and a test can pin it. It is read once per block,
  * at render time — two blocks in one document rendering across a minute tick
  * can still land on different windows, as they did before this layer existed.
  */
-type ListingDefinition<Attrs, Item> = {
-  parse: (attrs: NodeAttrs) => Attrs;
-  query: (
-    attrs: Attrs,
+const fetchRecords: {
+  [Type in ListingBlockNodeType]: (
+    attrs: NodeAttrs,
     now: number,
-  ) => Promise<{ data?: { records: Item[] } | null }>;
-};
-
-/** Infers both type parameters from the definition it is handed. */
-const defineListing = <Attrs, Item>(
-  definition: ListingDefinition<Attrs, Item>,
-) => definition;
-
-const LISTINGS = {
-  eventListing: defineListing({
-    parse: parseEventListingAttributes,
-    query: (attrs, now) => getEvents(buildEventListingQuery(attrs, now)),
-  }),
-  newsListing: defineListing({
-    parse: parseNewsListingAttributes,
-    query: (attrs, now) => getNews(buildNewsListingQuery(attrs, now)),
-  }),
-  pageListing: defineListing({
-    parse: parsePageListingAttributes,
-    query: (attrs) => getPages(buildPageListingQuery(attrs)),
-  }),
-  productListing: defineListing({
-    parse: parseProductListingAttributes,
-    query: (attrs) => getProducts(buildProductListingQuery(attrs)),
-  }),
-  profileListing: defineListing({
-    parse: parseProfileListingAttributes,
-    query: (attrs) => getProfiles(buildProfileListingQuery(attrs)),
-  }),
+  ) => Promise<ListingRecord[Type][]>;
+} = {
+  eventListing: async (attrs, now) =>
+    (
+      await getEvents(
+        buildEventListingQuery(parseEventListingAttributes(attrs), now),
+      )
+    ).data?.records ?? [],
+  newsListing: async (attrs, now) =>
+    (
+      await getNews(
+        buildNewsListingQuery(parseNewsListingAttributes(attrs), now),
+      )
+    ).data?.records ?? [],
+  pageListing: async (attrs) =>
+    (await getPages(buildPageListingQuery(parsePageListingAttributes(attrs))))
+      .data?.records ?? [],
+  productListing: async (attrs) =>
+    (
+      await getProducts(
+        buildProductListingQuery(parseProductListingAttributes(attrs)),
+      )
+    ).data?.records ?? [],
+  profileListing: async (attrs) =>
+    (
+      await getProfiles(
+        buildProfileListingQuery(parseProfileListingAttributes(attrs)),
+      )
+    ).data?.records ?? [],
 };
 
 /**
@@ -137,7 +148,7 @@ const LISTINGS = {
 const nodeAttrs = (node: NodeProps["node"]): NodeAttrs => node.attrs ?? {};
 
 /**
- * Binds one listing definition to the component that renders its records.
+ * Binds one listing node type to the function that renders its records.
  *
  * The renderer's handlers are synchronous, so the fetch happens in a server
  * component the handler returns. Suspending it keeps the surrounding prose
@@ -150,17 +161,11 @@ const nodeAttrs = (node: NodeProps["node"]): NodeAttrs => node.attrs ?? {};
  * covers the client, where React retries the failed boundary — without it a
  * second failure escapes to the route's error page. Neither fires on the
  * ordinary failure, because the SDK reports a bad request in-band as empty
- * `data` rather than throwing; that reaches the component as no records.
+ * `data` rather than throwing; that reaches the renderer as no records.
  */
-const listingBlock = <Attrs, Item>(
-  { parse, query }: ListingDefinition<Attrs, Item>,
-  // NoInfer matters: without it `Item` is inferred from the component as well
-  // as the definition, so pairing a definition with another type's component
-  // widens Item instead of failing — the five near-identical lines in
-  // createListingBlocks are exactly where that slip would happen. It cannot
-  // catch a news/page swap, since both list the same record; the routing test
-  // is what covers that pair.
-  Component: ComponentType<ListingProps<NoInfer<Item>>>,
+const listingBlock = <Type extends ListingBlockNodeType>(
+  nodeType: Type,
+  render: ListingRenderer<Type>,
 ): NodeHandler => {
   const Listing = async ({ node }: NodeProps) => {
     // A listing is request-time data, and a "past" window reads the clock —
@@ -168,21 +173,21 @@ const listingBlock = <Attrs, Item>(
     // prerender bails out under cacheComponents.
     await connection();
 
-    const [result, { data: site }] = await Promise.all([
-      query(parse(nodeAttrs(node)), minuteRoundedNow()),
+    const [records, { data: site }] = await Promise.all([
+      fetchRecords[nodeType](nodeAttrs(node), minuteRoundedNow()),
       getSite(),
     ]);
 
     // Every listing takes `site`, including the profile one that ignores it,
-    // so the injected components share a single prop shape. Bailing without it
-    // costs a profile listing that would once have rendered anyway — an
-    // acceptable trade, since a site this template cannot read also leaves the
-    // header, the theme, and every other listing on the page empty.
+    // so the renderers share a single prop shape. Bailing without it costs a
+    // profile listing that would once have rendered anyway — an acceptable
+    // trade, since a site this template cannot read also leaves the header,
+    // the theme, and every other listing on the page empty.
     if (!site) {
       return null;
     }
 
-    return <Component records={result.data?.records ?? []} site={site} />;
+    return <>{render({ records, site })}</>;
   };
 
   return ({ node }) => (
@@ -195,30 +200,34 @@ const listingBlock = <Attrs, Item>(
 };
 
 /**
- * The listing node types mapped to their handlers, ready to pass to
- * VenueContent's `components` prop.
+ * The supplied renderers wrapped into the handlers VenueContent passes to the
+ * SDK's `components` prop.
  *
- * Returning the node-type union rather than the renderer's open-ended
- * NodeHandlers is deliberate: an unhandled type is dropped from the content
- * silently, so a block added to the contract should fail to compile until it
- * has a component.
- *
- * Call this once, at module scope. Each call mints fresh component identities,
- * so calling it inline in JSX would remount every listing — and refetch it —
- * on each render of the surrounding content.
+ * A listing left off the map is left unregistered rather than given a handler
+ * that renders nothing, so the SDK keeps whatever it would do with that node.
  */
-export const createListingBlocks = (
-  components: ListingComponents,
-): Record<ListingBlockNodeType, NodeHandler> => ({
-  eventListing: listingBlock(LISTINGS.eventListing, components.eventListing),
-  newsListing: listingBlock(LISTINGS.newsListing, components.newsListing),
-  pageListing: listingBlock(LISTINGS.pageListing, components.pageListing),
-  productListing: listingBlock(
-    LISTINGS.productListing,
-    components.productListing,
-  ),
-  profileListing: listingBlock(
-    LISTINGS.profileListing,
-    components.profileListing,
-  ),
-});
+export const listingHandlers = (
+  renderers: ListingRenderers,
+): Record<string, NodeHandler> => {
+  const handlers: Record<string, NodeHandler> = {};
+
+  const add = <Type extends ListingBlockNodeType>(
+    nodeType: Type,
+    render: ListingRenderer<Type> | undefined,
+  ) => {
+    if (render) {
+      handlers[nodeType] = listingBlock(nodeType, render);
+    }
+  };
+
+  // Spelled out per type rather than looped, so each renderer keeps the record
+  // type its own key promises — iterating the node types would widen every
+  // renderer to the union and lose the pairing.
+  add("eventListing", renderers.eventListing);
+  add("newsListing", renderers.newsListing);
+  add("pageListing", renderers.pageListing);
+  add("productListing", renderers.productListing);
+  add("profileListing", renderers.profileListing);
+
+  return handlers;
+};

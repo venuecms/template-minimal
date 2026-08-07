@@ -1,14 +1,27 @@
 import { type LocalizedContent } from "@venuecms/sdk-next";
-import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
-
-import { VenueContent } from "./index";
+import { renderToReadableStream, renderToStaticMarkup } from "react-dom/server";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * The one map a caller passes carries both kinds of entry: a string styles the
- * default renderer for that node type, a component replaces it. These pin that
- * both reach the SDK correctly, since it takes them as two separate props.
+ * default renderer for that node type, a function renders a listing block off
+ * the records fetched for it. These pin that both reach the SDK correctly,
+ * since it takes them as two separate props — and that a listing entry never
+ * has to say anything about fetching.
  */
+const getEvents = vi.fn();
+const getSite = vi.fn();
+
+vi.mock("next/server", () => ({ connection: () => Promise.resolve() }));
+
+vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@venuecms/sdk-next")>()),
+  getEvents,
+  getSite,
+}));
+
+const { VenueContent } = await import("./index");
+
 const contentWith = (...nodes: Array<Record<string, unknown>>) =>
   ({
     siteId: "site-id",
@@ -21,10 +34,16 @@ const paragraph = (text: string) => ({
   content: [{ type: "text", text }],
 });
 
-const heading = (text: string, level = 2) => ({
-  type: "heading",
-  attrs: { level },
-  content: [{ type: "text", text }],
+const renderStream = async (element: React.ReactElement) => {
+  const stream = await renderToReadableStream(element);
+  await stream.allReady;
+  return new Response(stream).text();
+};
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  getSite.mockResolvedValue({ data: { timeZone: "Europe/Berlin" } });
+  getEvents.mockResolvedValue({ data: { records: [] } });
 });
 
 describe("VenueContent", () => {
@@ -40,52 +59,54 @@ describe("VenueContent", () => {
     expect(html).toContain("Prose");
   });
 
-  it("renders a component entry instead of the default node renderer", () => {
-    const html = renderToStaticMarkup(
+  it("renders a listing entry off the records fetched for the block", async () => {
+    getEvents.mockResolvedValue({
+      data: { records: [{ id: "first" }, { id: "second" }] },
+    });
+
+    const html = await renderStream(
       <VenueContent
-        content={contentWith(heading("Section"))}
+        content={contentWith({ type: "eventListing" })}
         contentStyles={{
-          heading: ({ children }) => <div data-heading>{children}</div>,
-        }}
-      />,
-    );
-
-    expect(html).toContain("<div data-heading");
-    expect(html).toContain("Section");
-    // The default heading renderer is replaced, not wrapped.
-    expect(html).not.toContain("<h2");
-  });
-
-  it("keeps string entries working alongside a component entry", () => {
-    const html = renderToStaticMarkup(
-      <VenueContent
-        content={contentWith(heading("Section"), paragraph("Prose"))}
-        contentStyles={{
-          p: "text-sm",
-          heading: ({ children }) => <div data-heading>{children}</div>,
-        }}
-      />,
-    );
-
-    expect(html).toContain("<div data-heading");
-    expect(html).toContain('class="text-sm"');
-  });
-
-  it("routes a node type the SDK has no default for to its component", () => {
-    // How a listing block reaches its renderer: an author-placed node type the
-    // SDK would otherwise drop with a console warning.
-    const html = renderToStaticMarkup(
-      <VenueContent
-        content={contentWith({ type: "eventListing", attrs: { limit: 3 } })}
-        contentStyles={{
-          eventListing: ({ node }) => (
-            <p>{`limit:${String(node.attrs?.limit)}`}</p>
+          eventListing: ({ records }) => (
+            <p>{records.map((event) => event.id).join(",")}</p>
           ),
         }}
       />,
     );
 
-    expect(html).toContain("limit:3");
+    expect(html).toContain("first,second");
+  });
+
+  it("queries the endpoint with the filters the block carries", async () => {
+    await renderStream(
+      <VenueContent
+        content={contentWith({
+          type: "eventListing",
+          attrs: { limit: "3", tags: "jazz" },
+        })}
+        contentStyles={{ eventListing: () => null }}
+      />,
+    );
+
+    expect(getEvents).toHaveBeenCalledWith(
+      expect.objectContaining({ limit: 3, tags: ["jazz"] }),
+    );
+  });
+
+  it("keeps string entries working alongside a listing entry", async () => {
+    const html = await renderStream(
+      <VenueContent
+        content={contentWith(paragraph("Prose"), { type: "eventListing" })}
+        contentStyles={{
+          p: "text-sm",
+          eventListing: () => <div data-listing />,
+        }}
+      />,
+    );
+
+    expect(html).toContain('class="text-sm"');
+    expect(html).toContain("data-listing");
   });
 
   it("renders content when given no map at all", () => {

@@ -1,7 +1,7 @@
 /**
- * The seam this module exists for: the query layer takes its list components as
- * an argument, the way the renderer takes `contentStyles`. These tests only ever
- * inject stub components, which is the point — nothing here may depend on what a
+ * The seam this module exists for: the query layer takes its renderers as an
+ * argument, the way the renderer takes `contentStyles`. These tests only ever
+ * inject stub renderers, which is the point — nothing here may depend on what a
  * listing looks like, because this layer is destined for @venuecms/sdk-next
  * while the components stay in the template.
  */
@@ -29,8 +29,8 @@ vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
 }));
 
 const { VenueContent } = await import("@venuecms/sdk-next");
-const { createListingBlocks } = await import("./index");
-type ListingComponents = import("./index").ListingComponents;
+const { listingHandlers } = await import("./index");
+type ListingRenderers = import("./index").ListingRenderers;
 const { LISTING_BLOCK_NODE_TYPES } = await import("./params");
 
 const records = (...titles: string[]) => ({
@@ -55,12 +55,12 @@ const label = (type: string, ids: Array<string | undefined>) => (
 );
 
 /**
- * Names each injected component so a test can tell which one was reached.
+ * Names each injected renderer so a test can tell which one was reached.
  *
  * Spelled out per type rather than generated, so `records` keeps the concrete
  * record type the contract promises for that listing.
  */
-const stubComponents = (): ListingComponents => ({
+const stubRenderers = (): ListingRenderers => ({
   eventListing: ({ records }) =>
     label(
       "eventListing",
@@ -90,10 +90,7 @@ const stubComponents = (): ListingComponents => ({
 
 const renderContent = async (content: LocalizedContent) => {
   const stream = await renderToReadableStream(
-    <VenueContent
-      content={content}
-      components={createListingBlocks(stubComponents())}
-    />,
+    <VenueContent content={content} components={listingHandlers(stubRenderers())} />,
     // A listing that throws is expected in one test; React reports it to
     // onError, and the default handler would fail the run.
     { onError: () => {} },
@@ -119,8 +116,8 @@ beforeEach(() => {
   }
 });
 
-describe("createListingBlocks", () => {
-  it("hands the fetched records to the injected component", async () => {
+describe("listingHandlers", () => {
+  it("hands the fetched records to the injected renderer", async () => {
     getEvents.mockResolvedValue(records("first", "second"));
 
     await expect(render({ type: "eventListing" })).resolves.toContain(
@@ -151,7 +148,7 @@ describe("createListingBlocks", () => {
     ["pageListing", getPages],
     ["productListing", getProducts],
     ["profileListing", getProfiles],
-  ])("routes %s to its own endpoint and component", async (type, fetcher) => {
+  ])("routes %s to its own endpoint and renderer", async (type, fetcher) => {
     fetcher.mockResolvedValue(records("record"));
 
     await expect(render({ type })).resolves.toContain(`${type}[record]`);
@@ -159,9 +156,18 @@ describe("createListingBlocks", () => {
   });
 
   it("covers every listing node type in the contract", () => {
-    expect(Object.keys(createListingBlocks(stubComponents())).sort()).toEqual(
+    expect(Object.keys(listingHandlers(stubRenderers())).sort()).toEqual(
       [...LISTING_BLOCK_NODE_TYPES].sort(),
     );
+  });
+
+  it("registers no handler for a listing a caller left off the map", () => {
+    // Renderers are optional, so a template can opt out of a listing type. It
+    // has to stay unregistered rather than register a handler that renders
+    // nothing, or the SDK could not fall back to its own renderer.
+    expect(
+      Object.keys(listingHandlers({ eventListing: () => null })),
+    ).toEqual(["eventListing"]);
   });
 
   it("keeps the surrounding content when a listing fails", async () => {
@@ -183,7 +189,7 @@ describe("createListingBlocks", () => {
   it("renders nothing rather than a siteless list when the site is unreadable", async () => {
     // The SDK reports a failed read as empty data, not a throw, so nothing
     // here catches it — the gate is the only thing keeping `site` off a
-    // component that has it typed non-null.
+    // renderer that has it typed non-null.
     getSite.mockResolvedValue({ data: undefined, error: new Error("no site") });
     getEvents.mockResolvedValue(records("first"));
 
@@ -192,7 +198,7 @@ describe("createListingBlocks", () => {
     );
   });
 
-  it("lets the injected component decide how an empty listing renders", async () => {
+  it("lets the injected renderer decide how an empty listing renders", async () => {
     getEvents.mockResolvedValue(records());
 
     await expect(render({ type: "eventListing" })).resolves.toContain(

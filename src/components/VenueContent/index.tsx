@@ -1,9 +1,11 @@
 import {
   type ContentStyles,
-  type NodeHandler,
   VenueContent as SdkVenueContent,
 } from "@venuecms/sdk-next";
 import { ComponentProps } from "react";
+
+import type { ListingRenderers } from "@/lib/listingBlocks";
+import { listingHandlers } from "@/lib/listingBlocks";
 
 /**
  * The keys the renderer only ever reads a class name from.
@@ -29,37 +31,38 @@ type StyleOnlyNode =
 
 /**
  * One entry per node, in a single map: a string is the class name put on the
- * renderer the SDK already has, a component replaces that renderer.
+ * renderer the SDK already has, a function renders a listing block.
  *
- * A component is how a node type the SDK has no renderer for — the listing
- * blocks an author places in content — gets rendered at all, rather than being
- * dropped with a console warning. Key it by TipTap node type (`heading`,
- * `eventListing`), not by the tag it renders as.
+ * A listing entry is a plain function of the block's records — the fetch behind
+ * it (reading the block's filters off the node, calling the endpoint) is this
+ * wrapper's job, so a template only says what the records look like:
+ *
+ *   eventListing: ({ records, site }) => <EventsList>...</EventsList>
+ *
+ * Key it by TipTap node type (`p`, `eventListing`), not by the tag it renders
+ * as. Only the listing types take a function: a node type the SDK already
+ * renders is styled, not replaced.
  */
 export type ContentComponents = Readonly<
-  Partial<Record<StyleOnlyNode, string>> & Record<string, string | NodeHandler>
+  Partial<Record<StyleOnlyNode, string>> & ListingRenderers
 >;
 
 /**
- * The SDK takes the two kinds as separate props, so callers would otherwise
- * have to know which of their entries is which. Splitting here keeps that an
- * implementation detail of this wrapper.
+ * The SDK takes class names and components as separate props, so callers would
+ * otherwise have to know which of their entries is which — and wrap the listing
+ * ones themselves. Doing both here keeps that an implementation detail of this
+ * wrapper.
  */
 const splitContentComponents = (contentStyles: ContentComponents) => {
   const classes: ContentStyles = {};
-  const components: Record<string, NodeHandler> = {};
 
   for (const [nodeType, entry] of Object.entries(contentStyles)) {
     if (typeof entry === "string") {
       classes[nodeType] = entry;
-    } else if (entry) {
-      // Anything else is a handler, but an explicit `undefined` entry would
-      // reach the renderer as a component and throw on render.
-      components[nodeType] = entry;
     }
   }
 
-  return { classes, components };
+  return { classes, components: listingHandlers(contentStyles) };
 };
 
 type VenueContentProps = Omit<
@@ -70,8 +73,8 @@ type VenueContentProps = Omit<
 };
 
 /**
- * The SDK renderer taking class names and components on one map, so a template
- * overrides how a node renders the same way it styles one.
+ * The SDK renderer taking class names and listing renderers on one map, so a
+ * template says how a listing block draws the same way it styles a paragraph.
  *
  * Import this rather than the SDK's VenueContent anywhere content the editor
  * produced is rendered, and pass `contentComponents` from @/components/

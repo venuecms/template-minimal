@@ -1,4 +1,5 @@
 import {
+  VenueContent,
   type Page as VenuePage,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
@@ -7,7 +8,6 @@ import { useLocale } from "next-intl";
 import { PageWithParent } from "@/lib/utils/tree";
 
 import { contentComponents } from "@/components/ListingBlock";
-import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
 import { PageTree } from "../PageTree";

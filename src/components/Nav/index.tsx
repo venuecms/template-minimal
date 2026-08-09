@@ -2,6 +2,7 @@ import {
   LocalizedContent,
   Page,
   Site,
+  VenueContent,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
 import { getPages } from "@venuecms/sdk-next";
@@ -9,8 +10,6 @@ import { getLocale } from "next-intl/server";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
-
-import { VenueContent } from "@/components/VenueContent";
 
 import { resolvePageHref } from "../utils/pageHref";
 // The site description is a short blurb, so it takes prose styling only — no

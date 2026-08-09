@@ -1,4 +1,5 @@
 import {
+  VenueContent,
   type Page as VenuePage,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
@@ -6,7 +7,6 @@ import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
 
 import { contentComponents } from "@/components/ListingBlock";
-import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";

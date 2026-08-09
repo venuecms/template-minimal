@@ -1,5 +1,6 @@
 import {
   Site,
+  VenueContent,
   type Event as VenueEvent,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
@@ -8,7 +9,6 @@ import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 
 import { contentComponents } from "@/components/ListingBlock";
-import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
 import { LocationLink } from "../LocationLink";

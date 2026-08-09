@@ -1,44 +1,19 @@
 /**
  * One component per listing block an author can place in rich-text content.
  *
- * Each takes the block's parameters — handed over by @/lib/listingBlocks, which
- * parsed them off the node and validated them — turns them into that endpoint's
- * query, resolves its own records, and lays them out with the same list
- * components the template uses for that record type elsewhere. So a listing
- * inside content looks like a listing anywhere else.
+ * Each is handed the block's records already resolved: the SDK's content
+ * renderer parses the block's filters off the node, validates them, calls that
+ * endpoint and suspends the result. All that is left here is layout, done with
+ * the same list components the template uses for that record type elsewhere —
+ * so a listing inside content looks like a listing anywhere else.
  *
- * These are the suspending half of a listing: the SDK's node handlers are
- * synchronous, so a block awaits here and @/lib/listingBlocks wraps it in the
- * Suspense and error boundaries. Nothing above this file fetches.
+ * Nothing here fetches or awaits. These are plain functions of their props,
+ * which is why they need no Suspense or error boundary of their own.
  *
  * An empty listing renders nothing. It sits mid-prose, where an empty-state
  * message would read as content the author wrote.
  */
-import {
-  getEvents,
-  getNews,
-  getPages,
-  getProducts,
-  getProfiles,
-  getSite,
-} from "@venuecms/sdk-next";
-import { connection } from "next/server";
-
-import type {
-  EventListingAttributes,
-  NewsListingAttributes,
-  PageListingAttributes,
-  ProductListingAttributes,
-  ProfileListingAttributes,
-} from "@/lib/listingBlocks/params";
-import {
-  buildEventListingQuery,
-  buildNewsListingQuery,
-  buildPageListingQuery,
-  buildProductListingQuery,
-  buildProfileListingQuery,
-  minuteRoundedNow,
-} from "@/lib/listingBlocks/params";
+import type { ListingProps } from "@venuecms/sdk-next";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ListProduct } from "@/components/ListProduct";
@@ -50,25 +25,15 @@ import {
   resolvePageHref,
 } from "@/components/utils/pageHref";
 
-// Each block opens with `await connection()`. A listing is request-time data,
-// and a "past" window reads the clock — both have to be marked dynamic before
-// they run, or the prerender bails out under cacheComponents. It sits in every
-// block rather than once above them because each block is its own dynamic
-// boundary now that it does its own fetching.
-
-export const EventListingBlock = async (params: EventListingAttributes) => {
-  await connection();
-
-  const [events, { data: site }] = await Promise.all([
-    getEvents(buildEventListingQuery(params, minuteRoundedNow())),
-    getSite(),
-  ]);
-
-  const records = events.data?.records ?? [];
-
-  // The SDK reports a failed read as empty data rather than throwing, so
-  // nothing catches it — this is the only thing keeping a siteless list off a
-  // component that has `site` typed non-null.
+export const EventListingBlock = ({
+  records,
+  site,
+}: ListingProps<"eventListing">) => {
+  // `site` arrives nullable because the SDK reports a failed read as absent
+  // data rather than throwing, so nothing catches it. Gating on it is the only
+  // thing keeping a siteless record off a list component that types it
+  // non-null. The record check is belt-and-braces: the SDK already renders
+  // nothing in place of an empty listing rather than calling this.
   if (!site || !records.length) {
     return null;
   }
@@ -82,16 +47,10 @@ export const EventListingBlock = async (params: EventListingAttributes) => {
   );
 };
 
-export const NewsListingBlock = async (params: NewsListingAttributes) => {
-  await connection();
-
-  const [news, { data: site }] = await Promise.all([
-    getNews(buildNewsListingQuery(params, minuteRoundedNow())),
-    getSite(),
-  ]);
-
-  const records = news.data?.records ?? [];
-
+export const NewsListingBlock = ({
+  records,
+  site,
+}: ListingProps<"newsListing">) => {
   if (!site || !records.length) {
     return null;
   }
@@ -111,16 +70,10 @@ export const NewsListingBlock = async (params: NewsListingAttributes) => {
   );
 };
 
-export const PageListingBlock = async (params: PageListingAttributes) => {
-  await connection();
-
-  const [pages, { data: site }] = await Promise.all([
-    getPages(buildPageListingQuery(params)),
-    getSite(),
-  ]);
-
-  const records = pages.data?.records ?? [];
-
+export const PageListingBlock = ({
+  records,
+  site,
+}: ListingProps<"pageListing">) => {
   if (!site || !records.length) {
     return null;
   }
@@ -139,16 +92,10 @@ export const PageListingBlock = async (params: PageListingAttributes) => {
   );
 };
 
-export const ProductListingBlock = async (params: ProductListingAttributes) => {
-  await connection();
-
-  const [products, { data: site }] = await Promise.all([
-    getProducts(buildProductListingQuery(params)),
-    getSite(),
-  ]);
-
-  const records = products.data?.records ?? [];
-
+export const ProductListingBlock = ({
+  records,
+  site,
+}: ListingProps<"productListing">) => {
   if (!site || !records.length) {
     return null;
   }
@@ -163,15 +110,18 @@ export const ProductListingBlock = async (params: ProductListingAttributes) => {
 };
 
 /**
- * The one listing that reads no site, so it does not fetch one: a profile card
- * still renders on a site this template cannot read, where the others cannot.
+ * The one listing that needs no site to draw, so it ignores the one it is
+ * handed: a profile card still renders on a site this template could not read,
+ * where the others bail out.
+ *
+ * That is a weaker guarantee than it was when this block did its own fetching
+ * and simply never asked for a site. The SDK resolves records and site together
+ * for every listing type, so a site read that rejects outright takes the
+ * profiles down with it.
  */
-export const ProfileListingBlock = async (params: ProfileListingAttributes) => {
-  await connection();
-
-  const { data } = await getProfiles(buildProfileListingQuery(params));
-  const records = data?.records ?? [];
-
+export const ProfileListingBlock = ({
+  records,
+}: ListingProps<"profileListing">) => {
   if (!records.length) {
     return null;
   }

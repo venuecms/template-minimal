@@ -1,4 +1,5 @@
 import {
+  VenueContent,
   type Profile as VenueProfile,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
@@ -6,7 +7,6 @@ import { useLocale } from "next-intl";
 
 import { Link } from "@/lib/i18n";
 
-import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
 // Deliberately plain `renderedStyles` rather than `contentComponents`: this bio

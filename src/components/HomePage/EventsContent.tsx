@@ -1,4 +1,8 @@
-import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk-next";
+import {
+  LocalizedContent,
+  VenueContent,
+  getLocalizedContent,
+} from "@venuecms/sdk-next";
 import { getEvents, getSite } from "@venuecms/sdk-next";
 import { ArrowRight } from "lucide-react";
 import { connection } from "next/server";
@@ -8,7 +12,6 @@ import { Link } from "@/lib/i18n";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { contentComponents } from "@/components/ListingBlock";
 import { TranslatedText } from "@/components/TranslatedText";
-import { VenueContent } from "@/components/VenueContent";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
 export async function EventsContent({ locale }: { locale: string }) {

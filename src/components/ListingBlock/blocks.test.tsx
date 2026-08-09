@@ -1,302 +1,216 @@
 /**
- * The fetching half of a listing block: given the parameters parsed off the
- * node, each block builds its endpoint's query, resolves its own records, and
- * renders them with the template's list components.
+ * What the template still owns of a listing block: layout.
  *
- * This is where the endpoint call lives now — @/lib/listingBlocks only hands
- * over the params — so this is where the query contract is pinned.
+ * The SDK parses the block's filters off the node, validates them, queries the
+ * endpoint and suspends the result — none of that is tested here, because none
+ * of it is ours. These blocks are plain functions of the records they are
+ * handed, so this pins the two things that are still template decisions: which
+ * list component draws each record type, and what a block does when it has
+ * nothing worth drawing.
  */
-import type { LocalizedContent } from "@venuecms/sdk-next";
+import type { ListingRecords, Site } from "@venuecms/sdk-next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-const getEvents = vi.fn();
-const getNews = vi.fn();
-const getPages = vi.fn();
-const getProducts = vi.fn();
-const getProfiles = vi.fn();
-const getSite = vi.fn();
-const connection = vi.fn(() => Promise.resolve());
-
-vi.mock("next/server", () => ({ connection: () => connection() }));
-
-vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@venuecms/sdk-next")>()),
-  getEvents,
-  getNews,
-  getPages,
-  getProducts,
-  getProfiles,
-  getSite,
-}));
-
-const {
+import {
   EventListingBlock,
   NewsListingBlock,
   PageListingBlock,
   ProductListingBlock,
   ProfileListingBlock,
-} = await import("./blocks");
-const { VenueContent } = await import("@/components/VenueContent");
-const { contentComponents } = await import("./index");
-const {
-  parseEventListingAttributes,
-  parseNewsListingAttributes,
-  parsePageListingAttributes,
-  parseProductListingAttributes,
-  parseProfileListingAttributes,
-} = await import("@/lib/listingBlocks/params");
+} from "./blocks";
 
-const localizedContent = (title: string) => [
-  { siteId: "site-id", locale: "en", title },
-];
+const siteId = "site-id";
 
-const listed = (...titles: string[]) => ({
-  data: {
-    records: titles.map((title) => ({
+const site: Site = {
+  id: siteId,
+  timeZone: "Europe/Berlin",
+  settings: {},
+};
+
+const localizedContent = (title: string) => [{ siteId, locale: "en", title }];
+
+/**
+ * One builder per record type, each satisfying that type in full.
+ *
+ * Written out rather than cast from one loose shape: the records differ in what
+ * they require, and a cast that papered over that would also hide a block
+ * reading a field its records do not carry. Only `title` varies — it is what the
+ * assertions look for in the rendered output.
+ */
+const records = {
+  event: (...titles: string[]): ListingRecords["eventListing"] =>
+    titles.map((title) => ({
       id: title,
+      siteId,
       slug: title,
-      image: null,
       startDate: "2026-09-01T20:00:00.000Z",
       endDate: "2026-09-01T23:00:00.000Z",
-      date: "2026-09-01T20:00:00.000Z",
+      hasTime: true,
+      publishState: "PUBLISHED",
+      artists: [],
       localizedContent: localizedContent(title),
     })),
-  },
-});
 
-const renderBlock = async (block: ReactNode, onError?: () => void) => {
+  news: (...titles: string[]): ListingRecords["newsListing"] =>
+    titles.map((title) => ({
+      id: title,
+      siteId,
+      slug: title,
+      order: 0,
+      featured: false,
+      type: "NEWS",
+      openInNewTab: false,
+      date: "2026-09-01T20:00:00.000Z",
+      roles: [],
+      localizedContent: localizedContent(title),
+    })),
+
+  page: (...titles: string[]): ListingRecords["pageListing"] =>
+    titles.map((title) => ({
+      id: title,
+      siteId,
+      slug: title,
+      order: 0,
+      featured: false,
+      type: "CONTENT",
+      openInNewTab: false,
+      roles: [],
+      localizedContent: localizedContent(title),
+    })),
+
+  product: (...titles: string[]): ListingRecords["productListing"] =>
+    titles.map((title) => ({
+      siteId,
+      slug: title,
+      order: 0,
+      featured: false,
+      artists: [],
+      localizedContent: localizedContent(title),
+    })),
+
+  profile: (...titles: string[]): ListingRecords["profileListing"] =>
+    titles.map((title) => ({
+      siteId,
+      slug: title,
+      localizedContent: localizedContent(title),
+    })),
+};
+
+// The list components read the locale, so they need the provider even though
+// the blocks themselves render synchronously.
+const render = async (block: ReactNode) => {
   const stream = await renderToReadableStream(
     <NextIntlClientProvider locale="en" messages={{}}>
       {block}
     </NextIntlClientProvider>,
-    // A block whose endpoint rejects is expected in one test; React reports it
-    // to onError, and the default handler would fail the run.
-    onError ? { onError } : undefined,
   );
   await stream.allReady;
   return new Response(stream).text();
 };
 
-const contentWith = (...nodes: Array<Record<string, unknown>>) =>
-  ({
-    siteId: "site-id",
-    locale: "en",
-    contentJSON: { type: "doc", content: nodes },
-  }) as LocalizedContent;
-
-const paragraph = (text: string) => ({
-  type: "paragraph",
-  content: [{ type: "text", text }],
-});
-
-beforeEach(() => {
-  vi.clearAllMocks();
-  getSite.mockResolvedValue({ data: { timeZone: "Europe/Berlin" } });
-  for (const endpoint of [
-    getEvents,
-    getNews,
-    getPages,
-    getProducts,
-    getProfiles,
-  ]) {
-    endpoint.mockResolvedValue(listed());
-  }
-});
-
 describe("listing blocks", () => {
-  it("queries the events endpoint with the block's parameters", async () => {
-    await renderBlock(
+  it("renders the records it was handed", async () => {
+    const html = await render(
       <EventListingBlock
-        {...parseEventListingAttributes({
-          listingType: "past",
-          limit: "3",
-          tags: "jazz, live",
-        })}
+        records={records.event("First gig", "Second gig")}
+        site={site}
       />,
-    );
-
-    expect(getEvents).toHaveBeenCalledWith(
-      expect.objectContaining({
-        limit: 3,
-        tags: ["jazz", "live"],
-        lt: expect.any(Number),
-      }),
-    );
-    // "past" is a window, not a param — it must not reach the endpoint.
-    expect(getEvents.mock.calls[0][0]).not.toHaveProperty("listingType");
-  });
-
-  it("renders the records it resolved", async () => {
-    getEvents.mockResolvedValue(listed("First gig", "Second gig"));
-
-    const html = await renderBlock(
-      <EventListingBlock {...parseEventListingAttributes({})} />,
     );
 
     expect(html).toContain("First gig");
     expect(html).toContain("Second gig");
   });
 
-  it("renders nothing for an empty listing", async () => {
-    // A listing sits mid-prose, where an empty-state message would read as
-    // content the author wrote.
-    getEvents.mockResolvedValue(listed());
-
-    await expect(
-      renderBlock(<EventListingBlock {...parseEventListingAttributes({})} />),
-    ).resolves.not.toContain("<div");
-  });
-
-  it("renders nothing rather than a siteless list when the site is unreadable", async () => {
-    // The SDK reports a failed read as empty data, not a throw, so nothing
-    // catches it — the gate is the only thing keeping `site` off a component
-    // that has it typed non-null.
-    getSite.mockResolvedValue({ data: undefined, error: new Error("no site") });
-    getEvents.mockResolvedValue(listed("First gig"));
-
-    await expect(
-      renderBlock(<EventListingBlock {...parseEventListingAttributes({})} />),
-    ).resolves.not.toContain("First gig");
-  });
-
-  it("routes a news listing to the news endpoint, linking to /news", async () => {
-    getNews.mockResolvedValue(listed("An announcement"));
-
-    const html = await renderBlock(
-      <NewsListingBlock {...parseNewsListingAttributes({})} />,
+  it("links a news listing to /news", async () => {
+    const html = await render(
+      <NewsListingBlock
+        records={records.news("An announcement")}
+        site={site}
+      />,
     );
 
-    expect(getNews).toHaveBeenCalledOnce();
     expect(html).toContain("An announcement");
     expect(html).toContain("/news/An announcement");
   });
 
-  it("routes a page listing to the pages endpoint", async () => {
-    getPages.mockResolvedValue(listed("A page"));
-
-    const html = await renderBlock(
-      <PageListingBlock {...parsePageListingAttributes({})} />,
+  it("renders a page listing", async () => {
+    const html = await render(
+      <PageListingBlock records={records.page("A page")} site={site} />,
     );
 
-    expect(getPages).toHaveBeenCalledOnce();
     expect(html).toContain("A page");
   });
 
-  it("routes a product listing to the products endpoint", async () => {
-    getProducts.mockResolvedValue(listed("A record"));
-
-    const html = await renderBlock(
-      <ProductListingBlock {...parseProductListingAttributes({})} />,
+  it("renders a product listing", async () => {
+    const html = await render(
+      <ProductListingBlock records={records.product("A record")} site={site} />,
     );
 
-    expect(getProducts).toHaveBeenCalledOnce();
     expect(html).toContain("A record");
+  });
+
+  it("renders a profile listing without a site", async () => {
+    // Profiles are the one listing that reads no site, so a profile card still
+    // draws on a site this template cannot read, where the others cannot.
+    const html = await render(
+      <ProfileListingBlock
+        records={records.profile("An artist")}
+        site={null}
+      />,
+    );
+
+    expect(html).toContain("An artist");
+  });
+
+  it.each([
+    ["an event listing", () => <EventListingBlock records={[]} site={site} />],
+    ["a news listing", () => <NewsListingBlock records={[]} site={site} />],
+    ["a page listing", () => <PageListingBlock records={[]} site={site} />],
+    [
+      "a product listing",
+      () => <ProductListingBlock records={[]} site={site} />,
+    ],
+    [
+      "a profile listing",
+      () => <ProfileListingBlock records={[]} site={null} />,
+    ],
+  ])("renders nothing for %s with no records", async (_label, block) => {
+    // A listing sits mid-prose, where an empty-state message would read as
+    // content the author wrote.
+    await expect(render(block())).resolves.toBe("");
   });
 
   it.each([
     [
       "an event listing",
-      () => <EventListingBlock {...parseEventListingAttributes({})} />,
+      () => (
+        <EventListingBlock records={records.event("A record")} site={null} />
+      ),
     ],
     [
       "a news listing",
-      () => <NewsListingBlock {...parseNewsListingAttributes({})} />,
+      () => <NewsListingBlock records={records.news("A record")} site={null} />,
     ],
     [
       "a page listing",
-      () => <PageListingBlock {...parsePageListingAttributes({})} />,
+      () => <PageListingBlock records={records.page("A record")} site={null} />,
     ],
     [
       "a product listing",
-      () => <ProductListingBlock {...parseProductListingAttributes({})} />,
+      () => (
+        <ProductListingBlock
+          records={records.product("A record")}
+          site={null}
+        />
+      ),
     ],
-    [
-      "a profile listing",
-      () => <ProfileListingBlock {...parseProfileListingAttributes({})} />,
-    ],
-  ])("marks %s dynamic before it reads anything", async (_label, block) => {
-    // A listing is request-time data, and next.config sets cacheComponents, so
-    // a block that skips this is resolved during the prerender and frozen into
-    // the shell. Nothing but this asserts it — the call is per-block now that
-    // each block owns its own request.
-    await renderBlock(block());
-
-    expect(connection).toHaveBeenCalled();
-  });
-
-  it("keeps a failed endpoint contained in the block that called it", async () => {
-    // The SDK usually reports a bad request in-band as empty data, but a
-    // network failure still rejects. The block must be what throws, so the
-    // boundaries @/lib/listingBlocks puts around it can catch it.
-    getEvents.mockRejectedValue(new Error("endpoint is down"));
-
-    await expect(
-      renderBlock(<EventListingBlock {...parseEventListingAttributes({})} />),
-    ).rejects.toThrow("endpoint is down");
-  });
-
-  it("renders a profile listing without reading the site", async () => {
-    // Profiles are the one listing that needs no site, so it does not fetch
-    // one — a profile card still renders where the others cannot.
-    getSite.mockResolvedValue({ data: undefined, error: new Error("no site") });
-    getProfiles.mockResolvedValue(listed("An artist"));
-
-    const html = await renderBlock(
-      <ProfileListingBlock {...parseProfileListingAttributes({})} />,
-    );
-
-    expect(html).toContain("An artist");
-    expect(getSite).not.toHaveBeenCalled();
-  });
-});
-
-/**
- * The whole feature, end to end: an author's block in real content, through the
- * real map and the real dispatch layer, to a rendered listing.
- *
- * The pieces are tested apart above; this is what pins them together — that
- * `contentComponents` wires each node type to the block that queries that node
- * type's endpoint, which nothing else asserts.
- */
-describe("listing blocks in content", () => {
-  it("resolves a block an author placed in content", async () => {
-    getEvents.mockResolvedValue(listed("First gig"));
-
-    const html = await renderBlock(
-      <VenueContent
-        content={contentWith({
-          type: "eventListing",
-          attrs: { limit: "3", tags: "jazz" },
-        })}
-        contentStyles={contentComponents}
-      />,
-    );
-
-    expect(html).toContain("First gig");
-    expect(getEvents).toHaveBeenCalledWith(
-      expect.objectContaining({ limit: 3, tags: ["jazz"] }),
-    );
-  });
-
-  it("keeps the article when a listing's endpoint is down", async () => {
-    getEvents.mockRejectedValue(new Error("endpoint is down"));
-
-    const html = await renderBlock(
-      <VenueContent
-        content={contentWith(
-          paragraph("Prose before"),
-          { type: "eventListing" },
-          paragraph("Prose after"),
-        )}
-        contentStyles={contentComponents}
-      />,
-      () => {},
-    );
-
-    expect(html).toContain("Prose before");
-    expect(html).toContain("Prose after");
+  ])("renders nothing rather than a siteless %s", async (_label, block) => {
+    // The SDK hands over a null site when that read failed, and it fails in-band
+    // rather than throwing — so nothing above catches it. This gate is the only
+    // thing keeping a null site off a component that types it non-null.
+    await expect(render(block())).resolves.toBe("");
   });
 });

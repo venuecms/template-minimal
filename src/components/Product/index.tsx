@@ -1,6 +1,7 @@
 import {
   ProductVariant,
   Site,
+  VenueContent,
   Product as VenueProduct,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
@@ -9,7 +10,6 @@ import { useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 
 import { contentComponents } from "@/components/ListingBlock";
-import { VenueContent } from "@/components/VenueContent";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";

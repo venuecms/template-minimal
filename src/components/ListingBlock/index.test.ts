@@ -34,8 +34,10 @@ describe("contentComponents", () => {
   });
 
   it("adds nothing beyond the prose styles and the listing blocks", () => {
-    // A stray key is either a typo that silently does nothing or a node type
-    // being overridden without anyone meaning to.
+    // Catches a node type overridden here without anyone meaning to. It cannot
+    // catch a bad key inside `renderedStyles` — both sides of this read from it
+    // — which is why that object is annotated `ContentStyles` at its
+    // declaration, where a class the renderer never applies fails to compile.
     expect(Object.keys(contentComponents).sort()).toEqual(
       [...Object.keys(renderedStyles), ...LISTING_BLOCK_NODE_TYPES].sort(),
     );

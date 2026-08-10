@@ -1,10 +1,11 @@
 import { type Event, type Site, getLocalizedContent } from "@venuecms/sdk-next";
-import { VenueImage } from "@/components/VenueImage";
 import { useLocale } from "next-intl";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+
+import { VenueImage } from "@/components/VenueImage";
 
 import { LocationLink } from "../LocationLink";
 import { formatDateRange } from "../utils";

@@ -9,13 +9,13 @@ import { useLocale } from "next-intl";
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-import { contentComponents } from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { LocationLink } from "../LocationLink";
 import { TicketList } from "../TicketList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { formatDateRange } from "../utils";
+import { renderedStyles } from "../utils/styles";
 
 export const EventFeatured = ({
   event,
@@ -63,10 +63,19 @@ export const EventFeatured = ({
             <TicketList tickets={event.tickets} />
           ) : null}
           <Link href={`/events/${event.slug}`}>
+            {/*
+              Plain `renderedStyles`, not `contentComponents`: this excerpt is
+              wrapped in a Link, and every list component a listing block draws
+              renders links of its own. Resolving a listing here would put an
+              <a> inside an <a> — invalid HTML the browser reparses and React
+              reports as a hydration mismatch — and would cost an extra endpoint
+              read on the home page for records nobody could page through.
+              ProfileCompact renders a bio the same way, for the same reason.
+            */}
             <VenueContent
               className="flex max-w-xl flex-col gap-6"
               content={content}
-              contentStyles={contentComponents}
+              contentStyles={renderedStyles}
             />
           </Link>
         </ColumnRight>
@@ -94,10 +103,8 @@ export const EventFeatured = ({
           </Link>
           <div className="text-xl">
             <Link href={`/events/${event.slug}`}>
-              <VenueContent
-                content={content}
-                contentStyles={contentComponents}
-              />
+              {/* Inside a Link, as above. */}
+              <VenueContent content={content} contentStyles={renderedStyles} />
             </Link>
           </div>
         </div>

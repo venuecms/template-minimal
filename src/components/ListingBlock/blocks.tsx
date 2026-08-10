@@ -10,8 +10,20 @@
  * Nothing here fetches or awaits. These are plain functions of their props,
  * which is why they need no Suspense or error boundary of their own.
  *
- * An empty listing renders nothing. It sits mid-prose, where an empty-state
- * message would read as content the author wrote.
+ * The four listings the endpoints page also get a `pagination`, and draw the
+ * pager under their records. Pages are the exception: that block returns every
+ * record because parent-path resolution needs them all, so it has no pagination
+ * on its props at all rather than one that is always null.
+ *
+ * A listing with nothing to show renders nothing — it sits mid-prose, where an
+ * empty-state message would read as content the author wrote. The one exception
+ * is a reader who paged past the end, who keeps a link back; see
+ * `PaginatedListing`, which owns that rule for all four.
+ *
+ * A block whose site read failed renders nothing at all, pager included: it
+ * cannot draw a record without the site, and a lone pair of arrows in a hole
+ * mid-article is worse than a clean gap. `ProfileListingBlock` needs no site,
+ * so it is the one block that keeps its pager in that case.
  */
 import type { ListingProps } from "@venuecms/sdk-next";
 
@@ -25,51 +37,63 @@ import {
   resolvePageHref,
 } from "@/components/utils/pageHref";
 
+import { PaginatedListing } from "./ListingPager";
+
 export const EventListingBlock = ({
   records,
   site,
+  pagination,
 }: ListingProps<"eventListing">) => {
   // `site` arrives nullable because the SDK reports a failed read as absent
   // data rather than throwing, so nothing catches it. Gating on it is the only
   // thing keeping a siteless record off a list component that types it
-  // non-null. The record check is belt-and-braces: the SDK already renders
-  // nothing in place of an empty listing rather than calling this.
-  if (!site || !records.length) {
+  // non-null.
+  if (!site) {
     return null;
   }
 
   return (
-    <EventsList className="gap-y-12 py-4">
-      {records.map((event) => (
-        <ListEvent key={event.id} event={event} site={site} withImage />
-      ))}
-    </EventsList>
+    <PaginatedListing pagination={pagination} records={records} label="Events">
+      <EventsList className="gap-y-12 py-4">
+        {records.map((event) => (
+          <ListEvent key={event.id} event={event} site={site} withImage />
+        ))}
+      </EventsList>
+    </PaginatedListing>
   );
 };
 
 export const NewsListingBlock = ({
   records,
   site,
+  pagination,
 }: ListingProps<"newsListing">) => {
-  if (!site || !records.length) {
+  if (!site) {
     return null;
   }
 
   return (
-    <PagesList className="py-4">
-      {records.map((article) => (
-        <ListPage
-          key={article.id}
-          page={article}
-          site={site}
-          href={resolveNewsArticleHref(article.slug)}
-          withDate
-        />
-      ))}
-    </PagesList>
+    <PaginatedListing pagination={pagination} records={records} label="News">
+      <PagesList className="py-4">
+        {records.map((article) => (
+          <ListPage
+            key={article.id}
+            page={article}
+            site={site}
+            href={resolveNewsArticleHref(article.slug)}
+            withDate
+          />
+        ))}
+      </PagesList>
+    </PaginatedListing>
   );
 };
 
+/**
+ * The one listing that does not paginate: the pages endpoint applies no
+ * `limit`/`page`, because every page has to come back for parent-path
+ * resolution. The SDK leaves `pagination` off this block's props entirely.
+ */
 export const PageListingBlock = ({
   records,
   site,
@@ -95,17 +119,24 @@ export const PageListingBlock = ({
 export const ProductListingBlock = ({
   records,
   site,
+  pagination,
 }: ListingProps<"productListing">) => {
-  if (!site || !records.length) {
+  if (!site) {
     return null;
   }
 
   return (
-    <div className="grid gap-8 py-4 sm:grid-cols-2 lg:grid-cols-3">
-      {records.map((product) => (
-        <ListProduct key={product.slug} product={product} site={site} />
-      ))}
-    </div>
+    <PaginatedListing
+      pagination={pagination}
+      records={records}
+      label="Products"
+    >
+      <div className="grid gap-8 py-4 sm:grid-cols-2 lg:grid-cols-3">
+        {records.map((product) => (
+          <ListProduct key={product.slug} product={product} site={site} />
+        ))}
+      </div>
+    </PaginatedListing>
   );
 };
 
@@ -121,16 +152,13 @@ export const ProductListingBlock = ({
  */
 export const ProfileListingBlock = ({
   records,
-}: ListingProps<"profileListing">) => {
-  if (!records.length) {
-    return null;
-  }
-
-  return (
+  pagination,
+}: ListingProps<"profileListing">) => (
+  <PaginatedListing pagination={pagination} records={records} label="Profiles">
     <TwoSubColumnLayout className="py-4">
       {records.map((profile) => (
         <ProfileCompact key={profile.slug} profile={profile} />
       ))}
     </TwoSubColumnLayout>
-  );
-};
+  </PaginatedListing>
+);

@@ -1,4 +1,5 @@
 import {
+  type SearchParams,
   VenueContent,
   type Page as VenuePage,
   getLocalizedContent,
@@ -22,9 +23,19 @@ import {
 export const Page = ({
   page,
   pages,
+  searchParams,
 }: {
   page: VenuePage;
   pages: Array<PageWithParent>;
+  /**
+   * The route's search params, for the pagers on any listing blocks in this
+   * content. Only a route segment can read them, so they are passed down.
+   *
+   * Required rather than optional: a caller that forgets it costs every listing
+   * in this content its pager, and does so silently — the records still render.
+   * A surface that genuinely has no URL to page by passes `{}` and says so.
+   */
+  searchParams: SearchParams;
 }) => {
   const locale = useLocale();
 
@@ -48,6 +59,7 @@ export const Page = ({
           className="flex max-w-[42rem] flex-col gap-6 text-sm"
           content={content}
           contentStyles={contentComponents}
+          searchParams={searchParams}
         />
         <TwoSubColumnLayout>
           {artists.map(({ profile }) => (

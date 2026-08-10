@@ -1,6 +1,6 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getProduct, getSite } from "@venuecms/sdk-next";
+import { type SearchParams, getProduct, getSite } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
 
 import { Product } from "@/components/Product";
@@ -10,8 +10,12 @@ export const generateMetadata = getGenerateMetadata(getProduct);
 
 const ProductPage = async ({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string } & Params>;
+  // Read here and handed down because only a route segment can: a listing block
+  // sits too deep inside the content to ask for the URL it is being paged by.
+  searchParams: Promise<SearchParams>;
 }) => {
   const { slug } = await params;
   await setupSSR({ params });
@@ -25,7 +29,9 @@ const ProductPage = async ({
     notFound();
   }
 
-  return <Product product={product} site={site} />;
+  return (
+    <Product product={product} site={site} searchParams={await searchParams} />
+  );
 };
 
 export default ProductPage;

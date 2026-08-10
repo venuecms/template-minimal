@@ -1,14 +1,18 @@
 /**
- * What the template still owns of a listing block: layout.
+ * What the template still owns of a listing block: layout, and the pager.
  *
  * The SDK parses the block's filters off the node, validates them, queries the
- * endpoint and suspends the result — none of that is tested here, because none
- * of it is ours. These blocks are plain functions of the records they are
- * handed, so this pins the two things that are still template decisions: which
- * list component draws each record type, and what a block does when it has
- * nothing worth drawing.
+ * endpoint, does the page arithmetic and builds the hrefs — none of that is
+ * tested here, because none of it is ours. These blocks are plain functions of
+ * the props they are handed, so this pins what is still a template decision:
+ * which list component draws each record type, what a block does when it has
+ * nothing worth drawing, and when a pager is worth drawing at all.
  */
-import type { ListingRecords, Site } from "@venuecms/sdk-next";
+import type {
+  ListingPagination,
+  ListingRecords,
+  Site,
+} from "@venuecms/sdk-next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
@@ -99,6 +103,32 @@ const records = {
     })),
 };
 
+/**
+ * A block's pagination as the SDK resolves it.
+ *
+ * The default is the ordinary middle of a listing — a page with one either
+ * side — so a case that cares about an edge overrides only the field that puts
+ * it there.
+ */
+const pagination = (
+  overrides: Partial<ListingPagination> = {},
+): ListingPagination => ({
+  page: 1,
+  pageNumber: 2,
+  pageSize: 10,
+  count: 30,
+  pageCount: 3,
+  hasPrev: true,
+  hasNext: true,
+  links: {
+    param: "eventListing",
+    prevHref: "?eventListing=0",
+    nextHref: "?eventListing=2",
+    hrefs: [],
+  },
+  ...overrides,
+});
+
 // The list components read the locale, so they need the provider even though
 // the blocks themselves render synchronously.
 const render = async (block: ReactNode) => {
@@ -117,6 +147,7 @@ describe("listing blocks", () => {
       <EventListingBlock
         records={records.event("First gig", "Second gig")}
         site={site}
+        pagination={null}
       />,
     );
 
@@ -129,6 +160,7 @@ describe("listing blocks", () => {
       <NewsListingBlock
         records={records.news("An announcement")}
         site={site}
+        pagination={null}
       />,
     );
 
@@ -146,7 +178,11 @@ describe("listing blocks", () => {
 
   it("renders a product listing", async () => {
     const html = await render(
-      <ProductListingBlock records={records.product("A record")} site={site} />,
+      <ProductListingBlock
+        records={records.product("A record")}
+        site={site}
+        pagination={null}
+      />,
     );
 
     expect(html).toContain("A record");
@@ -159,6 +195,7 @@ describe("listing blocks", () => {
       <ProfileListingBlock
         records={records.profile("An artist")}
         site={null}
+        pagination={null}
       />,
     );
 
@@ -166,16 +203,22 @@ describe("listing blocks", () => {
   });
 
   it.each([
-    ["an event listing", () => <EventListingBlock records={[]} site={site} />],
-    ["a news listing", () => <NewsListingBlock records={[]} site={site} />],
+    [
+      "an event listing",
+      () => <EventListingBlock records={[]} site={site} pagination={null} />,
+    ],
+    [
+      "a news listing",
+      () => <NewsListingBlock records={[]} site={site} pagination={null} />,
+    ],
     ["a page listing", () => <PageListingBlock records={[]} site={site} />],
     [
       "a product listing",
-      () => <ProductListingBlock records={[]} site={site} />,
+      () => <ProductListingBlock records={[]} site={site} pagination={null} />,
     ],
     [
       "a profile listing",
-      () => <ProfileListingBlock records={[]} site={null} />,
+      () => <ProfileListingBlock records={[]} site={null} pagination={null} />,
     ],
   ])("renders nothing for %s with no records", async (_label, block) => {
     // A listing sits mid-prose, where an empty-state message would read as
@@ -187,12 +230,22 @@ describe("listing blocks", () => {
     [
       "an event listing",
       () => (
-        <EventListingBlock records={records.event("A record")} site={null} />
+        <EventListingBlock
+          records={records.event("A record")}
+          site={null}
+          pagination={null}
+        />
       ),
     ],
     [
       "a news listing",
-      () => <NewsListingBlock records={records.news("A record")} site={null} />,
+      () => (
+        <NewsListingBlock
+          records={records.news("A record")}
+          site={null}
+          pagination={null}
+        />
+      ),
     ],
     [
       "a page listing",
@@ -204,6 +257,7 @@ describe("listing blocks", () => {
         <ProductListingBlock
           records={records.product("A record")}
           site={null}
+          pagination={null}
         />
       ),
     ],
@@ -212,5 +266,142 @@ describe("listing blocks", () => {
     // rather than throwing — so nothing above catches it. This gate is the only
     // thing keeping a null site off a component that types it non-null.
     await expect(render(block())).resolves.toBe("");
+  });
+});
+
+/**
+ * The pager.
+ *
+ * The hrefs are the SDK's — it is the only party that can build them, since the
+ * block cannot read the URL it is being paged by. What is tested here is the
+ * template's half: whether a pager is drawn at all, and that both directions
+ * reach the reader when they exist.
+ */
+describe("a listing block's pager", () => {
+  const renderEvents = (paginationProp: ListingPagination | null) =>
+    render(
+      <EventListingBlock
+        records={records.event("A gig")}
+        site={site}
+        pagination={paginationProp}
+      />,
+    );
+
+  it("links both directions from the middle of a listing", async () => {
+    const html = await renderEvents(pagination());
+
+    expect(html).toContain("eventListing=0");
+    expect(html).toContain("eventListing=2");
+  });
+
+  it("draws no pager when the author set no page size", async () => {
+    // A null pagination means the endpoint returned every record, so there are
+    // no pages to move between.
+    const html = await renderEvents(null);
+
+    expect(html).toContain("A gig");
+    expect(html).not.toContain("<nav");
+  });
+
+  it("draws no pager when the route threaded no search params", async () => {
+    // Without them the SDK cannot build an href, and says so with a null
+    // `links` rather than hrefs that all point at the current page. The records
+    // still render — only the pager is lost.
+    const html = await renderEvents(pagination({ links: null }));
+
+    expect(html).toContain("A gig");
+    expect(html).not.toContain("<nav");
+  });
+
+  it("draws no pager when the whole listing fits on one page", async () => {
+    const html = await renderEvents(
+      pagination({
+        page: 0,
+        pageNumber: 1,
+        count: 1,
+        pageCount: 1,
+        hasPrev: false,
+        hasNext: false,
+        links: {
+          param: "eventListing",
+          prevHref: null,
+          nextHref: null,
+          hrefs: [],
+        },
+      }),
+    );
+
+    expect(html).toContain("A gig");
+    expect(html).not.toContain("<nav");
+  });
+
+  it("trusts the hrefs over the booleans beside them", async () => {
+    // `hasPrev`/`hasNext` and the hrefs describe the same fact, and the pager
+    // renders hrefs — so if the SDK ever suppresses an href without clearing
+    // the matching boolean (it already clamps `nextHref` at MAX_PAGE), the
+    // pager must stay away rather than draw two dead arrows.
+    const html = await renderEvents(
+      pagination({
+        hasPrev: true,
+        hasNext: true,
+        links: {
+          param: "eventListing",
+          prevHref: null,
+          nextHref: null,
+          hrefs: [],
+        },
+      }),
+    );
+
+    expect(html).toContain("A gig");
+    expect(html).not.toContain("<nav");
+  });
+
+  it("names each pager so several on a page stay tellable apart", async () => {
+    // Landmarks that all announce "Pagination" leave a screen-reader user no
+    // way to know which listing each one moves.
+    const html = await renderEvents(pagination());
+
+    expect(html).toContain('aria-label="Events pagination"');
+  });
+
+  it("keeps a way back from a page that turned out to be empty", async () => {
+    // Reachable without anyone doing anything wrong: with no count to divide,
+    // the SDK offers a next link whenever a page comes back full, so the page
+    // after a listing whose length is an exact multiple of the page size is
+    // empty. Dropping the pager with the records would strand the reader there.
+    const html = await render(
+      <EventListingBlock
+        records={[]}
+        site={site}
+        pagination={pagination({ count: null, pageCount: null })}
+      />,
+    );
+
+    expect(html).toContain("eventListing=0");
+  });
+
+  it("still renders nothing for an empty first page", async () => {
+    // Nothing behind the reader and nothing to show: the block is genuinely
+    // empty, and an empty state mid-prose would read as the author's own words.
+    const html = await render(
+      <EventListingBlock
+        records={[]}
+        site={site}
+        pagination={pagination({
+          page: 0,
+          pageNumber: 1,
+          hasPrev: false,
+          links: {
+            param: "eventListing",
+            prevHref: null,
+            nextHref: "?eventListing=1",
+            hrefs: [],
+          },
+        })}
+      />,
+    );
+
+    expect(html).toBe("");
   });
 });

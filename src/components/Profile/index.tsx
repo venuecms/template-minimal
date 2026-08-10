@@ -1,4 +1,5 @@
 import {
+  type SearchParams,
   VenueContent,
   type Profile as VenueProfile,
   getLocalizedContent,
@@ -13,7 +14,21 @@ import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
 import { ErrorBoundary } from "../utils/ErrorBoundary";
 import { ProfileEventList, ProfileEventListSkeleton } from "./ProfileEventList";
 
-export const Profile = ({ profile }: { profile: VenueProfile }) => {
+export const Profile = ({
+  profile,
+  searchParams,
+}: {
+  profile: VenueProfile;
+  /**
+   * The route's search params, for the pagers on any listing blocks in this
+   * content. Only a route segment can read them, so they are passed down.
+   *
+   * Required rather than optional: a caller that forgets it costs every listing
+   * in this content its pager, and does so silently — the records still render.
+   * A surface that genuinely has no URL to page by passes `{}` and says so.
+   */
+  searchParams: SearchParams;
+}) => {
   const locale = useLocale();
   const t = useTranslations("events");
 
@@ -35,6 +50,7 @@ export const Profile = ({ profile }: { profile: VenueProfile }) => {
           className="flex flex-col gap-6 sm:pr-32"
           content={content}
           contentStyles={contentComponents}
+          searchParams={searchParams}
         />
         <ErrorBoundary fallback={null}>
           <Suspense fallback={<ProfileEventListSkeleton numElements={1} />}>

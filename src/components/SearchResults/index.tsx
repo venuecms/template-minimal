@@ -1,6 +1,6 @@
 "use client";
 
-import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk-next";
+import { getLocalizedContent } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 import {
   Dispatch,
@@ -8,6 +8,7 @@ import {
   ReactNode,
   SetStateAction,
   Suspense,
+  useMemo,
   useState,
 } from "react";
 
@@ -57,19 +58,27 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
   const { isQueryEnabled, results } = useSearchResults();
   const [currentFilter, setCurrentFilter] = useState<FilterType>("all");
 
-  const records = results?.records ?? [];
-  const counts = records.reduce(
-    (acc, record) => {
-      acc[record.type] = (acc[record.type] ?? 0) + 1;
-      return acc;
-    },
-    {} as Record<SearchAllType, number>,
+  const records = useMemo(() => results?.records ?? [], [results]);
+
+  const counts = useMemo(
+    () =>
+      records.reduce(
+        (acc, record) => {
+          acc[record.type] = (acc[record.type] ?? 0) + 1;
+          return acc;
+        },
+        {} as Record<SearchAllType, number>,
+      ),
+    [records],
   );
 
-  const filteredResults =
-    currentFilter === "all"
-      ? records
-      : records.filter((record) => record.type === currentFilter);
+  const filteredResults = useMemo(
+    () =>
+      currentFilter === "all"
+        ? records
+        : records.filter((record) => record.type === currentFilter),
+    [records, currentFilter],
+  );
 
   return isQueryEnabled ? (
     <TwoColumnLayout>
@@ -100,7 +109,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
         <ListContainer>
           {filteredResults.map((result) => {
             const { content } = getLocalizedContent(
-              result.localizedContent as Array<LocalizedContent>,
+              result.localizedContent,
               locale,
             );
             return (

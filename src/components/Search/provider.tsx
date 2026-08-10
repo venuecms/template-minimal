@@ -138,7 +138,7 @@ export const useSearchResults = (
 
   return {
     debouncedQuery,
-    results: results as SearchAllResponse,
+    results,
     isFetching,
     isError,
     error,

@@ -1,11 +1,17 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getLocalizedContent } from "@venuecms/sdk-next";
-import { getEvents, getPage, getSite } from "@venuecms/sdk-next";
+import {
+  type SearchParams,
+  getEvents,
+  getLocalizedContent,
+  getPage,
+  getSite,
+} from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { Pagination } from "@/components/Pagination";
+import { readPage } from "@/components/Pagination/pagination";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { setupSSR } from "@/components/utils";
 
@@ -20,12 +26,13 @@ const ArchivePage = async ({
   searchParams,
 }: {
   params: Promise<Params>;
-  searchParams: Promise<{ page: string }>;
+  searchParams: Promise<SearchParams>;
 }) => {
   const { locale } = await params;
   await setupSSR({ params });
 
-  const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
+  const resolvedSearchParams = await searchParams;
+  const currentPage = readPage(resolvedSearchParams);
 
   // Round down to nearest minute for better cache hits
   const now = new Date();
@@ -51,11 +58,6 @@ const ArchivePage = async ({
     ? getLocalizedContent(page.localizedContent, locale).content.title
     : "archive";
 
-  // Calculate total pages
-  const totalPages = events?.count
-    ? Math.ceil(events.count / ITEMS_PER_PAGE)
-    : 100;
-
   return (
     <TwoColumnLayout>
       <ColumnLeft className="text-sm text-secondary">
@@ -77,16 +79,14 @@ const ArchivePage = async ({
         ) : (
           "No events found"
         )}
-        {events?.records.length && totalPages > 1 ? (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={
-              // TODO: a quick hack. we need to update the API
-              events?.records.length < ITEMS_PER_PAGE ? currentPage : totalPages
-            }
-            baseUrl={`/archive`} // Use locale in base URL
-          />
-        ) : null}
+        <Pagination
+          page={currentPage}
+          pageSize={ITEMS_PER_PAGE}
+          result={events}
+          basePath="/archive"
+          searchParams={resolvedSearchParams}
+          label="Archive pagination"
+        />
       </ColumnRight>
     </TwoColumnLayout>
   );

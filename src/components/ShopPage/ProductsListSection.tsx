@@ -1,3 +1,4 @@
+import type { SearchParams } from "@venuecms/sdk-next";
 import { Suspense } from "react";
 
 import { Skeleton } from "@/components/ui/Input/Skeleton";
@@ -35,15 +36,21 @@ function ProductsListSkeleton() {
 
 export function ProductsListSection({
   locale,
-  currentPage,
+  searchParams,
 }: {
   locale: string;
-  currentPage: number;
+  /**
+   * Passed down whole rather than as a page number, because the pager needs the
+   * rest of the query string to link without dropping it — and unawaited, so
+   * the wait happens inside the Suspense boundary below rather than in the
+   * route above it.
+   */
+  searchParams: Promise<SearchParams>;
 }) {
   return (
     <ErrorBoundary fallback={<ProductsListError />}>
       <Suspense fallback={<ProductsListSkeleton />}>
-        <ProductsListContent locale={locale} currentPage={currentPage} />
+        <ProductsListContent locale={locale} searchParams={searchParams} />
       </Suspense>
     </ErrorBoundary>
   );

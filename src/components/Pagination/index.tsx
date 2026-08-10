@@ -21,6 +21,7 @@ export const PaginationLinks = ({
   prevHref,
   nextHref,
   label = "Pagination",
+  scroll = true,
   className,
 }: {
   prevHref: string | null;
@@ -34,6 +35,16 @@ export const PaginationLinks = ({
    * one moves.
    */
   label?: string;
+  /**
+   * Whether following a page link scrolls to the top, as Next does by default.
+   *
+   * True suits a pager that owns its page: `/archive` and `/shop` are the
+   * listing, so the new page's first record is what a reader wants in view.
+   * A listing block is the exception — it sits inside an article the reader is
+   * part-way through, and scrolling to the top there abandons the content they
+   * were reading to page a few records inside it.
+   */
+  scroll?: boolean;
   className?: string;
 }) => {
   const renderLink = (
@@ -55,7 +66,7 @@ export const PaginationLinks = ({
     }
 
     return (
-      <Link href={href} aria-label={linkLabel}>
+      <Link href={href} aria-label={linkLabel} scroll={scroll}>
         {children}
       </Link>
     );

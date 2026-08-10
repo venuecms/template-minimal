@@ -60,6 +60,10 @@ export const PaginatedListing = ({
         prevHref={links.prevHref}
         nextHref={links.nextHref}
         label={`${label} pagination`}
+        // A block is a few records inside an article, so paging it must leave
+        // the reader where they were. Next scrolls to the top on navigation by
+        // default, which reads as the whole page having reloaded.
+        scroll={false}
       />
     ) : null;
 

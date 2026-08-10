@@ -1,7 +1,12 @@
 import { TZDate } from "@date-fns/tz";
 import { format } from "date-fns";
 
-const formatDate = ({
+/**
+ * Formats a record date in the venue's zone. `timeZone` is optional because
+ * the SDK types it as nullable on Site; TZDate falls back to the runtime zone
+ * when it is absent, which is the best available guess.
+ */
+export const formatDate = ({
   date,
   withTime = true,
   timeZone,
@@ -9,7 +14,7 @@ const formatDate = ({
 }: {
   date: string;
   withTime?: boolean;
-  timeZone: string;
+  timeZone?: string;
   template: string;
 }) => {
   if (withTime) {

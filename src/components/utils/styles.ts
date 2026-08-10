@@ -1,7 +1,21 @@
+import type { ContentStyles } from "@venuecms/sdk-next";
 import removeMarkdown from "remove-markdown";
 
-// rendered styles for rendered content
-export const renderedStyles = {
+/**
+ * Class names for rendered content, one per node the SDK's renderer styles.
+ *
+ * Annotated so a key the renderer never reads is a compile error rather than a
+ * class that silently lands nowhere. `ContentStyles` is deliberately narrower
+ * than the classes the SDK declares — it leaves out `text`, `heading`,
+ * `hardBreak` and `iframe`, which its renderer accepts but never applies
+ * (`heading` defers to h1/h2/h3, embeds ignore `iframe`) — so styling a heading
+ * means naming h1/h2/h3, and this is what says so.
+ *
+ * The annotation has to live here, not at the call sites: it reaches the
+ * renderer both spread into a larger map and passed as a bare variable, and
+ * excess-property checking is exempt in both.
+ */
+export const renderedStyles: ContentStyles = {
   p: "text-primary text-sm",
   h2: "text-xl text-secondary",
   h3: "text-sm text-secondary",

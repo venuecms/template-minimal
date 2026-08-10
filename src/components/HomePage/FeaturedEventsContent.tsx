@@ -1,8 +1,8 @@
-import { VenueImage } from "@/components/VenueImage";
 import { getEvents, getSite } from "@venuecms/sdk-next";
 import { connection } from "next/server";
 
 import { EventFeatured } from "@/components/EventFeatured";
+import { VenueImage } from "@/components/VenueImage";
 
 export async function FeaturedEventsContent({ locale }: { locale: string }) {
   await connection();

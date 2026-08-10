@@ -1,6 +1,6 @@
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
-import { getPage } from "@venuecms/sdk-next";
+import { type SearchParams, getPage } from "@venuecms/sdk-next";
 
 import { ProductsListSection } from "@/components/ShopPage";
 import { setupSSR } from "@/components/utils";
@@ -14,14 +14,14 @@ const ProductsPage = async ({
   searchParams,
 }: {
   params: Promise<Params>;
-  searchParams: Promise<{ page: string }>;
+  searchParams: Promise<SearchParams>;
 }) => {
   const { locale } = await params;
   await setupSSR({ params });
 
-  const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
-
-  return <ProductsListSection locale={locale} currentPage={currentPage} />;
+  // Forwarded unawaited: the wait belongs inside the section's Suspense
+  // boundary, not up here where it would hold the whole route.
+  return <ProductsListSection locale={locale} searchParams={searchParams} />;
 };
 
 export default ProductsPage;

@@ -1,21 +1,37 @@
-import { getLocalizedContent } from "@venuecms/sdk-next";
-import { getPage, getProducts, getSite } from "@venuecms/sdk-next";
+import {
+  type SearchParams,
+  getLocalizedContent,
+  getPage,
+  getProducts,
+  getSite,
+} from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
 import { ListProduct } from "@/components/ListProduct";
 import { Pagination } from "@/components/Pagination";
+import { readPage } from "@/components/Pagination/pagination";
 
 const ITEMS_PER_PAGE = 50;
 
 export async function ProductsListContent({
   locale,
-  currentPage,
+  searchParams,
 }: {
   locale: string;
-  currentPage: number;
+  /**
+   * Awaited here rather than in the route, because this component already
+   * renders inside the shop page's Suspense boundary — and `connection()` above
+   * has already opted this subtree out of the prerender, so it costs nothing
+   * extra. The page it names decides what to fetch, so this one wait cannot
+   * join the `Promise.all` below.
+   */
+  searchParams: Promise<SearchParams>;
 }) {
   await connection();
+
+  const resolvedSearchParams = await searchParams;
+  const currentPage = readPage(resolvedSearchParams);
 
   const [{ data: products }, { data: page }, { data: site }] =
     await Promise.all([
@@ -30,11 +46,6 @@ export async function ProductsListContent({
   if (!site) {
     notFound();
   }
-
-  // Calculate total pages
-  const totalPages = products?.count
-    ? Math.ceil(products.count / ITEMS_PER_PAGE)
-    : 100;
 
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
@@ -64,13 +75,14 @@ export async function ProductsListContent({
           ))}
         </div>
       ) : null}
-      {moreProducts?.length && totalPages > 1 ? (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages - 1}
-          baseUrl={`/shop`}
-        />
-      ) : null}
+      <Pagination
+        page={currentPage}
+        pageSize={ITEMS_PER_PAGE}
+        result={products}
+        basePath="/shop"
+        searchParams={resolvedSearchParams}
+        label="Shop pagination"
+      />
     </section>
   );
 }

@@ -11,22 +11,14 @@ export async function EventsListContent({
   title,
 }: {
   locale: string;
-  /**
-   * The heading, when the caller already knows it.
-   *
-   * `/events` passes none and looks up the page record slugged "events" for
-   * one. A page typed as the event listing stands in for that route and holds
-   * the title an author actually wrote, so it passes its own — otherwise such
-   * a page would head itself with a title from a different record entirely.
-   */
+  /** Heading; a listing page passes its own, else the "events" record is read for one. */
   title?: string;
 }) {
   await connection();
 
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
     getEvents({ limit: 60, upcoming: true }),
-    // Skipped when the caller brought a title: the page record is read for
-    // nothing else here.
+    // Read for the title only, so skipped when the caller brought one.
     title ? { data: null } : getPage({ slug: "events" }),
     getSite(),
   ]);

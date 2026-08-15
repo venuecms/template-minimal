@@ -1,17 +1,3 @@
-/**
- * The heading, which is the one thing this listing reads that its caller can
- * now know better than it does.
- *
- * `/events` has no title of its own and looks the /events page record up for
- * one. A page typed as the event listing already holds the title an author
- * wrote, and a heading that ignored it would leave that page announcing itself
- * as whatever the /events record says — a wrong heading, not a missing one, so
- * nothing about it looks broken.
- *
- * `connection()` is stubbed for the same reason as in the shop's test: the
- * component calls it to opt out of the prerender and it throws outside a Next
- * request scope.
- */
 import { setConfig } from "@venuecms/sdk-next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
@@ -44,8 +30,7 @@ beforeEach(() => {
       settings: {},
     };
 
-    // Pages first: the page record for this listing lives at /pages/events,
-    // which the events branch would otherwise swallow.
+    // Pages first: /pages/events would otherwise match the events branch.
     if (url.includes("/pages")) {
       body = {
         id: "page-id",

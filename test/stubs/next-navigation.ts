@@ -14,15 +14,7 @@ export const useRouter = () => ({
 
 export const usePathname = () => "/";
 
-/**
- * Next's not-found signal.
- *
- * A route or a server component reaches for this when a read comes back empty,
- * so a test that exercises one has to be able to tell "rendered nothing" from
- * "bailed out". Real `notFound()` throws a framework error the router catches;
- * throwing a recognisable one here keeps that distinction without pulling the
- * router in.
- */
+/** Recognisable throw so a test can tell a bailout from an empty render. */
 export const notFound = (): never => {
   throw new Error("NEXT_NOT_FOUND");
 };

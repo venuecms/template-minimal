@@ -1,15 +1,3 @@
-/**
- * The pager, which is the only part of this listing that can be wrong quietly.
- *
- * The grid either shows products or does not, and a reader can see which. A
- * pager pointing at the wrong route still renders two working arrows — they
- * just walk the reader off the page they were on, which is what happens to a
- * page typed as the product listing if this component keeps hardcoding /shop.
- *
- * `connection()` is stubbed because the component calls it to opt out of the
- * prerender, and outside a Next request scope it throws. That is not the
- * behaviour under test.
- */
 import { setConfig } from "@venuecms/sdk-next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
@@ -25,10 +13,8 @@ vi.mock("@/components/ListProduct", () => ({
   ),
 }));
 
-/** Enough products for the endpoint to report more pages after this one. */
 const COUNT = 120;
 
-/** What the products endpoint hands back for a full first page. */
 const PAGE_SIZE = 50;
 
 const render = async (node: ReactNode) => {

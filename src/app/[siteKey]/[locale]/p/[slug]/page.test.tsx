@@ -1,11 +1,3 @@
-/**
- * The one thing only this route can get wrong: choosing a layout.
- *
- * `PageListing` is covered where it lives, and so is the type-to-layout map.
- * What neither sees is whether this segment consults the map at all — a page
- * typed as the site's event listing that quietly renders the page layout is a
- * blank-looking page, not an error.
- */
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -81,17 +73,12 @@ describe("the page route", () => {
   });
 
   it("still renders a listing when the page tree cannot be read", async () => {
-    // A listing draws from its own endpoint. Deciding the layout after the
-    // page-tree guard would 404 it over a read only the page layout needs —
-    // and the pages read is the one this route makes purely for subpages.
     expect(await renderRoute("PRODUCTLIST", true)).toContain(
       'data-testid="page-listing"',
     );
   });
 
   it("keeps a page typed as a listing this template has no index for", async () => {
-    // There is no profiles index here, so PROFILELIST resolves to no layout and
-    // the page renders its own content rather than nothing at all.
     expect(await renderRoute("PROFILELIST")).toContain(
       'data-testid="page-layout"',
     );

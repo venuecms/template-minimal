@@ -51,7 +51,6 @@ export function EventsListSection({
   title,
 }: {
   locale: string;
-  /** The heading, when the caller knows it. See {@link EventsListContent}. */
   title?: string;
 }) {
   return (

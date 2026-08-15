@@ -38,10 +38,7 @@ const PagePage = async ({
       notFound();
     }
 
-    // A page typed as one of the site's listings renders that listing instead
-    // of its own content, so the index looks the same wherever an author puts
-    // it. Decided before the page tree is read at all: a listing draws from its
-    // own endpoint, and the tree is something only the page layout needs.
+    // Resolved before the page tree is read: only the page layout needs the tree.
     const listingLayout = resolvePageListingLayout(page.type);
 
     if (listingLayout) {
@@ -58,7 +55,6 @@ const PagePage = async ({
       );
     }
 
-    // The page layout draws the subpage tree, so it does need the page list.
     const { data: pages } = await getPages();
 
     if (!pages) {

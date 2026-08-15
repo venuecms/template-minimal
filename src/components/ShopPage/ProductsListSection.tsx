@@ -40,7 +40,6 @@ export function ProductsListSection({
 }: {
   locale: string;
   currentPage: number;
-  /** What the pager pages against. See {@link ProductsListContent}. */
   basePath: string;
 }) {
   return (

@@ -15,14 +15,7 @@ export async function ProductsListContent({
 }: {
   locale: string;
   currentPage: number;
-  /**
-   * The path the pager builds its hrefs against.
-   *
-   * Passed in rather than hardcoded to `/shop` because this listing is no
-   * longer only that route: a page typed as the product listing pages against
-   * its own `/p/<slug>`, and a pager that walked a reader back to `/shop`
-   * would fail silently — the links render, they just leave the page.
-   */
+  /** Path the pager builds hrefs against; a listing page pages against its own /p/<slug>. */
   basePath: string;
 }) {
   await connection();

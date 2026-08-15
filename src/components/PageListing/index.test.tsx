@@ -1,12 +1,3 @@
-/**
- * The dispatch itself, with the three listings stubbed.
- *
- * How a listing looks is covered where it lives — these are the same sections
- * `/news`, `/events` and `/shop` render. What only this component can get wrong
- * is which one a layout reaches, and the two things only `/p/<slug>` knows that
- * have to survive the trip: the page's own title, and the path a pager builds
- * hrefs against. The second fails quietly, paging a reader off to `/shop`.
- */
 import { MAX_PAGE } from "@venuecms/sdk-next";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
@@ -14,9 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { PageListing } from "./index";
 
-// A function declaration, not a const: the mock factories below run while the
-// hoisted `./index` import is resolved, before any top-level `const` on this
-// module has initialised.
+// Declaration, not const: mock factories run before this module's consts init.
 function stub(testId: string) {
   return (props: Record<string, unknown>) => (
     <div
@@ -76,10 +65,6 @@ describe("PageListing", () => {
   ] as const)(
     "gives the %s listing the page's own title",
     async (layout, testId) => {
-      // Events as well as news: a title that reaches the dispatcher and is then
-      // dropped leaves an author's page announcing itself with whatever heading
-      // the static route reads for itself — a wrong title rather than a missing
-      // one, and nothing about that failure is visible at the call site.
       const html = await renderListing({ layout, title: "Dispatches" });
 
       expect(html).toContain(`data-testid="${testId}"`);
@@ -88,8 +73,6 @@ describe("PageListing", () => {
   );
 
   it("gives the products listing no title, having nowhere to draw one", async () => {
-    // This template's shop is a bare grid on /shop too. Showing what an author
-    // wrote above the products is #66's job, not this dispatcher's.
     const html = await renderListing({ layout: "products", title: "Merch" });
 
     expect(html).toContain('data-testid="products-view"');
@@ -108,8 +91,6 @@ describe("PageListing", () => {
   });
 
   it("takes the first of a repeated page param, as a route would", async () => {
-    // `parseInt` on the array reads "1,2" as 1 by accident. Reading the first
-    // value on purpose is the same rule the SDK's own pagers follow.
     const html = await renderListing({
       layout: "products",
       searchParams: { page: ["1", "2"] },
@@ -131,9 +112,6 @@ describe("PageListing", () => {
   });
 
   it("clamps a hand-edited page rather than handing it to the endpoint", async () => {
-    // The endpoints page by offset, so an arbitrary number off the query string
-    // is an arbitrary offset for the database to walk. Clamping rather than
-    // resetting leaves the deepest reachable page a link back.
     const html = await renderListing({
       layout: "products",
       searchParams: { page: String(MAX_PAGE + 5000) },

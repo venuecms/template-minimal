@@ -6,12 +6,28 @@ import { connection } from "next/server";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-export async function EventsListContent({ locale }: { locale: string }) {
+export async function EventsListContent({
+  locale,
+  title,
+}: {
+  locale: string;
+  /**
+   * The heading, when the caller already knows it.
+   *
+   * `/events` passes none and looks up the page record slugged "events" for
+   * one. A page typed as the event listing stands in for that route and holds
+   * the title an author actually wrote, so it passes its own — otherwise such
+   * a page would head itself with a title from a different record entirely.
+   */
+  title?: string;
+}) {
   await connection();
 
   const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
     getEvents({ limit: 60, upcoming: true }),
-    getPage({ slug: "events" }),
+    // Skipped when the caller brought a title: the page record is read for
+    // nothing else here.
+    title ? { data: null } : getPage({ slug: "events" }),
     getSite(),
   ]);
 
@@ -19,9 +35,11 @@ export async function EventsListContent({ locale }: { locale: string }) {
     notFound();
   }
 
-  const pageTitle = page
-    ? getLocalizedContent(page.localizedContent, locale).content.title
-    : "upcoming events";
+  const pageTitle =
+    title ??
+    (page
+      ? getLocalizedContent(page.localizedContent, locale).content.title
+      : "upcoming events");
 
   return (
     <TwoColumnLayout>

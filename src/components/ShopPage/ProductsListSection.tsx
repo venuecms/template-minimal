@@ -36,14 +36,21 @@ function ProductsListSkeleton() {
 export function ProductsListSection({
   locale,
   currentPage,
+  basePath,
 }: {
   locale: string;
   currentPage: number;
+  /** What the pager pages against. See {@link ProductsListContent}. */
+  basePath: string;
 }) {
   return (
     <ErrorBoundary fallback={<ProductsListError />}>
       <Suspense fallback={<ProductsListSkeleton />}>
-        <ProductsListContent locale={locale} currentPage={currentPage} />
+        <ProductsListContent
+          locale={locale}
+          currentPage={currentPage}
+          basePath={basePath}
+        />
       </Suspense>
     </ErrorBoundary>
   );

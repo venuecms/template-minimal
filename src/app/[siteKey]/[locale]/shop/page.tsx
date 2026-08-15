@@ -21,7 +21,13 @@ const ProductsPage = async ({
 
   const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
 
-  return <ProductsListSection locale={locale} currentPage={currentPage} />;
+  return (
+    <ProductsListSection
+      locale={locale}
+      currentPage={currentPage}
+      basePath="/shop"
+    />
+  );
 };
 
 export default ProductsPage;

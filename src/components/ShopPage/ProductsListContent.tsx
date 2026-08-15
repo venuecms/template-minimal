@@ -11,9 +11,19 @@ const ITEMS_PER_PAGE = 50;
 export async function ProductsListContent({
   locale,
   currentPage,
+  basePath,
 }: {
   locale: string;
   currentPage: number;
+  /**
+   * The path the pager builds its hrefs against.
+   *
+   * Passed in rather than hardcoded to `/shop` because this listing is no
+   * longer only that route: a page typed as the product listing pages against
+   * its own `/p/<slug>`, and a pager that walked a reader back to `/shop`
+   * would fail silently — the links render, they just leave the page.
+   */
+  basePath: string;
 }) {
   await connection();
 
@@ -68,7 +78,7 @@ export async function ProductsListContent({
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages - 1}
-          baseUrl={`/shop`}
+          baseUrl={basePath}
         />
       ) : null}
     </section>

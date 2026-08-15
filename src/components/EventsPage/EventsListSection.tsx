@@ -46,11 +46,18 @@ function EventsListSkeleton() {
   );
 }
 
-export function EventsListSection({ locale }: { locale: string }) {
+export function EventsListSection({
+  locale,
+  title,
+}: {
+  locale: string;
+  /** The heading, when the caller knows it. See {@link EventsListContent}. */
+  title?: string;
+}) {
   return (
     <ErrorBoundary fallback={<EventsListError />}>
       <Suspense fallback={<EventsListSkeleton />}>
-        <EventsListContent locale={locale} />
+        <EventsListContent locale={locale} title={title} />
       </Suspense>
     </ErrorBoundary>
   );

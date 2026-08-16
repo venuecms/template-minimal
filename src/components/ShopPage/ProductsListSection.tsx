@@ -1,3 +1,4 @@
+import type { SearchParams } from "@venuecms/sdk-next";
 import { Suspense } from "react";
 
 import { Skeleton } from "@/components/ui/Input/Skeleton";
@@ -37,12 +38,13 @@ export function ProductsListSection({
   locale,
   currentPage,
   basePath,
+  searchParams,
   children,
 }: {
   locale: string;
   currentPage: number;
   basePath: string;
-  /** The page's body, above the grid; absent on the `/shop` route. */
+  searchParams?: SearchParams;
   children?: React.ReactNode;
 }) {
   return (
@@ -52,6 +54,7 @@ export function ProductsListSection({
           locale={locale}
           currentPage={currentPage}
           basePath={basePath}
+          searchParams={searchParams}
         >
           {children}
         </ProductsListContent>

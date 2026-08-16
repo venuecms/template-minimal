@@ -1,3 +1,4 @@
+import type { SearchParams } from "@venuecms/sdk-next";
 import { getLocalizedContent } from "@venuecms/sdk-next";
 import { getPage, getProducts, getSite } from "@venuecms/sdk-next";
 import { notFound } from "next/navigation";
@@ -12,13 +13,14 @@ export async function ProductsListContent({
   locale,
   currentPage,
   basePath,
+  searchParams,
   children,
 }: {
   locale: string;
   currentPage: number;
   /** Path the pager builds hrefs against; a listing page pages against its own /p/<slug>. */
   basePath: string;
-  /** The page's body, above the grid; absent on the `/shop` route. */
+  searchParams?: SearchParams;
   children?: React.ReactNode;
 }) {
   await connection();
@@ -76,6 +78,7 @@ export async function ProductsListContent({
           currentPage={currentPage}
           totalPages={totalPages - 1}
           baseUrl={basePath}
+          searchParams={searchParams}
         />
       ) : null}
     </section>

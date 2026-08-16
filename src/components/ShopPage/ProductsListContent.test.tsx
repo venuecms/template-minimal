@@ -5,6 +5,7 @@ import { renderToReadableStream } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ProductsListContent } from "./ProductsListContent";
+import { ProductsListSection } from "./ProductsListSection";
 
 vi.mock("next/server", () => ({ connection: async () => {} }));
 vi.mock("@/components/ListProduct", () => ({
@@ -12,6 +13,10 @@ vi.mock("@/components/ListProduct", () => ({
     <div data-testid="product">{product.slug}</div>
   ),
 }));
+
+// Containment alone would pass with the body drawn outside the listing, so the
+// assertions read the section that should hold it.
+const listingSection = (html: string) => html.split("<section")[1] ?? "";
 
 const COUNT = 120;
 
@@ -84,19 +89,57 @@ describe("the products listing pager", () => {
     expect(html).toContain("/p/merch?page=2");
     expect(html).not.toContain("/shop?page=");
   });
+
+  // Without this the body's listing block snaps back to its first page.
+  it("keeps a listing block's own param when paging the route", async () => {
+    const html = await render(
+      <ProductsListContent
+        locale="en"
+        currentPage={1}
+        basePath="/p/merch"
+        searchParams={{ page: "1", evt_9k3z1: "3" }}
+      />,
+    );
+
+    expect(html).toContain("/p/merch?evt_9k3z1=3&amp;page=2");
+  });
 });
 
 describe("the products listing body", () => {
   it("renders a body it was handed above the products", async () => {
-    const html = await render(
-      <ProductsListContent locale="en" currentPage={0} basePath="/p/merch">
-        <p>Season notes</p>
-      </ProductsListContent>,
+    const section = listingSection(
+      await render(
+        <ProductsListContent locale="en" currentPage={0} basePath="/p/merch">
+          <p>Season notes</p>
+        </ProductsListContent>,
+      ),
     );
 
-    expect(html.indexOf("Season notes")).toBeGreaterThan(-1);
-    expect(html.indexOf("Season notes")).toBeLessThan(
-      html.indexOf('data-testid="product"'),
+    expect(section.indexOf("Season notes")).toBeGreaterThan(-1);
+    expect(section.indexOf("Season notes")).toBeLessThan(
+      section.indexOf('data-testid="product"'),
     );
+  });
+
+  it("renders no body wrapper for the /shop route, which passes none", async () => {
+    const html = await render(
+      <ProductsListContent locale="en" currentPage={0} basePath="/shop" />,
+    );
+
+    expect(html).not.toContain('class="pb-20"');
+  });
+});
+
+describe("the products listing section", () => {
+  it("hands the body it was given to the content it wraps", async () => {
+    const section = listingSection(
+      await render(
+        <ProductsListSection locale="en" currentPage={0} basePath="/p/merch">
+          <p>Season notes</p>
+        </ProductsListSection>,
+      ),
+    );
+
+    expect(section).toContain("Season notes");
   });
 });

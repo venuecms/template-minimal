@@ -53,7 +53,6 @@ export function EventsListSection({
 }: {
   locale: string;
   title?: string;
-  /** The page's body, above the events; absent on the `/events` route. */
   children?: React.ReactNode;
 }) {
   return (

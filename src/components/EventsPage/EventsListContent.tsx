@@ -14,7 +14,6 @@ export async function EventsListContent({
   locale: string;
   /** Heading; a listing page passes its own, else the "events" record is read for one. */
   title?: string;
-  /** The page's body, above the events; absent on the `/events` route. */
   children?: React.ReactNode;
 }) {
   await connection();

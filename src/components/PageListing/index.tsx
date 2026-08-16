@@ -10,6 +10,7 @@ import { EventsListSection } from "@/components/EventsPage";
 import { contentComponents } from "@/components/ListingBlock";
 import { NewsView } from "@/components/News";
 import { ProductsListSection } from "@/components/ShopPage";
+import { hasRenderableContent } from "@/components/utils/pageContent";
 import type { PageListingLayout } from "@/components/utils/pageLayout";
 
 // Duplicates VEN-514's readPage (#69) on purpose; drop when that lands.
@@ -36,16 +37,16 @@ export const PageListing = ({
   layout: PageListingLayout;
   locale: string;
   title?: string;
-  /** The page's own body, which is a listing's content as much as the records are. */
+  /** The page's own body, rendered above the records. */
   content?: LocalizedContent;
   /** Path any pager builds hrefs against; only the route knows it. */
   basePath: string;
   searchParams: SearchParams;
 }) => {
-  // Emptiness decided here, not in the views: a VenueContent that renders null
-  // still leaves them holding a spacer around nothing.
+  // Emptiness decided here, not in the views, which would otherwise space
+  // around a VenueContent that renders nothing.
   const body =
-    content?.content || content?.contentJSON ? (
+    content && hasRenderableContent(content) ? (
       <VenueContent
         className="flex max-w-[42rem] flex-col gap-6 text-sm"
         content={content}
@@ -55,7 +56,7 @@ export const PageListing = ({
     ) : null;
 
   switch (layout) {
-    // No body: the news layout already renders an article's content in full.
+    // No body: this layout renders the latest article's, and two would compete.
     case "news":
       return <NewsView title={title} searchParams={searchParams} />;
     case "events":
@@ -71,6 +72,7 @@ export const PageListing = ({
           locale={locale}
           basePath={basePath}
           currentPage={readPage(searchParams)}
+          searchParams={searchParams}
         >
           {body}
         </ProductsListSection>

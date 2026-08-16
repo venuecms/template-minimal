@@ -14,22 +14,32 @@ function stub(testId: string) {
   return ({
     children,
     ...props
-  }: Record<string, unknown> & { children?: ReactNode }) => (
-    <div
-      data-testid={testId}
-      data-title={typeof props.title === "string" ? props.title : undefined}
-      data-base-path={
-        typeof props.basePath === "string" ? props.basePath : undefined
-      }
-      data-current-page={
-        typeof props.currentPage === "number"
-          ? String(props.currentPage)
-          : undefined
-      }
-    >
-      {children}
-    </div>
-  );
+  }: Record<string, unknown> & {
+    children?: ReactNode;
+    searchParams?: SearchParams;
+  }) => {
+    const blockParam = props.searchParams?.evt_9k3z1;
+
+    return (
+      <div
+        data-testid={testId}
+        data-title={typeof props.title === "string" ? props.title : undefined}
+        data-base-path={
+          typeof props.basePath === "string" ? props.basePath : undefined
+        }
+        data-current-page={
+          typeof props.currentPage === "number"
+            ? String(props.currentPage)
+            : undefined
+        }
+        data-block-param={
+          typeof blockParam === "string" ? blockParam : undefined
+        }
+      >
+        {children}
+      </div>
+    );
+  };
 }
 
 function contentStub({
@@ -67,11 +77,10 @@ vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
   VenueContent: contentStub,
 }));
 
-const localizedContent = (content: string | null) => ({
-  siteId: "s1",
-  locale: "en",
-  content,
-});
+const localizedContent = (fields: {
+  content?: string | null;
+  contentJSON?: { [key: string]: unknown } | null;
+}) => ({ siteId: "s1", locale: "en", ...fields });
 
 // The stub views hold nothing but their children, so the markup up to the first
 // close tag is what a view was handed.
@@ -176,7 +185,7 @@ describe("PageListing", () => {
       const html = await renderListing({
         layout,
         searchParams: { page: "2" },
-        content: localizedContent("<p>Season notes</p>"),
+        content: localizedContent({ content: "<p>Season notes</p>" }),
       });
 
       const view = withinView(html, testId);
@@ -191,10 +200,28 @@ describe("PageListing", () => {
   // An empty block would leave the views spacing around nothing.
   it.each([
     ["no localized content", undefined],
-    ["an empty body", localizedContent(null)],
+    ["an empty body", localizedContent({ content: null })],
+    ["a whitespace-only body", localizedContent({ content: "   " })],
+    // What the editor saves for a body its author typed in and then cleared.
+    [
+      "an emptied editor doc",
+      localizedContent({
+        contentJSON: { type: "doc", content: [{ type: "paragraph" }] },
+      }),
+    ],
   ])("renders no content block for %s", async (_label, content) => {
     expect(await renderListing({ layout: "events", content })).not.toContain(
       'data-testid="page-content"',
     );
+  });
+
+  // The body's own listing block pages by a param of its own.
+  it("hands the products listing every param, not just the page", async () => {
+    const html = await renderListing({
+      layout: "products",
+      searchParams: { page: "1", evt_9k3z1: "3" },
+    });
+
+    expect(html).toContain('data-block-param="3"');
   });
 });

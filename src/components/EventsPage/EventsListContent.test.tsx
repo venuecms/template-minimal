@@ -5,8 +5,13 @@ import { renderToReadableStream } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { EventsListContent } from "./EventsListContent";
+import { EventsListSection } from "./EventsListSection";
 
 vi.mock("next/server", () => ({ connection: async () => {} }));
+
+// ColumnLeft is emitted first, so a body moved into it still reads as "before
+// the events" unless the assertion names the column that should hold it.
+const columnRight = (html: string) => html.split('class="col-span-2')[1] ?? "";
 
 const render = async (node: ReactNode) => {
   const stream = await renderToReadableStream(
@@ -79,15 +84,31 @@ describe("the events listing heading", () => {
   });
 
   it("renders a body it was handed above the events", async () => {
-    const html = await render(
-      <EventsListContent locale="en" title="What's On">
-        <p>Season notes</p>
-      </EventsListContent>,
+    const column = columnRight(
+      await render(
+        <EventsListContent locale="en" title="What's On">
+          <p>Season notes</p>
+        </EventsListContent>,
+      ),
     );
 
-    expect(html.indexOf("Season notes")).toBeGreaterThan(-1);
-    expect(html.indexOf("Season notes")).toBeLessThan(
-      html.indexOf("No events found"),
+    expect(column.indexOf("Season notes")).toBeGreaterThan(-1);
+    expect(column.indexOf("Season notes")).toBeLessThan(
+      column.indexOf("No events found"),
     );
+  });
+});
+
+describe("the events listing section", () => {
+  it("hands the body it was given to the content it wraps", async () => {
+    const column = columnRight(
+      await render(
+        <EventsListSection locale="en" title="What's On">
+          <p>Season notes</p>
+        </EventsListSection>,
+      ),
+    );
+
+    expect(column).toContain("Season notes");
   });
 });

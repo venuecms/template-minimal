@@ -75,6 +75,21 @@ describe("Pagination", () => {
     expect(html).not.toContain("page=6");
   });
 
+  // A listing block in the same page's body pages by a param of its own.
+  it("carries the rest of the query string across a page move", async () => {
+    const html = await render(
+      <Pagination
+        currentPage={1}
+        totalPages={5}
+        baseUrl="/p/merch"
+        searchParams={{ page: "1", evt_9k3z1: "3" }}
+      />,
+    );
+
+    expect(html).toContain("/p/merch?evt_9k3z1=3&amp;page=0");
+    expect(html).toContain("/p/merch?evt_9k3z1=3&amp;page=2");
+  });
+
   it("renders nothing when there are no pages to move between", async () => {
     await expect(
       render(<Pagination currentPage={0} totalPages={0} baseUrl="/archive" />),

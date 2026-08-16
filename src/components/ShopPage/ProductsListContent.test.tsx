@@ -85,3 +85,18 @@ describe("the products listing pager", () => {
     expect(html).not.toContain("/shop?page=");
   });
 });
+
+describe("the products listing body", () => {
+  it("renders a body it was handed above the products", async () => {
+    const html = await render(
+      <ProductsListContent locale="en" currentPage={0} basePath="/p/merch">
+        <p>Season notes</p>
+      </ProductsListContent>,
+    );
+
+    expect(html.indexOf("Season notes")).toBeGreaterThan(-1);
+    expect(html.indexOf("Season notes")).toBeLessThan(
+      html.indexOf('data-testid="product"'),
+    );
+  });
+});

@@ -77,4 +77,17 @@ describe("the events listing heading", () => {
 
     expect(requested.some((url) => url.includes("/pages"))).toBe(false);
   });
+
+  it("renders a body it was handed above the events", async () => {
+    const html = await render(
+      <EventsListContent locale="en" title="What's On">
+        <p>Season notes</p>
+      </EventsListContent>,
+    );
+
+    expect(html.indexOf("Season notes")).toBeGreaterThan(-1);
+    expect(html.indexOf("Season notes")).toBeLessThan(
+      html.indexOf("No events found"),
+    );
+  });
 });

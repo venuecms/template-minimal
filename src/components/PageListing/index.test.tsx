@@ -1,4 +1,8 @@
-import { MAX_PAGE } from "@venuecms/sdk-next";
+import {
+  type ContentEntries,
+  MAX_PAGE,
+  type SearchParams,
+} from "@venuecms/sdk-next";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -7,7 +11,10 @@ import { PageListing } from "./index";
 
 // Declaration, not const: mock factories run before this module's consts init.
 function stub(testId: string) {
-  return (props: Record<string, unknown>) => (
+  return ({
+    children,
+    ...props
+  }: Record<string, unknown> & { children?: ReactNode }) => (
     <div
       data-testid={testId}
       data-title={typeof props.title === "string" ? props.title : undefined}
@@ -18,6 +25,28 @@ function stub(testId: string) {
         typeof props.currentPage === "number"
           ? String(props.currentPage)
           : undefined
+      }
+    >
+      {children}
+    </div>
+  );
+}
+
+function contentStub({
+  contentStyles,
+  searchParams,
+}: {
+  contentStyles?: ContentEntries;
+  searchParams?: SearchParams;
+}) {
+  return (
+    <div
+      data-testid="page-content"
+      data-content-styles={
+        typeof contentStyles?.p === "string" ? contentStyles.p : undefined
+      }
+      data-search-page={
+        typeof searchParams?.page === "string" ? searchParams.page : undefined
       }
     />
   );
@@ -30,6 +59,24 @@ vi.mock("@/components/EventsPage", () => ({
 vi.mock("@/components/ShopPage", () => ({
   ProductsListSection: stub("products-view"),
 }));
+vi.mock("@/components/ListingBlock", () => ({
+  contentComponents: { p: "prose" },
+}));
+vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@venuecms/sdk-next")>()),
+  VenueContent: contentStub,
+}));
+
+const localizedContent = (content: string | null) => ({
+  siteId: "s1",
+  locale: "en",
+  content,
+});
+
+// The stub views hold nothing but their children, so the markup up to the first
+// close tag is what a view was handed.
+const withinView = (html: string, testId: string) =>
+  html.split(`data-testid="${testId}"`)[1]?.split("</div>")[0] ?? "";
 
 const render = async (node: ReactNode) => {
   const stream = await renderToReadableStream(node);
@@ -118,5 +165,36 @@ describe("PageListing", () => {
     });
 
     expect(html).toContain(`data-current-page="${MAX_PAGE}"`);
+  });
+
+  it.each([
+    ["events", "events-view"],
+    ["products", "products-view"],
+  ] as const)(
+    "renders the page's own content inside the %s listing",
+    async (layout, testId) => {
+      const html = await renderListing({
+        layout,
+        searchParams: { page: "2" },
+        content: localizedContent("<p>Season notes</p>"),
+      });
+
+      const view = withinView(html, testId);
+
+      expect(view).toContain('data-testid="page-content"');
+      // The content's own listing blocks need the styles and the page's params.
+      expect(view).toContain('data-content-styles="prose"');
+      expect(view).toContain('data-search-page="2"');
+    },
+  );
+
+  // An empty block would leave the views spacing around nothing.
+  it.each([
+    ["no localized content", undefined],
+    ["an empty body", localizedContent(null)],
+  ])("renders no content block for %s", async (_label, content) => {
+    expect(await renderListing({ layout: "events", content })).not.toContain(
+      'data-testid="page-content"',
+    );
   });
 });

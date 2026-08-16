@@ -9,10 +9,13 @@ import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 export async function EventsListContent({
   locale,
   title,
+  children,
 }: {
   locale: string;
   /** Heading; a listing page passes its own, else the "events" record is read for one. */
   title?: string;
+  /** The page's body, above the events; absent on the `/events` route. */
+  children?: React.ReactNode;
 }) {
   await connection();
 
@@ -39,6 +42,7 @@ export async function EventsListContent({
         <p className="pb-8 text-primary">{pageTitle}</p>
       </ColumnLeft>
       <ColumnRight>
+        {children}
         {events?.records.length ? (
           <EventsList className="gap-y-12">
             {events.records.map((event) => (

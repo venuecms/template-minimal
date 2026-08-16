@@ -49,14 +49,19 @@ function EventsListSkeleton() {
 export function EventsListSection({
   locale,
   title,
+  children,
 }: {
   locale: string;
   title?: string;
+  /** The page's body, above the events; absent on the `/events` route. */
+  children?: React.ReactNode;
 }) {
   return (
     <ErrorBoundary fallback={<EventsListError />}>
       <Suspense fallback={<EventsListSkeleton />}>
-        <EventsListContent locale={locale} title={title} />
+        <EventsListContent locale={locale} title={title}>
+          {children}
+        </EventsListContent>
       </Suspense>
     </ErrorBoundary>
   );

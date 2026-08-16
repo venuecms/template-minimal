@@ -12,11 +12,14 @@ export async function ProductsListContent({
   locale,
   currentPage,
   basePath,
+  children,
 }: {
   locale: string;
   currentPage: number;
   /** Path the pager builds hrefs against; a listing page pages against its own /p/<slug>. */
   basePath: string;
+  /** The page's body, above the grid; absent on the `/shop` route. */
+  children?: React.ReactNode;
 }) {
   await connection();
 
@@ -48,6 +51,7 @@ export async function ProductsListContent({
 
   return (
     <section className="py-20">
+      {children ? <div className="pb-20">{children}</div> : null}
       <div className="grid gap-8 pb-20 sm:max-w-full lg:grid-cols-2 xl:grid-cols-4">
         {topProducts?.length
           ? topProducts.map((product) => (

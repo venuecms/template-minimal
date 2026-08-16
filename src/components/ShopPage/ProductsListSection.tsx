@@ -37,10 +37,13 @@ export function ProductsListSection({
   locale,
   currentPage,
   basePath,
+  children,
 }: {
   locale: string;
   currentPage: number;
   basePath: string;
+  /** The page's body, above the grid; absent on the `/shop` route. */
+  children?: React.ReactNode;
 }) {
   return (
     <ErrorBoundary fallback={<ProductsListError />}>
@@ -49,7 +52,9 @@ export function ProductsListSection({
           locale={locale}
           currentPage={currentPage}
           basePath={basePath}
-        />
+        >
+          {children}
+        </ProductsListContent>
       </Suspense>
     </ErrorBoundary>
   );

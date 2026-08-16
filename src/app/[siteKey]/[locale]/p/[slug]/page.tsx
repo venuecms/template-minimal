@@ -49,6 +49,7 @@ const PagePage = async ({
           layout={listingLayout}
           locale={locale}
           title={content.title ?? undefined}
+          content={content}
           basePath={`/p/${slug}`}
           searchParams={resolvedSearchParams}
         />

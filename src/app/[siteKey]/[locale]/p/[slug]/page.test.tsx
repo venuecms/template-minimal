@@ -10,7 +10,10 @@ vi.mock("@/components", () => ({
   Page: () => <div data-testid="page-layout" />,
 }));
 vi.mock("@/components/PageListing", () => ({
-  PageListing: (props: Record<string, unknown>) => (
+  PageListing: ({
+    content,
+    ...props
+  }: Record<string, unknown> & { content?: { content?: string | null } }) => (
     <div
       data-testid="page-listing"
       data-layout={typeof props.layout === "string" ? props.layout : undefined}
@@ -18,6 +21,7 @@ vi.mock("@/components/PageListing", () => ({
       data-base-path={
         typeof props.basePath === "string" ? props.basePath : undefined
       }
+      data-content={content?.content ?? undefined}
     />
   ),
 }));
@@ -33,7 +37,9 @@ vi.mock("@venuecms/sdk-next", () => ({
   getPages: async () => ({
     data: reads.pagesReadFails ? null : { records: [] },
   }),
-  getLocalizedContent: () => ({ content: { title: "What's On" } }),
+  getLocalizedContent: () => ({
+    content: { title: "What's On", content: "Season notes" },
+  }),
 }));
 
 const render = async (node: ReactNode) => {
@@ -70,6 +76,12 @@ describe("the page route", () => {
     expect(html).toContain('data-layout="events"');
     expect(html).toContain('data-title="What&#x27;s On"');
     expect(html).toContain('data-base-path="/p/whats-on"');
+  });
+
+  it("hands the listing the page's own content to render", async () => {
+    expect(await renderRoute("EVENTLIST")).toContain(
+      'data-content="Season notes"',
+    );
   });
 
   it("still renders a listing when the page tree cannot be read", async () => {

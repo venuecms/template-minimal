@@ -1,4 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
@@ -20,21 +21,28 @@ import { cn } from "@/lib/utils";
 export const PaginationLinks = ({
   prevHref,
   nextHref,
-  label = "Pagination",
+  name,
   scroll = true,
   className,
 }: {
   prevHref: string | null;
   nextHref: string | null;
   /**
-   * The nav landmark's accessible name.
+   * What this pager pages, already translated — "Events evt_1k3f9q".
    *
-   * Defaulted rather than fixed because a page can now carry several pagers —
-   * one per listing block in the content — and landmarks that all announce
-   * "Pagination" leave a screen-reader user no way to tell which listing each
-   * one moves.
+   * Names all three things a pager exposes: the nav landmark and both arrow
+   * links. Naming only the landmark is not enough, because a screen reader also
+   * offers a flat list of a page's links, outside any landmark — two listings
+   * in one article would each contribute a link called "Next page" there, which
+   * is the ambiguity this exists to remove.
+   *
+   * Absent for a pager that owns its whole page: `/archive` and `/shop` have
+   * one each, so there is nothing to tell apart and the plain translated names
+   * read better. `PaginatedListing` supplies it for blocks, since the thing
+   * that separates two of them is the SDK's per-block search param and only it
+   * is handed one.
    */
-  label?: string;
+  name?: string;
   /**
    * Whether following a page link scrolls to the top, as Next does by default.
    *
@@ -47,6 +55,8 @@ export const PaginationLinks = ({
   scroll?: boolean;
   className?: string;
 }) => {
+  const t = useTranslations("pagination");
+
   const renderLink = (
     href: string | null,
     children: ReactNode,
@@ -74,11 +84,19 @@ export const PaginationLinks = ({
 
   return (
     <nav
-      aria-label={label}
+      aria-label={name ? t("listing_label", { name }) : t("label")}
       className={cn("mt-8 flex items-center justify-between gap-4", className)}
     >
-      {renderLink(prevHref, <ArrowLeft className="size-6" />, "Previous page")}
-      {renderLink(nextHref, <ArrowRight className="size-6" />, "Next page")}
+      {renderLink(
+        prevHref,
+        <ArrowLeft className="size-6" />,
+        name ? t("previous_page_in", { name }) : t("previous_page"),
+      )}
+      {renderLink(
+        nextHref,
+        <ArrowRight className="size-6" />,
+        name ? t("next_page_in", { name }) : t("next_page"),
+      )}
     </nav>
   );
 };

@@ -8,5 +8,18 @@
     "past_events": "Tidigare evenemang",
     "see_all_upcoming_events": "se alla kommande evenemang",
     "events": "Evenemang"
+  },
+  "pagination": {
+    "label": "Paginering",
+    "previous_page": "Föregående sida",
+    "next_page": "Nästa sida",
+    "listing_name": "{listing} {id}",
+    "listing_label": "Paginering för {name}",
+    "previous_page_in": "Föregående sida av {name}",
+    "next_page_in": "Nästa sida av {name}",
+    "events": "Evenemang",
+    "news": "Nyheter",
+    "products": "Produkter",
+    "profiles": "Profiler"
   }
 }

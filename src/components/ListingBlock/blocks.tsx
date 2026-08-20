@@ -53,7 +53,11 @@ export const EventListingBlock = ({
   }
 
   return (
-    <PaginatedListing pagination={pagination} records={records} label="Events">
+    <PaginatedListing
+      pagination={pagination}
+      records={records}
+      listing="events"
+    >
       <EventsList className="gap-y-12 py-4">
         {records.map((event) => (
           <ListEvent key={event.id} event={event} site={site} withImage />
@@ -73,7 +77,7 @@ export const NewsListingBlock = ({
   }
 
   return (
-    <PaginatedListing pagination={pagination} records={records} label="News">
+    <PaginatedListing pagination={pagination} records={records} listing="news">
       <PagesList className="py-4">
         {records.map((article) => (
           <ListPage
@@ -129,7 +133,7 @@ export const ProductListingBlock = ({
     <PaginatedListing
       pagination={pagination}
       records={records}
-      label="Products"
+      listing="products"
     >
       <div className="grid gap-8 py-4 sm:grid-cols-2 lg:grid-cols-3">
         {records.map((product) => (
@@ -154,7 +158,11 @@ export const ProfileListingBlock = ({
   records,
   pagination,
 }: ListingProps<"profileListing">) => (
-  <PaginatedListing pagination={pagination} records={records} label="Profiles">
+  <PaginatedListing
+    pagination={pagination}
+    records={records}
+    listing="profiles"
+  >
     <TwoSubColumnLayout className="py-4">
       {records.map((profile) => (
         <ProfileCompact key={profile.slug} profile={profile} />

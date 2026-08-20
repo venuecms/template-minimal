@@ -14,9 +14,12 @@
  * what made paging a block feel like a page reload.
  */
 import type { ListingPagination } from "@venuecms/sdk-next";
+import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
+
+import en from "@/lib/i18n/dictionaries/en.json";
 
 import { PaginatedListing } from "@/components/ListingBlock/ListingPager";
 
@@ -38,8 +41,14 @@ vi.mock("@/lib/i18n", () => ({
   ),
 }));
 
+// `@/lib/i18n` is stubbed for its Link, but the pager still reads its aria
+// strings out of next-intl proper, so the provider stays.
 const render = async (node: ReactNode) => {
-  const stream = await renderToReadableStream(node);
+  const stream = await renderToReadableStream(
+    <NextIntlClientProvider locale="en" messages={en}>
+      {node}
+    </NextIntlClientProvider>,
+  );
   await stream.allReady;
   return new Response(stream).text();
 };
@@ -92,7 +101,7 @@ describe("PaginatedListing", () => {
       <PaginatedListing
         pagination={pagination()}
         records={[{ id: "one" }]}
-        label="Events"
+        listing="events"
       >
         <p>records</p>
       </PaginatedListing>,

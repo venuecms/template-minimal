@@ -33,13 +33,17 @@
  * only a genuinely empty listing renders nothing.
  */
 import type { ListingPagination } from "@venuecms/sdk-next";
+import { useTranslations } from "next-intl";
 
 import { PaginationLinks } from "@/components/Pagination";
+
+/** The record types that paginate, as the pager's dictionary names them. */
+export type ListingKind = "events" | "news" | "products" | "profiles";
 
 export const PaginatedListing = ({
   pagination,
   records,
-  label,
+  listing,
   children,
 }: {
   pagination: ListingPagination | null;
@@ -48,10 +52,17 @@ export const PaginatedListing = ({
    * `isEmpty` flag so a caller cannot pass one that disagrees with what it drew.
    */
   records: readonly unknown[];
-  /** Names this pager's nav, so several on one page stay tellable apart. */
-  label: string;
+  /**
+   * Which record type this block lists.
+   *
+   * A dictionary key rather than a display string: the name it ends up in is
+   * announced to a screen reader, so it has to be resolved in the reader's
+   * language rather than handed over already written in English.
+   */
+  listing: ListingKind;
   children: React.ReactNode;
 }) => {
+  const t = useTranslations("pagination");
   const links = pagination?.links;
 
   const pager =
@@ -59,7 +70,18 @@ export const PaginatedListing = ({
       <PaginationLinks
         prevHref={links.prevHref}
         nextHref={links.nextHref}
-        label={`${label} pagination`}
+        // The record type alone does not separate two event listings in one
+        // article — upcoming and past, say — whose landmarks would both
+        // announce "Events pagination" and whose arrows would both be called
+        // "Next page". The block's search param is the one thing guaranteed to
+        // differ between them, that being the whole reason the SDK derives it.
+        //
+        // It is a hash, so it is spelled out rather than read, and it changes
+        // if the author edits the block's filters. Both are real costs, taken
+        // because a name that is awkward still beats one that is ambiguous, and
+        // `ListingProps` hands a block nothing semantic about itself — a
+        // followup on the SDK could offer something better.
+        name={t("listing_name", { listing: t(listing), id: links.param })}
         // A block is a few records inside an article, so paging it must leave
         // the reader where they were. Next scrolls to the top on navigation by
         // default, which reads as the whole page having reloaded.

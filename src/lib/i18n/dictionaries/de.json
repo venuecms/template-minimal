@@ -10,10 +10,13 @@
     "events": "Veranstaltungen"
   },
   "pagination": {
-    "label": "Seitennavigation",
+    "label": "Seitenauswahl",
     "previous_page": "Vorherige Seite",
     "next_page": "Nächste Seite",
-    "listing_label": "Seitennavigation für {listing} {id}",
+    "listing_name": "{listing} {id}",
+    "listing_label": "Seitenauswahl für {name}",
+    "previous_page_in": "Vorherige Seite von {name}",
+    "next_page_in": "Nächste Seite von {name}",
     "events": "Veranstaltungen",
     "news": "Neuigkeiten",
     "products": "Produkte",

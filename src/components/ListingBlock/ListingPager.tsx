@@ -70,15 +70,18 @@ export const PaginatedListing = ({
       <PaginationLinks
         prevHref={links.prevHref}
         nextHref={links.nextHref}
-        // Naming the nav after the record type alone is not enough: an article
-        // can hold two event listings — upcoming and past, say — and two
-        // landmarks both announcing "Events pagination" leave a reader no way
-        // to tell which listing either one moves. The block's search param is
-        // the one thing guaranteed to differ between them, that being the whole
-        // reason the SDK derives it, so it is what separates the names. Opaque
-        // read aloud, but a distinguishable name beats an ambiguous one, and it
-        // is all a block is told about itself.
-        label={t("listing_label", { listing: t(listing), id: links.param })}
+        // The record type alone does not separate two event listings in one
+        // article — upcoming and past, say — whose landmarks would both
+        // announce "Events pagination" and whose arrows would both be called
+        // "Next page". The block's search param is the one thing guaranteed to
+        // differ between them, that being the whole reason the SDK derives it.
+        //
+        // It is a hash, so it is spelled out rather than read, and it changes
+        // if the author edits the block's filters. Both are real costs, taken
+        // because a name that is awkward still beats one that is ambiguous, and
+        // `ListingProps` hands a block nothing semantic about itself — a
+        // followup on the SDK could offer something better.
+        name={t("listing_name", { listing: t(listing), id: links.param })}
         // A block is a few records inside an article, so paging it must leave
         // the reader where they were. Next scrolls to the top on navigation by
         // default, which reads as the whole page having reloaded.

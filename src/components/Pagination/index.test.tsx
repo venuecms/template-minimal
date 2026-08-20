@@ -86,16 +86,34 @@ describe("PaginationLinks", () => {
     expect(html).toContain(`aria-label="${sv.pagination.label}"`);
   });
 
-  it("takes a caller's name for the landmark over the default", async () => {
+  it("names the landmark and both links after what a caller says it pages", async () => {
+    // One prop, three accessible names. The links matter as much as the nav:
+    // a screen reader also lists a page's links flat, outside any landmark, so
+    // two pagers left with a "Next page" each are ambiguous there whatever
+    // their navs are called.
     const html = await render(
       <PaginationLinks
-        prevHref={null}
-        nextHref="/archive?page=1"
-        label="Events pagination evt_1k3f9q"
+        prevHref="/archive?page=0"
+        nextHref="/archive?page=2"
+        name="Events evt_1k3f9q"
       />,
     );
 
-    expect(html).toContain('aria-label="Events pagination evt_1k3f9q"');
+    expect(html).toContain('aria-label="Events evt_1k3f9q pagination"');
+    expect(html).toContain('aria-label="Previous page of Events evt_1k3f9q"');
+    expect(html).toContain('aria-label="Next page of Events evt_1k3f9q"');
+  });
+
+  it("keeps the plain names for a pager that owns its page", async () => {
+    // `/archive` and `/shop` have one pager each, so there is nothing to tell
+    // apart and the shorter names read better.
+    const html = await render(
+      <PaginationLinks prevHref="/archive?page=0" nextHref="/archive?page=2" />,
+    );
+
+    expect(html).toContain(`aria-label="${en.pagination.label}"`);
+    expect(html).toContain(`aria-label="${en.pagination.next_page}"`);
+    expect(html).not.toContain("pagination of");
   });
 });
 

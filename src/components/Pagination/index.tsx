@@ -21,24 +21,28 @@ import { cn } from "@/lib/utils";
 export const PaginationLinks = ({
   prevHref,
   nextHref,
-  label,
+  name,
   scroll = true,
   className,
 }: {
   prevHref: string | null;
   nextHref: string | null;
   /**
-   * The nav landmark's accessible name.
+   * What this pager pages, already translated — "Events evt_1k3f9q".
    *
-   * Optional rather than fixed because a page can now carry several pagers —
-   * one per listing block in the content — and landmarks that all announce
-   * "Pagination" leave a screen-reader user no way to tell which listing each
-   * one moves. A pager that owns its page needs no such name and falls back to
-   * the plain translated one; `PaginatedListing` builds the distinguishing
-   * names, since the thing that separates two blocks is the SDK's per-block
-   * search param and only it is handed one.
+   * Names all three things a pager exposes: the nav landmark and both arrow
+   * links. Naming only the landmark is not enough, because a screen reader also
+   * offers a flat list of a page's links, outside any landmark — two listings
+   * in one article would each contribute a link called "Next page" there, which
+   * is the ambiguity this exists to remove.
+   *
+   * Absent for a pager that owns its whole page: `/archive` and `/shop` have
+   * one each, so there is nothing to tell apart and the plain translated names
+   * read better. `PaginatedListing` supplies it for blocks, since the thing
+   * that separates two of them is the SDK's per-block search param and only it
+   * is handed one.
    */
-  label?: string;
+  name?: string;
   /**
    * Whether following a page link scrolls to the top, as Next does by default.
    *
@@ -80,15 +84,19 @@ export const PaginationLinks = ({
 
   return (
     <nav
-      aria-label={label ?? t("label")}
+      aria-label={name ? t("listing_label", { name }) : t("label")}
       className={cn("mt-8 flex items-center justify-between gap-4", className)}
     >
       {renderLink(
         prevHref,
         <ArrowLeft className="size-6" />,
-        t("previous_page"),
+        name ? t("previous_page_in", { name }) : t("previous_page"),
       )}
-      {renderLink(nextHref, <ArrowRight className="size-6" />, t("next_page"))}
+      {renderLink(
+        nextHref,
+        <ArrowRight className="size-6" />,
+        name ? t("next_page_in", { name }) : t("next_page"),
+      )}
     </nav>
   );
 };

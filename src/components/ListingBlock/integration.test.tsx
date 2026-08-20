@@ -153,8 +153,9 @@ describe("a listing block, end to end", () => {
 
     // The param is the SDK's, derived from what the block is rather than where
     // it sits, so it is matched by shape rather than spelled out here — in the
-    // landmark's name as well as the href, since the name is built from it.
-    expect(html).toMatch(/aria-label="Events pagination [a-z]+_[a-z0-9]+"/);
+    // landmark and link names as well as the href, since they are built from it.
+    expect(html).toMatch(/aria-label="Events [a-z]+_[a-z0-9]+ pagination"/);
+    expect(html).toMatch(/aria-label="Next page of Events [a-z]+_[a-z0-9]+"/);
     expect(html).toMatch(/href="\?[a-z]+_[a-z0-9]+=1"/);
   });
 

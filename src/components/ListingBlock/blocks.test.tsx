@@ -21,6 +21,7 @@ import { describe, expect, it } from "vitest";
 import en from "@/lib/i18n/dictionaries/en.json";
 import sv from "@/lib/i18n/dictionaries/sv.json";
 
+import type { ListingKind } from "./ListingPager";
 import {
   EventListingBlock,
   NewsListingBlock,
@@ -302,23 +303,28 @@ describe("a listing block's pager", () => {
    * The landmark name a pager is expected to carry, built from the dictionary
    * rather than written out per locale.
    *
-   * Interpolating the same message the component reads makes the English case
-   * partly a mirror of the implementation — `PaginationLinks` covers the
-   * literal strings. What it pins here is the two things a mirror still cannot
-   * fake: that the name comes from the dictionary at all rather than an English
-   * literal, and that the block's unique param reaches it.
+   * Interpolating the same messages the component reads makes the English case
+   * partly a mirror of the implementation — `index.test.tsx` covers the literal
+   * strings, and `dictionaries.test.tsx` covers the messages themselves. What
+   * it pins here is the two things a mirror still cannot fake: that the name
+   * comes from the dictionary at all rather than an English literal, and that
+   * the block's unique param reaches it.
    */
   const navLabel = (
     dictionary: typeof en | typeof sv,
-    listing: "events" | "news" | "products" | "profiles",
+    listing: ListingKind,
     id = "eventListing",
   ) =>
-    dictionary.pagination.listing_label
-      .replace("{listing}", dictionary.pagination[listing])
-      .replace("{id}", id);
+    dictionary.pagination.listing_label.replace(
+      "{name}",
+      dictionary.pagination.listing_name
+        .replace("{listing}", dictionary.pagination[listing])
+        .replace("{id}", id),
+    );
 
-  const ariaLabels = (html: string) =>
-    [...html.matchAll(/aria-label="([^"]*)"/g)].map(([, label]) => label);
+  /** Just the landmarks, so a difference cannot come from an arrow instead. */
+  const navLabels = (html: string) =>
+    [...html.matchAll(/<nav aria-label="([^"]*)"/g)].map(([, label]) => label);
 
   it("links both directions from the middle of a listing", async () => {
     const html = await renderEvents(pagination());
@@ -398,12 +404,12 @@ describe("a listing block's pager", () => {
     expect(html).toContain(`aria-label="${navLabel(en, "events")}"`);
   });
 
-  it("names each pager on a page differently", async () => {
+  it("names each pager on a page differently, landmark and links alike", async () => {
     // Two event listings in one article — upcoming and past, say — used to
     // render two <nav> landmarks named "Events pagination" and two "Next page"
     // links, so a reader could not tell which listing either one moved. The
     // block's own search param is the one thing the SDK guarantees unique
-    // between them, so the name is built from that.
+    // between them, so the names are built from that.
     const upcoming = await renderEvents(
       pagination({
         links: {
@@ -425,13 +431,22 @@ describe("a listing block's pager", () => {
       }),
     );
 
-    expect(ariaLabels(upcoming)).not.toEqual(ariaLabels(past));
+    expect(navLabels(upcoming)).not.toEqual(navLabels(past));
     expect(upcoming).toContain(
       `aria-label="${navLabel(en, "events", "evt_1k3f9q")}"`,
     );
     expect(past).toContain(
       `aria-label="${navLabel(en, "events", "evt_7bq2xd")}"`,
     );
+
+    // The links too. A screen reader lists a page's links flat, outside any
+    // landmark, so two pagers each offering a bare "Next page" stay ambiguous
+    // there however their navs are named — which is half of what was reported.
+    const nextLinks = (html: string) =>
+      [...html.matchAll(/aria-label="([^"]*)"[^>]*href/g)].map(([, l]) => l);
+
+    expect(nextLinks(upcoming)).not.toEqual(nextLinks(past));
+    expect(upcoming).not.toContain(`aria-label="${en.pagination.next_page}"`);
   });
 
   it("names the landmark in the reader's language", async () => {

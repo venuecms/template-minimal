@@ -8,5 +8,15 @@
     "past_events": "Tidligere begivenheder",
     "see_all_upcoming_events": "se alle kommende begivenheder",
     "events": "Begivenheder"
+  },
+  "pagination": {
+    "label": "Paginering",
+    "previous_page": "Forrige side",
+    "next_page": "Næste side",
+    "listing_label": "Paginering for {listing} {id}",
+    "events": "Begivenheder",
+    "news": "Nyheder",
+    "products": "Produkter",
+    "profiles": "Profiler"
   }
 }

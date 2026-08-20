@@ -8,5 +8,15 @@
     "past_events": "Past Events",
     "see_all_upcoming_events": "see all upcoming events",
     "events": "Events"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous_page": "Previous page",
+    "next_page": "Next page",
+    "listing_label": "{listing} pagination {id}",
+    "events": "Events",
+    "news": "News",
+    "products": "Products",
+    "profiles": "Profiles"
   }
 }

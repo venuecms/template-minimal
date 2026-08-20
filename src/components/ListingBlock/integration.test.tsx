@@ -26,6 +26,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { renderToReadableStream } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import en from "@/lib/i18n/dictionaries/en.json";
+
 import { contentComponents } from "./index";
 
 vi.mock("next/server", () => ({ connection: async () => {} }));
@@ -94,7 +96,7 @@ afterEach(() => {
 const render = async (node: React.ReactNode) => {
   const errors: string[] = [];
   const stream = await renderToReadableStream(
-    <NextIntlClientProvider locale="en" messages={{}}>
+    <NextIntlClientProvider locale="en" messages={en}>
       {node}
     </NextIntlClientProvider>,
     {
@@ -149,9 +151,10 @@ describe("a listing block, end to end", () => {
       />,
     );
 
-    expect(html).toContain('aria-label="Events pagination"');
     // The param is the SDK's, derived from what the block is rather than where
-    // it sits, so it is matched by shape rather than spelled out here.
+    // it sits, so it is matched by shape rather than spelled out here — in the
+    // landmark's name as well as the href, since the name is built from it.
+    expect(html).toMatch(/aria-label="Events pagination [a-z]+_[a-z0-9]+"/);
     expect(html).toMatch(/href="\?[a-z]+_[a-z0-9]+=1"/);
   });
 
@@ -189,6 +192,29 @@ describe("a listing block, end to end", () => {
 
     expect(params.length).toBe(2);
     expect(new Set(params).size).toBe(2);
+  });
+
+  it("names the two pagers on that page apart", async () => {
+    // The upcoming/past pair from the issue: same record type, same template,
+    // one article. Both navs used to announce "Events pagination", so a reader
+    // moving between landmarks could not tell which listing either one paged.
+    const { html } = await render(
+      <VenueContent
+        content={contentWith(
+          eventListing({ limit: 2 }),
+          eventListing({ limit: 2, listingType: "past" }),
+        )}
+        contentStyles={contentComponents}
+        searchParams={{}}
+      />,
+    );
+
+    const names = [...html.matchAll(/<nav aria-label="([^"]+)"/g)].map(
+      ([, name]) => name,
+    );
+
+    expect(names.length).toBe(2);
+    expect(new Set(names).size).toBe(2);
   });
 
   it("renders the records but no pager when the route threaded no search params", async () => {

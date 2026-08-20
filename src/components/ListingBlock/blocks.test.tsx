@@ -18,6 +18,9 @@ import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
+import en from "@/lib/i18n/dictionaries/en.json";
+import sv from "@/lib/i18n/dictionaries/sv.json";
+
 import {
   EventListingBlock,
   NewsListingBlock,
@@ -130,10 +133,14 @@ const pagination = (
 });
 
 // The list components read the locale, so they need the provider even though
-// the blocks themselves render synchronously.
-const render = async (block: ReactNode) => {
+// the blocks themselves render synchronously. The real dictionaries rather than
+// a fixture, so a pager string missing from a shipped locale fails here.
+const render = async (block: ReactNode, locale: "en" | "sv" = "en") => {
   const stream = await renderToReadableStream(
-    <NextIntlClientProvider locale="en" messages={{}}>
+    <NextIntlClientProvider
+      locale={locale}
+      messages={locale === "sv" ? sv : en}
+    >
       {block}
     </NextIntlClientProvider>,
   );
@@ -278,14 +285,40 @@ describe("listing blocks", () => {
  * reach the reader when they exist.
  */
 describe("a listing block's pager", () => {
-  const renderEvents = (paginationProp: ListingPagination | null) =>
+  const renderEvents = (
+    paginationProp: ListingPagination | null,
+    locale: "en" | "sv" = "en",
+  ) =>
     render(
       <EventListingBlock
         records={records.event("A gig")}
         site={site}
         pagination={paginationProp}
       />,
+      locale,
     );
+
+  /**
+   * The landmark name a pager is expected to carry, built from the dictionary
+   * rather than written out per locale.
+   *
+   * Interpolating the same message the component reads makes the English case
+   * partly a mirror of the implementation — `PaginationLinks` covers the
+   * literal strings. What it pins here is the two things a mirror still cannot
+   * fake: that the name comes from the dictionary at all rather than an English
+   * literal, and that the block's unique param reaches it.
+   */
+  const navLabel = (
+    dictionary: typeof en | typeof sv,
+    listing: "events" | "news" | "products" | "profiles",
+    id = "eventListing",
+  ) =>
+    dictionary.pagination.listing_label
+      .replace("{listing}", dictionary.pagination[listing])
+      .replace("{id}", id);
+
+  const ariaLabels = (html: string) =>
+    [...html.matchAll(/aria-label="([^"]*)"/g)].map(([, label]) => label);
 
   it("links both directions from the middle of a listing", async () => {
     const html = await renderEvents(pagination());
@@ -357,13 +390,99 @@ describe("a listing block's pager", () => {
     expect(html).not.toContain("<nav");
   });
 
-  it("names each pager so several on a page stay tellable apart", async () => {
+  it("names a pager after its record type", async () => {
     // Landmarks that all announce "Pagination" leave a screen-reader user no
     // way to know which listing each one moves.
     const html = await renderEvents(pagination());
 
-    expect(html).toContain('aria-label="Events pagination"');
+    expect(html).toContain(`aria-label="${navLabel(en, "events")}"`);
   });
+
+  it("names each pager on a page differently", async () => {
+    // Two event listings in one article — upcoming and past, say — used to
+    // render two <nav> landmarks named "Events pagination" and two "Next page"
+    // links, so a reader could not tell which listing either one moved. The
+    // block's own search param is the one thing the SDK guarantees unique
+    // between them, so the name is built from that.
+    const upcoming = await renderEvents(
+      pagination({
+        links: {
+          param: "evt_1k3f9q",
+          prevHref: "?evt_1k3f9q=0",
+          nextHref: "?evt_1k3f9q=2",
+          hrefs: [],
+        },
+      }),
+    );
+    const past = await renderEvents(
+      pagination({
+        links: {
+          param: "evt_7bq2xd",
+          prevHref: "?evt_7bq2xd=0",
+          nextHref: "?evt_7bq2xd=2",
+          hrefs: [],
+        },
+      }),
+    );
+
+    expect(ariaLabels(upcoming)).not.toEqual(ariaLabels(past));
+    expect(upcoming).toContain(
+      `aria-label="${navLabel(en, "events", "evt_1k3f9q")}"`,
+    );
+    expect(past).toContain(
+      `aria-label="${navLabel(en, "events", "evt_7bq2xd")}"`,
+    );
+  });
+
+  it("names the landmark in the reader's language", async () => {
+    const html = await renderEvents(pagination(), "sv");
+
+    expect(html).toContain(`aria-label="${navLabel(sv, "events")}"`);
+    expect(html).not.toContain(en.pagination.events);
+  });
+
+  it.each([
+    [
+      "a news listing",
+      "news",
+      () => (
+        <NewsListingBlock
+          records={records.news("An announcement")}
+          site={site}
+          pagination={pagination()}
+        />
+      ),
+    ],
+    [
+      "a product listing",
+      "products",
+      () => (
+        <ProductListingBlock
+          records={records.product("A record")}
+          site={site}
+          pagination={pagination()}
+        />
+      ),
+    ],
+    [
+      "a profile listing",
+      "profiles",
+      () => (
+        <ProfileListingBlock
+          records={records.profile("An artist")}
+          site={site}
+          pagination={pagination()}
+        />
+      ),
+    ],
+  ] as const)(
+    "names the pager on %s after its own records",
+    async (_name, key, block) => {
+      const html = await render(block());
+
+      expect(html).toContain(`aria-label="${navLabel(en, key)}"`);
+    },
+  );
 
   it("keeps a way back from a page that turned out to be empty", async () => {
     // Reachable without anyone doing anything wrong: with no count to divide,

@@ -30,8 +30,7 @@ import type { ListingProps } from "@venuecms/sdk-next";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ListProduct } from "@/components/ListProduct";
 import { ListPage, PagesList } from "@/components/PageList";
-import { ProfileCompact } from "@/components/ProfileCompact";
-import { TwoSubColumnLayout } from "@/components/layout";
+import { ProfilesList } from "@/components/ProfileList";
 import {
   resolveNewsArticleHref,
   resolvePageHref,
@@ -155,10 +154,6 @@ export const ProfileListingBlock = ({
   pagination,
 }: ListingProps<"profileListing">) => (
   <PaginatedListing pagination={pagination} records={records} label="Profiles">
-    <TwoSubColumnLayout className="py-4">
-      {records.map((profile) => (
-        <ProfileCompact key={profile.slug} profile={profile} />
-      ))}
-    </TwoSubColumnLayout>
+    <ProfilesList profiles={records} className="py-4" />
   </PaginatedListing>
 );

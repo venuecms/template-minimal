@@ -69,6 +69,9 @@ vi.mock("@/components/EventsPage", () => ({
 vi.mock("@/components/ShopPage", () => ({
   ProductsListSection: stub("products-view"),
 }));
+vi.mock("@/components/ProfilesPage", () => ({
+  ProfilesListSection: stub("profiles-view"),
+}));
 vi.mock("@/components/ListingBlock", () => ({
   contentComponents: { p: "prose" },
 }));
@@ -109,6 +112,7 @@ describe("PageListing", () => {
     ["news", "news-view"],
     ["events", "events-view"],
     ["products", "products-view"],
+    ["profiles", "profiles-view"],
   ] as const)("renders the %s listing", async (layout, testId) => {
     expect(await renderListing({ layout })).toContain(
       `data-testid="${testId}"`,
@@ -118,6 +122,7 @@ describe("PageListing", () => {
   it.each([
     ["news", "news-view"],
     ["events", "events-view"],
+    ["profiles", "profiles-view"],
   ] as const)(
     "gives the %s listing the page's own title",
     async (layout, testId) => {
@@ -179,6 +184,7 @@ describe("PageListing", () => {
   it.each([
     ["events", "events-view"],
     ["products", "products-view"],
+    ["profiles", "profiles-view"],
   ] as const)(
     "renders the page's own content inside the %s listing",
     async (layout, testId) => {

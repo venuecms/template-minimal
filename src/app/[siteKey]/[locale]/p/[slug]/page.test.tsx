@@ -90,8 +90,15 @@ describe("the page route", () => {
     );
   });
 
-  it("keeps a page typed as a listing this template has no index for", async () => {
-    expect(await renderRoute("PROFILELIST")).toContain(
+  it("renders a profile listing page with its listing", async () => {
+    const html = await renderRoute("PROFILELIST");
+
+    expect(html).not.toContain('data-testid="page-layout"');
+    expect(html).toContain('data-layout="profiles"');
+  });
+
+  it("keeps a page type this template has no listing for on the page layout", async () => {
+    expect(await renderRoute("SOMETHING_NEW")).toContain(
       'data-testid="page-layout"',
     );
   });

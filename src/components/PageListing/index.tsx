@@ -9,6 +9,7 @@ import {
 import { EventsListSection } from "@/components/EventsPage";
 import { contentComponents } from "@/components/ListingBlock";
 import { NewsView } from "@/components/News";
+import { ProfilesListSection } from "@/components/ProfilesPage";
 import { ProductsListSection } from "@/components/ShopPage";
 import { hasRenderableContent } from "@/components/utils/pageContent";
 import type { PageListingLayout } from "@/components/utils/pageLayout";
@@ -76,6 +77,12 @@ export const PageListing = ({
         >
           {body}
         </ProductsListSection>
+      );
+    // The events frame, which is also the archive's: with no /profiles route to
+    // mirror, the index layout this template already uses is the one to match.
+    case "profiles":
+      return (
+        <ProfilesListSection title={title}>{body}</ProfilesListSection>
       );
   }
 };

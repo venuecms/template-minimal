@@ -56,7 +56,12 @@ function contentStub({
   return (
     <div
       data-testid="page-content"
-      data-class-name={className}
+      // Compared here rather than round-tripped through an attribute: the class
+      // string is full of characters React escapes, and a test that had to
+      // un-escape them would be debugging entities instead of layout.
+      data-measure-scoped={
+        className?.includes(pageBodyStyles) ? "yes" : undefined
+      }
       data-content-styles={
         typeof contentStyles?.p === "string" ? contentStyles.p : undefined
       }
@@ -108,17 +113,6 @@ const body = localizedContent({ content: "<p>Season notes</p>" });
 const withinView = (html: string, testId: string) =>
   html.split(`data-testid="${testId}"`)[1]?.split("</div>")[0] ?? "";
 
-// Unescaped, because the arbitrary-variant selector these class names carry is
-// full of characters React escapes on the way into an attribute.
-const attr = (html: string, name: string) =>
-  html
-    .match(new RegExp(`data-${name}="([^"]*)"`))?.[1]
-    .replaceAll("&gt;", ">")
-    .replaceAll("&lt;", "<")
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#x27;", "'")
-    .replaceAll("&amp;", "&");
-
 const render = async (node: ReactNode) => {
   const stream = await renderToReadableStream(node);
   await stream.allReady;
@@ -163,7 +157,11 @@ describe("PageListing", () => {
   );
 
   it("gives the products layout no title, having nowhere to draw one", async () => {
-    const html = await renderListing({ layout: "products", title: "Merch" });
+    const html = await renderListing({
+      layout: "products",
+      title: "Merch",
+      content: body,
+    });
 
     expect(html).toContain('data-testid="products-layout"');
     expect(html).not.toContain('data-title="Merch"');
@@ -250,14 +248,19 @@ describe("PageListing", () => {
    * The measure has to sit on the body's children rather than the body, or the
    * products block an author placed on a PRODUCTLIST page is capped at prose
    * width instead of filling the layout the way /shop's own grid does.
+   *
+   * That the selector actually reaches the block is a separate claim, pinned
+   * against the real renderer in `ListingBlock/integration.test.tsx` — this one
+   * only checks the body is styled with it at all.
    */
-  it("scopes the readable measure to the prose, so a block fills the layout", async () => {
-    const html = await renderListing({ layout: "products", content: body });
-    const className = attr(html, "class-name") ?? "";
+  it.each(["events", "products", "profiles"] as const)(
+    "styles the %s body so a listing escapes the prose measure",
+    async (layout) => {
+      const html = await renderListing({ layout, content: body });
 
-    expect(className).toContain(pageBodyStyles);
-    expect(pageBodyStyles).toContain("[&>*:not([data-listing])]:max-w-");
-  });
+      expect(html).toContain('data-measure-scoped="yes"');
+    },
+  );
 
   // An empty block would leave the views spacing around nothing.
   it.each([
@@ -275,6 +278,17 @@ describe("PageListing", () => {
     expect(await renderListing({ layout: "events", content })).not.toContain(
       'data-testid="page-content"',
     );
+  });
+
+  // The frame holds nothing but the body, so with no body it is a bare section
+  // of padding on a page that used to draw a grid.
+  it("draws no products frame at all for a body with nothing in it", async () => {
+    const html = await renderListing({
+      layout: "products",
+      content: undefined,
+    });
+
+    expect(html).not.toContain('data-testid="products-layout"');
   });
 
   // The body's own listing block pages by a param of its own.

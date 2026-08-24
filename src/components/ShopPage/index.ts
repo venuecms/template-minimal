@@ -1,2 +1,5 @@
 export { ProductsLayout } from "./ProductsLayout";
-export { ProductsListSection } from "./ProductsListSection";
+export {
+  ProductsListSection,
+  ProductsListSkeleton,
+} from "./ProductsListSection";

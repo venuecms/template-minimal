@@ -14,7 +14,12 @@ function ProductsListError() {
   );
 }
 
-function ProductsListSkeleton() {
+/**
+ * Exported so /shop's route-level `loading.tsx` draws the same thing this
+ * Suspense fallback does — two copies drifted by a padding class is what the
+ * route transition and the fallback disagreeing on height looks like.
+ */
+export function ProductsListSkeleton() {
   return (
     <div className="grid gap-8 sm:max-w-full lg:grid-cols-2 xl:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (

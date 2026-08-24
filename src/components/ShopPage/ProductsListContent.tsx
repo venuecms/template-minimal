@@ -44,9 +44,24 @@ export async function ProductsListContent({
 
   const records = products?.records ?? [];
 
-  const totalPages = products?.count
-    ? Math.ceil(products.count / ITEMS_PER_PAGE)
-    : 100;
+  /**
+   * Pages the endpoint's own answer implies.
+   *
+   * `count` is optional on this response, so a missing one cannot be read as
+   * "no pages" — but nor can it be read as the open-ended hundred this used to
+   * assume, which offered ninety-nine dead links over a single screen. Without
+   * a count the only honest claim is that a full page might have another behind
+   * it and a short one is the last.
+   *
+   * Tested for presence rather than truthiness: a count of zero is an empty
+   * shop, which is exactly the case a truthiness check sent down the fallback.
+   */
+  const totalPages =
+    products?.count != null
+      ? Math.ceil(products.count / ITEMS_PER_PAGE)
+      : records.length < ITEMS_PER_PAGE
+        ? currentPage + 1
+        : currentPage + 2;
 
   return (
     <>
@@ -60,7 +75,10 @@ export async function ProductsListContent({
           which is exactly where a reader most needs the link back. */}
       {totalPages > 1 ? (
         <Pagination
-          currentPage={currentPage}
+          // Clamped to one past the end, so stepping back off a hand-edited
+          // page deep past the last one lands on real records instead of
+          // walking the reader back through empty page after empty page.
+          currentPage={Math.min(currentPage, totalPages)}
           totalPages={totalPages - 1}
           baseUrl={basePath}
           searchParams={searchParams}

@@ -59,8 +59,10 @@ export const PageListing = ({
       );
     // Frame only, and no title: /shop draws no heading, and the records are the
     // body's own product listing block, not a second grid fetched here.
+    //
+    // Nothing to frame means no frame: a bare section is a screenful of padding.
     case "products":
-      return <ProductsLayout>{body}</ProductsLayout>;
+      return body ? <ProductsLayout>{body}</ProductsLayout> : null;
     // The events frame, which is also the archive's: with no /profiles route to
     // mirror, the index layout this template already uses is the one to match.
     case "profiles":

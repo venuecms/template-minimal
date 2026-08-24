@@ -81,8 +81,13 @@ export const PageListing = ({
     // The events frame, which is also the archive's: with no /profiles route to
     // mirror, the index layout this template already uses is the one to match.
     case "profiles":
-      return (
-        <ProfilesListSection title={title}>{body}</ProfilesListSection>
-      );
+      return <ProfilesListSection title={title}>{body}</ProfilesListSection>;
   }
+
+  // A layout added to the union without a case above is a compile error here
+  // rather than a page that renders nothing: React accepts an undefined return,
+  // so falling off this switch would be silent at runtime and at typecheck.
+  layout satisfies never;
+
+  return null;
 };

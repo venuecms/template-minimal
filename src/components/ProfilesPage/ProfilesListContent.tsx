@@ -1,49 +1,39 @@
 import { getProfiles } from "@venuecms/sdk-next";
 import { connection } from "next/server";
-import type { ReactNode } from "react";
 
 import { ProfilesList } from "@/components/ProfileList";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-// One page of profiles, matching the roster template-liminal lists. The
-// endpoint pages, but no route here does: profiles are a cast list, not a feed,
-// and `count` is optional on that response, so a pager could not size itself.
+// One page of profiles, matching the roster template-liminal lists and the cap
+// /events already puts on its own index. Records past it are not reachable from
+// this page; giving it a pager is a follow-up, not a silent detail.
 const PROFILE_LIMIT = 99;
 
-export async function ProfilesListContent({
-  title,
-  children,
-}: {
-  /**
-   * Heading. Always the listing page's own: unlike events and shop, this
-   * template has no /profiles route and so no page record to read one from.
-   */
-  title?: string;
-  children?: ReactNode;
-}) {
+/**
+ * The records half of the profile listing. Draws only the grid: its frame, its
+ * heading and the page's own body live in `ProfilesListSection`, above the
+ * Suspense boundary, so none of them wait on this fetch or vanish with it.
+ */
+export async function ProfilesListContent() {
   await connection();
 
-  const { data: profiles } = await getProfiles({
-    limit: PROFILE_LIMIT,
-    dir: "desc",
-  });
+  // No `dir`/`orderBy`: a `profileListing` block sends neither unless its author
+  // picks one, so leaving them off is what makes this page and that block order
+  // the same roster the same way.
+  const { data: profiles } = await getProfiles({ limit: PROFILE_LIMIT });
+
+  // The SDK reports a failed read as absent data rather than throwing, which
+  // would otherwise render an outage as an empty roster — a cached 200 saying
+  // the site has no artists. Throwing hands it to the error boundary instead.
+  if (!profiles) {
+    throw new Error("The profiles endpoint could not be read.");
+  }
 
   // No site read, and so no `notFound` on a failed one: a profile card draws
   // from the profile alone, and asking would only add a request that could
   // take the page down with it.
-  return (
-    <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary">
-        <p className="pb-8 text-primary">{title ?? "artists"}</p>
-      </ColumnLeft>
-      <ColumnRight>
-        {children}
-        {profiles?.records.length ? (
-          <ProfilesList profiles={profiles.records} />
-        ) : (
-          "No artists found"
-        )}
-      </ColumnRight>
-    </TwoColumnLayout>
+  return profiles.records.length ? (
+    <ProfilesList profiles={profiles.records} />
+  ) : (
+    "No artists found"
   );
 }

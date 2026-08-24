@@ -140,16 +140,23 @@ describe("PageListing", () => {
     expect(html).not.toContain("data-title");
   });
 
-  it("pages the products listing against the page it is rendered on", async () => {
-    const html = await renderListing({
-      layout: "products",
-      basePath: "/p/merch",
-      searchParams: { page: "2" },
-    });
+  it.each([
+    ["products", "products-view"],
+    ["profiles", "profiles-view"],
+  ] as const)(
+    "pages the %s listing against the page it is rendered on",
+    async (layout, testId) => {
+      const html = await renderListing({
+        layout,
+        basePath: "/p/merch",
+        searchParams: { page: "2" },
+      });
 
-    expect(html).toContain('data-base-path="/p/merch"');
-    expect(html).toContain('data-current-page="2"');
-  });
+      expect(html).toContain(`data-testid="${testId}"`);
+      expect(html).toContain('data-base-path="/p/merch"');
+      expect(html).toContain('data-current-page="2"');
+    },
+  );
 
   it("takes the first of a repeated page param, as a route would", async () => {
     const html = await renderListing({

@@ -1,3 +1,4 @@
+import type { SearchParams } from "@venuecms/sdk-next";
 import { Suspense } from "react";
 import type { ReactNode } from "react";
 
@@ -51,6 +52,9 @@ function ProfilesListSkeleton() {
  */
 export function ProfilesListSection({
   title,
+  currentPage,
+  basePath,
+  searchParams,
   children,
 }: {
   /**
@@ -58,6 +62,10 @@ export function ProfilesListSection({
    * template has no /profiles route and so no page record to read one from.
    */
   title?: string;
+  currentPage: number;
+  /** Path the pager builds hrefs against; only the route knows it. */
+  basePath: string;
+  searchParams?: SearchParams;
   /** The page's own body, rendered above the records. */
   children?: ReactNode;
 }) {
@@ -75,7 +83,11 @@ export function ProfilesListSection({
         {children}
         <ErrorBoundary fallback={<ProfilesListError />}>
           <Suspense fallback={<ProfilesListSkeleton />}>
-            <ProfilesListContent />
+            <ProfilesListContent
+              currentPage={currentPage}
+              basePath={basePath}
+              searchParams={searchParams}
+            />
           </Suspense>
         </ErrorBoundary>
       </ColumnRight>

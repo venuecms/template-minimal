@@ -1,7 +1,6 @@
 /** The listing a page *is*, not `PageListingBlock`, which is a listing of pages. */
 import {
   type LocalizedContent,
-  MAX_PAGE,
   type SearchParams,
   VenueContent,
 } from "@venuecms/sdk-next";
@@ -13,19 +12,7 @@ import { ProfilesListSection } from "@/components/ProfilesPage";
 import { ProductsListSection } from "@/components/ShopPage";
 import { hasRenderableContent } from "@/components/utils/pageContent";
 import type { PageListingLayout } from "@/components/utils/pageLayout";
-
-// Duplicates VEN-514's readPage (#69) on purpose; drop when that lands.
-const readPage = (searchParams: SearchParams): number => {
-  const raw = searchParams.page;
-  const value = Array.isArray(raw) ? raw[0] : raw;
-
-  // Digits only: Number() reads "1e3" as the deepest offset scan the endpoint allows.
-  if (typeof value !== "string" || !/^\d+$/.test(value)) {
-    return 0;
-  }
-
-  return Math.min(Number(value), MAX_PAGE);
-};
+import { readPage } from "@/components/utils/searchParams";
 
 export const PageListing = ({
   layout,

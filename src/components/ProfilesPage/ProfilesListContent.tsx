@@ -40,23 +40,32 @@ export async function ProfilesListContent({
     throw new Error("The profiles endpoint could not be read.");
   }
 
-  const { records } = profiles;
+  const { records, count } = profiles;
 
-  // `count` is optional on the profiles response, so unlike /shop there is no
-  // total to divide into pages: a page that came back full is the only evidence
-  // another may follow. The SDK pages a `profileListing` block by that same
-  // rule, which is what keeps the two surfaces agreeing where the roster ends.
+  // `count` is optional on the profiles response, so the roster's end is found
+  // two ways. Given a count, the records already behind the reader plus the
+  // ones on this page settle it exactly. Without one, a page that came back
+  // full is the only evidence another may follow — the rule the SDK pages a
+  // `profileListing` block by, which is what keeps the two surfaces agreeing
+  // about where the roster ends.
   //
-  // It does mean a roster whose length is an exact multiple of the page size
-  // offers one link to an empty page. That page keeps its pager rather than
-  // stranding whoever followed it.
+  // The countless case does mean a roster whose length is an exact multiple of
+  // the page size offers one link to an empty page. That page keeps its pager
+  // rather than stranding whoever followed it.
+  const hasNextPage =
+    typeof count === "number"
+      ? (currentPage + 1) * PROFILES_PER_PAGE < count
+      : records.length === PROFILES_PER_PAGE;
+
   const prevHref =
     currentPage > 0
       ? buildPageHref(basePath, searchParams, currentPage - 1)
       : null;
 
+  // Clamped at the deepest offset the endpoint will scan, so a pager cannot
+  // walk a reader past the page the SDK would refuse anyway.
   const nextHref =
-    records.length === PROFILES_PER_PAGE && currentPage < MAX_PAGE
+    hasNextPage && currentPage < MAX_PAGE
       ? buildPageHref(basePath, searchParams, currentPage + 1)
       : null;
 

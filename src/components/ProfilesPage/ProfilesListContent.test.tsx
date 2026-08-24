@@ -52,11 +52,14 @@ const renderRoster = (
 
 let profileRecords: Array<Record<string, unknown>> = [];
 let profilesReadFails = false;
+/** The roster's total, or null for the endpoint answering without one. */
+let profilesCount: number | null = null;
 
 beforeEach(() => {
   setConfig({ siteKey: "test-site" });
   profileRecords = [];
   profilesReadFails = false;
+  profilesCount = null;
 
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
     const url = input instanceof Request ? input.url : String(input);
@@ -67,7 +70,9 @@ beforeEach(() => {
         : new Response(
             JSON.stringify({
               records: profileRecords,
-              count: profileRecords.length,
+              // Omitted, not nulled, when there is none: `count` is optional on
+              // this response and a real endpoint leaves the key off entirely.
+              ...(profilesCount === null ? {} : { count: profilesCount }),
             }),
             { status: 200, headers: { "content-type": "application/json" } },
           );
@@ -196,11 +201,9 @@ describe("the profiles listing", () => {
  * The roster pages like /archive and /shop: a shared `?page=`, hrefs against
  * the page's own path, and the reader taken to the top of the new page.
  *
- * What it cannot borrow from them is their arithmetic. `count` is optional on
- * the profiles response, so there is no total to divide into pages, and the
- * only end-of-roster signal available is a page that came back short. That is
- * the same rule the SDK applies to a `profileListing` block, which is what
- * keeps the two surfaces agreeing about where the roster ends.
+ * What it cannot borrow from them is a single piece of arithmetic. `count` is
+ * optional on the profiles response, so the end of the roster is found one of
+ * two ways depending on whether the endpoint volunteered a total.
  */
 describe("the profile roster's pager", () => {
   it("asks the endpoint for the page it was given", async () => {
@@ -211,29 +214,15 @@ describe("the profile roster's pager", () => {
     expect(new URL(requestedUrls()[0]).searchParams.get("page")).toBe("2");
   });
 
-  it("links on to the next page while pages come back full", async () => {
-    profileRecords = aRoster(PROFILES_PER_PAGE);
-
-    expect(await renderRoster()).toContain("/p/roster?page=1");
-  });
-
-  // The short page is the end of the roster; offering a next link here walks
-  // the reader onto a page that is empty by construction.
-  it("offers no next page from a short one", async () => {
-    profileRecords = aRoster(PROFILES_PER_PAGE - 1);
-
-    expect(await renderRoster()).not.toContain("page=1");
-  });
-
   it("offers no previous page from the first", async () => {
     profileRecords = aRoster(PROFILES_PER_PAGE);
+    profilesCount = PROFILES_PER_PAGE * 3;
 
     expect(await renderRoster()).not.toContain("Previous page");
   });
 
-  // A roster whose length is an exact multiple of the page size hands out a
-  // next link to an empty page. Dropping the pager there would strand a reader
-  // who followed it with no way back.
+  // A reader who overshoots the roster — by following the countless case's
+  // speculative next link, or by hand-editing the URL — must not be stranded.
   it("keeps a way back off an empty page", async () => {
     profileRecords = [];
 
@@ -266,7 +255,54 @@ describe("the profile roster's pager", () => {
   // two dead arrows.
   it("draws no pager for a roster that fits on one page", async () => {
     profileRecords = aRoster(3);
+    profilesCount = 3;
 
     expect(await renderRoster()).not.toContain("Artists pagination");
+  });
+
+  // Given a total, the records already behind the reader plus the ones on this
+  // page settle exactly where the roster ends.
+  describe("given a count", () => {
+    it("links on while records remain beyond this page", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+      profilesCount = PROFILES_PER_PAGE + 1;
+
+      expect(await renderRoster()).toContain("/p/roster?page=1");
+    });
+
+    // The bug a full page alone cannot see: 50 of 50 is the end of the roster,
+    // not the middle of it.
+    it("offers no next page from a full last one", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+      profilesCount = PROFILES_PER_PAGE;
+
+      expect(await renderRoster()).not.toContain("page=1");
+    });
+
+    it("offers no next page from the last of several", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+      profilesCount = PROFILES_PER_PAGE * 2;
+
+      expect(await renderRoster({ currentPage: 1 })).not.toContain("page=2");
+    });
+  });
+
+  // Without one, a page that came back full is the only evidence another may
+  // follow — the same rule the SDK pages a `profileListing` block by, which is
+  // what keeps the two surfaces agreeing about where the roster ends.
+  describe("given no count", () => {
+    it("links on while pages come back full", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+
+      expect(await renderRoster()).toContain("/p/roster?page=1");
+    });
+
+    // The short page is the end of the roster; a next link here walks the
+    // reader onto a page that is empty by construction.
+    it("offers no next page from a short one", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE - 1);
+
+      expect(await renderRoster()).not.toContain("page=1");
+    });
   });
 });

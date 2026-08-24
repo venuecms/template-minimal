@@ -51,6 +51,33 @@ describe("hasRenderableContent", () => {
     expect(hasRenderableContent(localized({ contentJSON }))).toBe(false);
   });
 
+  /**
+   * The fields disagree, and the renderer's answer is the one that counts:
+   * `VenueContent` draws `contentJSON` whenever it is present and only reads
+   * the markdown when it is not. A record whose editor doc was cleared while a
+   * stale markdown mirror stayed behind therefore renders nothing, so judging
+   * the markdown first would space the listing around an empty body.
+   */
+  it("is false for an emptied doc still carrying stale markdown", () => {
+    expect(
+      hasRenderableContent(
+        localized({
+          content: "## Notes from a previous edit",
+          contentJSON: { type: "doc", content: [{ type: "paragraph" }] },
+        }),
+      ),
+    ).toBe(false);
+  });
+
+  // And the mirror is still what a body with no doc at all is judged by.
+  it("is true for markdown with no doc beside it", () => {
+    expect(
+      hasRenderableContent(
+        localized({ content: "## Notes", contentJSON: null }),
+      ),
+    ).toBe(true);
+  });
+
   // A node the reader can see, even with no text of its own, is content.
   it("is true for a doc holding only an image", () => {
     expect(

@@ -1,6 +1,34 @@
+import { MAX_PAGE } from "@venuecms/sdk-next";
 import { describe, expect, it } from "vitest";
 
-import { buildPageHref } from "./searchParams";
+import { buildPageHref, readPage } from "./searchParams";
+
+describe("readPage", () => {
+  it("reads the page the URL names", () => {
+    expect(readPage({ page: "3" })).toBe(3);
+  });
+
+  it("starts at the first page when the URL names none", () => {
+    expect(readPage({})).toBe(0);
+  });
+
+  it("takes the first of a repeated param, as a route would", () => {
+    expect(readPage({ page: ["1", "2"] })).toBe(1);
+  });
+
+  // Digits only. Number() would read "1e3" as the deepest offset the endpoint
+  // will scan and "-2" as a negative one; parseInt would take "12abc" for 12.
+  it.each(["not-a-page", "-2", "3abc", "2.5", "1e3", "", " 1"])(
+    "starts at the first page rather than sending %j to the endpoint",
+    (page) => {
+      expect(readPage({ page })).toBe(0);
+    },
+  );
+
+  it("clamps a hand-edited page to the deepest the endpoint will scan", () => {
+    expect(readPage({ page: String(MAX_PAGE + 5000) })).toBe(MAX_PAGE);
+  });
+});
 
 describe("buildPageHref", () => {
   it("pages against the path it was given", () => {

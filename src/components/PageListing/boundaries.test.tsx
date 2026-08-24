@@ -80,17 +80,12 @@ describe("a listing whose records failed", () => {
     },
   );
 
-  // The shop grid has no heading slot, so only its body is at stake.
-  it("keeps the products body", async () => {
-    const html = await render(
-      <ProductsListSection currentPage={0} basePath="/p/merch">
-        <p>Season notes</p>
-      </ProductsListSection>,
-    );
-
-    expect(html).toContain("Season notes");
-  });
-
+  /**
+   * Products are absent from the cases above because that layout wraps no body
+   * at all now: a PRODUCTLIST page's records come from a listing block in its
+   * own content, which sits outside anything `ProductsListSection` bounds. All
+   * that is left to pin for the shop is its failure message, below.
+   */
   it("draws each listing's own failure message in place of its records", async () => {
     const searchParams: SearchParams = {};
 

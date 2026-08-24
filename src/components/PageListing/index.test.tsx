@@ -7,6 +7,8 @@ import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
+import { pageBodyStyles } from "@/components/ListingBlock";
+
 import { PageListing } from "./index";
 
 // Declaration, not const: mock factories run before this module's consts init.
@@ -43,20 +45,28 @@ function stub(testId: string) {
 }
 
 function contentStub({
+  className,
   contentStyles,
   searchParams,
 }: {
+  className?: string;
   contentStyles?: ContentEntries;
   searchParams?: SearchParams;
 }) {
   return (
     <div
       data-testid="page-content"
+      data-class-name={className}
       data-content-styles={
         typeof contentStyles?.p === "string" ? contentStyles.p : undefined
       }
       data-search-page={
         typeof searchParams?.page === "string" ? searchParams.page : undefined
+      }
+      data-block-param={
+        typeof searchParams?.evt_9k3z1 === "string"
+          ? searchParams.evt_9k3z1
+          : undefined
       }
     />
   );
@@ -66,13 +76,19 @@ vi.mock("@/components/News", () => ({ NewsView: stub("news-view") }));
 vi.mock("@/components/EventsPage", () => ({
   EventsListSection: stub("events-view"),
 }));
+// `ProductsListSection` is stubbed although the layout no longer renders it, so
+// a layout that reaches for the shop's records again shows up as a failure here
+// rather than as a second grid under the author's own products block.
 vi.mock("@/components/ShopPage", () => ({
-  ProductsListSection: stub("products-view"),
+  ProductsLayout: stub("products-layout"),
+  ProductsListSection: stub("products-records"),
 }));
 vi.mock("@/components/ProfilesPage", () => ({
   ProfilesListSection: stub("profiles-view"),
 }));
-vi.mock("@/components/ListingBlock", () => ({
+// Partial, so the real `pageBodyStyles` is what the body is checked against.
+vi.mock("@/components/ListingBlock", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/components/ListingBlock")>()),
   contentComponents: { p: "prose" },
 }));
 vi.mock("@venuecms/sdk-next", async (importOriginal) => ({
@@ -85,10 +101,23 @@ const localizedContent = (fields: {
   contentJSON?: { [key: string]: unknown } | null;
 }) => ({ siteId: "s1", locale: "en", ...fields });
 
+const body = localizedContent({ content: "<p>Season notes</p>" });
+
 // The stub views hold nothing but their children, so the markup up to the first
 // close tag is what a view was handed.
 const withinView = (html: string, testId: string) =>
   html.split(`data-testid="${testId}"`)[1]?.split("</div>")[0] ?? "";
+
+// Unescaped, because the arbitrary-variant selector these class names carry is
+// full of characters React escapes on the way into an attribute.
+const attr = (html: string, name: string) =>
+  html
+    .match(new RegExp(`data-${name}="([^"]*)"`))?.[1]
+    .replaceAll("&gt;", ">")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#x27;", "'")
+    .replaceAll("&amp;", "&");
 
 const render = async (node: ReactNode) => {
   const stream = await renderToReadableStream(node);
@@ -111,10 +140,10 @@ describe("PageListing", () => {
   it.each([
     ["news", "news-view"],
     ["events", "events-view"],
-    ["products", "products-view"],
+    ["products", "products-layout"],
     ["profiles", "profiles-view"],
   ] as const)("renders the %s listing", async (layout, testId) => {
-    expect(await renderListing({ layout })).toContain(
+    expect(await renderListing({ layout, content: body })).toContain(
       `data-testid="${testId}"`,
     );
   });
@@ -133,34 +162,41 @@ describe("PageListing", () => {
     },
   );
 
-  it("gives the products listing no title, having nowhere to draw one", async () => {
+  it("gives the products layout no title, having nowhere to draw one", async () => {
     const html = await renderListing({ layout: "products", title: "Merch" });
 
-    expect(html).toContain('data-testid="products-view"');
-    expect(html).not.toContain("data-title");
+    expect(html).toContain('data-testid="products-layout"');
+    expect(html).not.toContain('data-title="Merch"');
   });
 
-  it.each([
-    ["products", "products-view"],
-    ["profiles", "profiles-view"],
-  ] as const)(
-    "pages the %s listing against the page it is rendered on",
-    async (layout, testId) => {
-      const html = await renderListing({
-        layout,
-        basePath: "/p/merch",
-        searchParams: { page: "2" },
-      });
+  /**
+   * The point of the whole split. A PRODUCTLIST page is an ordinary page whose
+   * body holds a product listing block, so the layout is a frame and nothing
+   * more — a listing fetched here would stack a second grid under the author's.
+   */
+  it("draws no products of its own, leaving them to the body's block", async () => {
+    const html = await renderListing({ layout: "products", content: body });
 
-      expect(html).toContain(`data-testid="${testId}"`);
-      expect(html).toContain('data-base-path="/p/merch"');
-      expect(html).toContain('data-current-page="2"');
-    },
-  );
+    expect(html).not.toContain('data-testid="products-records"');
+    expect(withinView(html, "products-layout")).toContain(
+      'data-testid="page-content"',
+    );
+  });
+
+  it("pages the profiles listing against the page it is rendered on", async () => {
+    const html = await renderListing({
+      layout: "profiles",
+      basePath: "/p/roster",
+      searchParams: { page: "2" },
+    });
+
+    expect(html).toContain('data-base-path="/p/roster"');
+    expect(html).toContain('data-current-page="2"');
+  });
 
   it("takes the first of a repeated page param, as a route would", async () => {
     const html = await renderListing({
-      layout: "products",
+      layout: "profiles",
       searchParams: { page: ["1", "2"] },
     });
 
@@ -170,18 +206,18 @@ describe("PageListing", () => {
   it("starts at the first page rather than fetching a nonsense one", async () => {
     for (const page of ["not-a-page", "-2", "3abc", "2.5", "1e3", ""]) {
       expect(
-        await renderListing({ layout: "products", searchParams: { page } }),
+        await renderListing({ layout: "profiles", searchParams: { page } }),
       ).toContain('data-current-page="0"');
     }
 
     expect(
-      await renderListing({ layout: "products", searchParams: {} }),
+      await renderListing({ layout: "profiles", searchParams: {} }),
     ).toContain('data-current-page="0"');
   });
 
   it("clamps a hand-edited page rather than handing it to the endpoint", async () => {
     const html = await renderListing({
-      layout: "products",
+      layout: "profiles",
       searchParams: { page: String(MAX_PAGE + 5000) },
     });
 
@@ -190,7 +226,7 @@ describe("PageListing", () => {
 
   it.each([
     ["events", "events-view"],
-    ["products", "products-view"],
+    ["products", "products-layout"],
     ["profiles", "profiles-view"],
   ] as const)(
     "renders the page's own content inside the %s listing",
@@ -198,7 +234,7 @@ describe("PageListing", () => {
       const html = await renderListing({
         layout,
         searchParams: { page: "2" },
-        content: localizedContent({ content: "<p>Season notes</p>" }),
+        content: body,
       });
 
       const view = withinView(html, testId);
@@ -209,6 +245,19 @@ describe("PageListing", () => {
       expect(view).toContain('data-search-page="2"');
     },
   );
+
+  /**
+   * The measure has to sit on the body's children rather than the body, or the
+   * products block an author placed on a PRODUCTLIST page is capped at prose
+   * width instead of filling the layout the way /shop's own grid does.
+   */
+  it("scopes the readable measure to the prose, so a block fills the layout", async () => {
+    const html = await renderListing({ layout: "products", content: body });
+    const className = attr(html, "class-name") ?? "";
+
+    expect(className).toContain(pageBodyStyles);
+    expect(pageBodyStyles).toContain("[&>*:not([data-listing])]:max-w-");
+  });
 
   // An empty block would leave the views spacing around nothing.
   it.each([
@@ -229,9 +278,10 @@ describe("PageListing", () => {
   });
 
   // The body's own listing block pages by a param of its own.
-  it("hands the products listing every param, not just the page", async () => {
+  it("hands the body every param, not just the page", async () => {
     const html = await renderListing({
       layout: "products",
+      content: body,
       searchParams: { page: "1", evt_9k3z1: "3" },
     });
 

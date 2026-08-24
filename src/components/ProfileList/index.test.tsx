@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
+import { ListingRoot } from "@/components/ListingBlock/ListingRoot";
 import { ProfileListingBlock } from "@/components/ListingBlock/blocks";
 
 import { ProfilesList } from "./index";
@@ -43,6 +44,11 @@ describe("ProfilesList", () => {
   // Asserted against the shared list rather than its class names: the point of
   // extracting it is that the profile listing page and the content block cannot
   // drift, and comparing markup is what catches one of them growing a wrapper.
+  //
+  // The block draws its list inside `ListingRoot` — the element that carries
+  // `data-listing`, and so the one a page body exempts from the prose measure —
+  // which is why that is spelled out on the right rather than dropped from the
+  // comparison.
   it("is what the profile listing block draws", async () => {
     const records = profiles("An artist", "Another artist");
 
@@ -50,6 +56,12 @@ describe("ProfilesList", () => {
       await render(
         <ProfileListingBlock records={records} site={null} pagination={null} />,
       ),
-    ).toBe(await render(<ProfilesList profiles={records} className="py-4" />));
+    ).toBe(
+      await render(
+        <ListingRoot>
+          <ProfilesList profiles={records} className="py-4" />
+        </ListingRoot>,
+      ),
+    );
   });
 });

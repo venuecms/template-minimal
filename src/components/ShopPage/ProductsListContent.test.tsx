@@ -8,14 +8,10 @@ import { ProductsListSection } from "./ProductsListSection";
 
 vi.mock("next/server", () => ({ connection: async () => {} }));
 vi.mock("@/components/ListProduct", () => ({
-  ListProduct: ({ product }: { product: { slug: string } }) => (
-    <div data-testid="product">{product.slug}</div>
+  ProductsList: ({ products }: { products: Array<{ slug: string }> }) => (
+    <div data-testid="products">{products.map((p) => p.slug).join(",")}</div>
   ),
 }));
-
-// Containment alone would pass with the body drawn outside the listing, so the
-// assertions read the section that should hold it.
-const listingSection = (html: string) => html.split("<section")[1] ?? "";
 
 const COUNT = 120;
 
@@ -41,11 +37,11 @@ const requestedUrls = () =>
       input instanceof Request ? input.url : String(input),
     );
 
-let siteReadFails = false;
+let productCount = COUNT;
 
 beforeEach(() => {
   setConfig({ siteKey: "test-site" });
-  siteReadFails = false;
+  productCount = COUNT;
 
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
     const url = input instanceof Request ? input.url : String(input);
@@ -53,18 +49,14 @@ beforeEach(() => {
     if (url.includes("/products")) {
       return new Response(
         JSON.stringify({
-          records: Array.from({ length: PAGE_SIZE }, (_, i) => ({
-            slug: `p${i}`,
-            localizedContent: [],
-          })),
-          count: COUNT,
+          records: Array.from(
+            { length: Math.min(productCount, PAGE_SIZE) },
+            (_, i) => ({ slug: `p${i}`, localizedContent: [] }),
+          ),
+          count: productCount,
         }),
         { status: 200, headers: { "content-type": "application/json" } },
       );
-    }
-
-    if (siteReadFails) {
-      return new Response("upstream is down", { status: 500 });
     }
 
     return new Response(
@@ -80,6 +72,28 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+});
+
+describe("the products listing", () => {
+  // The grid is `ProductsList`, shared with the product listing block, so a
+  // block and /shop draw the same thing rather than two grids that drift.
+  it("draws its records through the shared products grid", async () => {
+    const html = await render(
+      <ProductsListSection currentPage={0} basePath="/shop" />,
+    );
+
+    expect(html).toContain('data-testid="products"');
+    expect(html).toContain("p0,p1");
+  });
+
+  // The frame is `ProductsLayout`, which the route wraps around this.
+  it("draws no frame of its own, leaving that to the layout", async () => {
+    const html = await render(
+      <ProductsListSection currentPage={0} basePath="/shop" />,
+    );
+
+    expect(html).not.toContain("<section");
+  });
 });
 
 describe("the products listing pager", () => {
@@ -113,51 +127,15 @@ describe("the products listing pager", () => {
 
     expect(html).toContain("/p/merch?evt_9k3z1=3&amp;page=2");
   });
-});
 
-describe("the products listing body", () => {
-  it("renders a body it was handed above the products", async () => {
-    const section = listingSection(
-      await render(
-        <ProductsListSection currentPage={0} basePath="/p/merch">
-          <p>Season notes</p>
-        </ProductsListSection>,
-      ),
-    );
+  it("draws no pager for a shop that fits on one page", async () => {
+    productCount = 3;
 
-    expect(section.indexOf("Season notes")).toBeGreaterThan(-1);
-    expect(section.indexOf("Season notes")).toBeLessThan(
-      section.indexOf('data-testid="product"'),
-    );
-  });
-
-  it("renders no body wrapper for the /shop route, which passes none", async () => {
     const html = await render(
       <ProductsListSection currentPage={0} basePath="/shop" />,
     );
 
-    expect(html).not.toContain('class="pb-20"');
-  });
-
-  // The body costs no request of its own, so it sits outside the boundaries: a
-  // failed grid read has no business taking an author's prose down with it.
-  //
-  // Asserted on what survives rather than on the error copy: the boundary that
-  // catches the bailout is a client component, and React hands a suspended
-  // boundary's error to the client rather than running its fallback in SSR.
-  // That is also why this cannot see the boundary's *placement* — the body
-  // renders in the server output either way — so the placement itself is
-  // pinned in PageListing/boundaries.test.tsx, where the boundary is stubbed.
-  it("keeps the body when the grid fails", async () => {
-    siteReadFails = true;
-
-    const html = await render(
-      <ProductsListSection currentPage={0} basePath="/p/merch">
-        <p>Season notes</p>
-      </ProductsListSection>,
-    );
-
-    expect(html).toContain("Season notes");
+    expect(html).not.toContain("?page=");
   });
 });
 

@@ -16,7 +16,7 @@ function ProductsListError() {
 
 function ProductsListSkeleton() {
   return (
-    <div className="grid gap-8 pb-20 sm:max-w-full lg:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-8 sm:max-w-full lg:grid-cols-2 xl:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (
         <div key={i} className="flex flex-col gap-3">
           <Skeleton className="aspect-square" />
@@ -31,37 +31,33 @@ function ProductsListSkeleton() {
 }
 
 /**
- * The frame of the products listing, shared by /shop and by a PRODUCTLIST page.
+ * The products listing /shop draws: the grid, its pager, and the boundaries
+ * they need.
  *
- * The page's own body sits *outside* the boundaries on purpose. It is already
- * in hand and costs no request, so putting it under the Suspense would hide
- * readable content behind the grid's skeleton and shift the layout when it
- * resolved, and putting it under the ErrorBoundary would delete an author's
- * prose because an unrelated fetch failed.
+ * This is the component a page gets from a product listing block in its body,
+ * which is why it takes no page content of its own and no frame — `ProductsLayout`
+ * is the frame, and the route composes the two. A PRODUCTLIST page renders that
+ * same layout around its body instead, and never reaches this.
  */
 export function ProductsListSection({
   currentPage,
   basePath,
   searchParams,
-  children,
 }: {
   currentPage: number;
+  /** Path the pager builds hrefs against; only the route knows it. */
   basePath: string;
   searchParams?: SearchParams;
-  children?: React.ReactNode;
 }) {
   return (
-    <section className="py-20">
-      {children ? <div className="pb-20">{children}</div> : null}
-      <ErrorBoundary fallback={<ProductsListError />}>
-        <Suspense fallback={<ProductsListSkeleton />}>
-          <ProductsListContent
-            currentPage={currentPage}
-            basePath={basePath}
-            searchParams={searchParams}
-          />
-        </Suspense>
-      </ErrorBoundary>
-    </section>
+    <ErrorBoundary fallback={<ProductsListError />}>
+      <Suspense fallback={<ProductsListSkeleton />}>
+        <ProductsListContent
+          currentPage={currentPage}
+          basePath={basePath}
+          searchParams={searchParams}
+        />
+      </Suspense>
+    </ErrorBoundary>
   );
 }

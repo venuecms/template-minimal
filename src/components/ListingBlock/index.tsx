@@ -22,6 +22,10 @@ import {
   ProfileListingBlock,
 } from "./blocks";
 
+// The class names a body rendered with these components belongs in: they scope
+// the readable measure so a listing among the prose fills the layout instead.
+export { pageBodyStyles } from "./ListingRoot";
+
 // Annotated with AllListingComponents as well, so a listing type added to the
 // contract fails to compile here until this template can render it — rather
 // than being dropped from published content with a console warning.

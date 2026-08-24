@@ -18,7 +18,7 @@ import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
-import { PaginatedListing } from "@/components/ListingBlock/ListingPager";
+import { PaginatedListing } from "@/components/ListingBlock/ListingRoot";
 
 import { PaginationLinks } from "./index";
 

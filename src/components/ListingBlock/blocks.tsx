@@ -28,16 +28,15 @@
 import type { ListingProps } from "@venuecms/sdk-next";
 
 import { EventsList, ListEvent } from "@/components/EventList";
-import { ListProduct } from "@/components/ListProduct";
+import { ProductsList } from "@/components/ListProduct";
 import { ListPage, PagesList } from "@/components/PageList";
-import { ProfileCompact } from "@/components/ProfileCompact";
-import { TwoSubColumnLayout } from "@/components/layout";
+import { ProfilesList } from "@/components/ProfileList";
 import {
   resolveNewsArticleHref,
   resolvePageHref,
 } from "@/components/utils/pageHref";
 
-import { PaginatedListing } from "./ListingPager";
+import { ListingRoot, PaginatedListing } from "./ListingRoot";
 
 export const EventListingBlock = ({
   records,
@@ -103,16 +102,18 @@ export const PageListingBlock = ({
   }
 
   return (
-    <PagesList className="py-4">
-      {records.map((page) => (
-        <ListPage
-          key={page.id}
-          page={page}
-          site={site}
-          {...resolvePageHref(page)}
-        />
-      ))}
-    </PagesList>
+    <ListingRoot>
+      <PagesList className="py-4">
+        {records.map((page) => (
+          <ListPage
+            key={page.id}
+            page={page}
+            site={site}
+            {...resolvePageHref(page)}
+          />
+        ))}
+      </PagesList>
+    </ListingRoot>
   );
 };
 
@@ -131,11 +132,9 @@ export const ProductListingBlock = ({
       records={records}
       label="Products"
     >
-      <div className="grid gap-8 py-4 sm:grid-cols-2 lg:grid-cols-3">
-        {records.map((product) => (
-          <ListProduct key={product.slug} product={product} site={site} />
-        ))}
-      </div>
+      {/* The shop's own grid, so a block reads as the listing /shop draws
+          rather than a second, plainer way of showing the same products. */}
+      <ProductsList className="py-4" products={records} site={site} />
     </PaginatedListing>
   );
 };
@@ -155,10 +154,6 @@ export const ProfileListingBlock = ({
   pagination,
 }: ListingProps<"profileListing">) => (
   <PaginatedListing pagination={pagination} records={records} label="Profiles">
-    <TwoSubColumnLayout className="py-4">
-      {records.map((profile) => (
-        <ProfileCompact key={profile.slug} profile={profile} />
-      ))}
-    </TwoSubColumnLayout>
+    <ProfilesList profiles={records} className="py-4" />
   </PaginatedListing>
 );

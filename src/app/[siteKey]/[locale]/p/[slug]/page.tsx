@@ -1,4 +1,4 @@
-import { NewsView, Page } from "@/components";
+import { Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import { type SearchParams, getLocalizedContent } from "@venuecms/sdk-next";
@@ -7,7 +7,9 @@ import { notFound } from "next/navigation";
 
 import { PageWithParent } from "@/lib/utils/tree";
 
+import { PageListing } from "@/components/PageListing";
 import { setupSSR } from "@/components/utils";
+import { resolvePageListingLayout } from "@/components/utils/pageLayout";
 
 export const generateMetadata = getGenerateMetadata(getPage);
 
@@ -31,20 +33,33 @@ const PagePage = async ({
 
   try {
     const { data: page } = await getPage({ slug });
-    const { data: pages } = await getPages();
 
-    if (!page || !pages) {
+    if (!page) {
       notFound();
     }
 
-    if (page.type === "NEWS" || page.type === "NEWSLIST") {
+    // Resolved before the page tree is read: only the page layout needs the tree.
+    const listingLayout = resolvePageListingLayout(page.type);
+
+    if (listingLayout) {
       const { content } = getLocalizedContent(page.localizedContent, locale);
+
       return (
-        <NewsView
+        <PageListing
+          layout={listingLayout}
+          locale={locale}
           title={content.title ?? undefined}
+          content={content}
+          basePath={`/p/${slug}`}
           searchParams={resolvedSearchParams}
         />
       );
+    }
+
+    const { data: pages } = await getPages();
+
+    if (!pages) {
+      notFound();
     }
 
     return (

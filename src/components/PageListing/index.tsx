@@ -1,0 +1,87 @@
+/** The listing a page *is*, not `PageListingBlock`, which is a listing of pages. */
+import {
+  type LocalizedContent,
+  type SearchParams,
+  VenueContent,
+} from "@venuecms/sdk-next";
+
+import { cn } from "@/lib/utils";
+
+import { EventsListSection } from "@/components/EventsPage";
+import { contentComponents, pageBodyStyles } from "@/components/ListingBlock";
+import { NewsView } from "@/components/News";
+import { ProfilesListSection } from "@/components/ProfilesPage";
+import { ProductsLayout } from "@/components/ShopPage";
+import { hasRenderableContent } from "@/components/utils/pageContent";
+import type { PageListingLayout } from "@/components/utils/pageLayout";
+import { readPage } from "@/components/utils/searchParams";
+
+export const PageListing = ({
+  layout,
+  locale,
+  title,
+  content,
+  basePath,
+  searchParams,
+}: {
+  layout: PageListingLayout;
+  locale: string;
+  title?: string;
+  /** The page's own body, rendered above the records. */
+  content?: LocalizedContent;
+  /** Path any pager builds hrefs against; only the route knows it. */
+  basePath: string;
+  searchParams: SearchParams;
+}) => {
+  // Emptiness decided here, not in the views, which would otherwise space
+  // around a VenueContent that renders nothing.
+  const body =
+    content && hasRenderableContent(content) ? (
+      <VenueContent
+        // The measure sits on the prose, not the body, so a listing block in it
+        // fills the layout the way the hardcoded listings do.
+        className={cn(pageBodyStyles, "text-sm")}
+        content={content}
+        contentStyles={contentComponents}
+        searchParams={searchParams}
+      />
+    ) : null;
+
+  switch (layout) {
+    // No body: this layout renders the latest article's, and two would compete.
+    case "news":
+      return <NewsView title={title} searchParams={searchParams} />;
+    case "events":
+      return (
+        <EventsListSection locale={locale} title={title}>
+          {body}
+        </EventsListSection>
+      );
+    // Frame only, and no title: /shop draws no heading, and the records are the
+    // body's own product listing block, not a second grid fetched here.
+    //
+    // Nothing to frame means no frame: a bare section is a screenful of padding.
+    case "products":
+      return body ? <ProductsLayout>{body}</ProductsLayout> : null;
+    // The events frame, which is also the archive's: with no /profiles route to
+    // mirror, the index layout this template already uses is the one to match.
+    case "profiles":
+      return (
+        <ProfilesListSection
+          title={title}
+          basePath={basePath}
+          currentPage={readPage(searchParams)}
+          searchParams={searchParams}
+        >
+          {body}
+        </ProfilesListSection>
+      );
+  }
+
+  // A layout added to the union without a case above is a compile error here
+  // rather than a page that renders nothing: React accepts an undefined return,
+  // so falling off this switch would be silent at runtime and at typecheck.
+  layout satisfies never;
+
+  return null;
+};

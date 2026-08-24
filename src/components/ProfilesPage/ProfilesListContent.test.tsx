@@ -1,0 +1,308 @@
+import { setConfig } from "@venuecms/sdk-next";
+import { NextIntlClientProvider } from "next-intl";
+import type { ReactNode } from "react";
+import { renderToReadableStream } from "react-dom/server";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { PROFILES_PER_PAGE, ProfilesListContent } from "./ProfilesListContent";
+import { ProfilesListSection } from "./ProfilesListSection";
+
+vi.mock("next/server", () => ({ connection: async () => {} }));
+
+// ColumnLeft is emitted first, so a body moved into it still reads as "before
+// the profiles" unless the assertion names the column that should hold it.
+const columnRight = (html: string) => html.split('class="col-span-2')[1] ?? "";
+
+const render = async (node: ReactNode) => {
+  const stream = await renderToReadableStream(
+    <NextIntlClientProvider locale="en" messages={{}}>
+      {node}
+    </NextIntlClientProvider>,
+    // The roster's boundary is expected to catch a failed read; without this
+    // the recoverable error still reaches the console and reads as a test error.
+    { onError: () => {} },
+  );
+  await stream.allReady;
+  return new Response(stream).text();
+};
+
+const requestedUrls = () =>
+  vi
+    .mocked(globalThis.fetch)
+    .mock.calls.map(([input]) =>
+      input instanceof Request ? input.url : String(input),
+    );
+
+const aProfile = (title: string) => ({
+  siteId: "site-id",
+  slug: title.toLowerCase().replace(/\s+/g, "-"),
+  localizedContent: [{ siteId: "site-id", locale: "en", title }],
+});
+
+/** A page of the roster `n` records long, to page off the end of. */
+const aRoster = (n: number) =>
+  Array.from({ length: n }, (_, i) => aProfile(`Artist ${i}`));
+
+const renderRoster = (
+  props: Partial<Parameters<typeof ProfilesListSection>[0]> = {},
+) =>
+  render(
+    <ProfilesListSection basePath="/p/roster" currentPage={0} {...props} />,
+  );
+
+let profileRecords: Array<Record<string, unknown>> = [];
+let profilesReadFails = false;
+/** The roster's total, or null for the endpoint answering without one. */
+let profilesCount: number | null = null;
+
+beforeEach(() => {
+  setConfig({ siteKey: "test-site" });
+  profileRecords = [];
+  profilesReadFails = false;
+  profilesCount = null;
+
+  vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+    const url = input instanceof Request ? input.url : String(input);
+
+    if (url.includes("/profiles")) {
+      return profilesReadFails
+        ? new Response("upstream is down", { status: 500 })
+        : new Response(
+            JSON.stringify({
+              records: profileRecords,
+              // Omitted, not nulled, when there is none: `count` is optional on
+              // this response and a real endpoint leaves the key off entirely.
+              ...(profilesCount === null ? {} : { count: profilesCount }),
+            }),
+            { status: 200, headers: { "content-type": "application/json" } },
+          );
+    }
+
+    return new Response(
+      JSON.stringify({
+        id: "site-id",
+        timeZone: "Europe/Berlin",
+        settings: {},
+      }),
+      { status: 200, headers: { "content-type": "application/json" } },
+    );
+  });
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe("the profiles listing", () => {
+  it("draws the profiles the endpoint returned", async () => {
+    profileRecords = [aProfile("An Artist")];
+
+    const html = await renderRoster({ title: "Artists" });
+
+    expect(html).toContain("An Artist");
+    expect(html).toContain("/artists/an-artist");
+  });
+
+  it("heads itself with the listing page's own title", async () => {
+    expect(await renderRoster({ title: "Roster" })).toContain("Roster");
+  });
+
+  // Unlike events and shop, this template has no /profiles route and so no page
+  // record to fall back to, which is why the heading is only ever the page's.
+  // A locale saved without a title yields "", not undefined, so the fallback
+  // has to read emptiness rather than absence or the heading column draws blank.
+  it.each([
+    ["no title", undefined],
+    ["an empty title", ""],
+    ["a whitespace-only title", "   "],
+  ])("falls back to a heading of its own given %s", async (_label, title) => {
+    const html = await renderRoster({ title });
+
+    expect(html).toContain("artists");
+    expect(requestedUrls().some((url) => url.includes("/pages"))).toBe(false);
+  });
+
+  it("says so when there are no profiles", async () => {
+    expect(await renderRoster({ title: "Artists" })).toContain(
+      "No artists found",
+    );
+  });
+
+  // An outage rendered as an empty roster is a cached 200 claiming the site has
+  // no artists, which is why the read has to fail loudly rather than fall
+  // through to the empty state. Asserted on the throw rather than on rendered
+  // markup: the boundary that catches it is a client component, and React hands
+  // a suspended boundary's error to the client rather than running it in SSR.
+  it("fails loudly rather than reporting an outage as an empty roster", async () => {
+    profilesReadFails = true;
+
+    await expect(
+      ProfilesListContent({ basePath: "/p/roster", currentPage: 0 }),
+    ).rejects.toThrow("The profiles endpoint could not be read.");
+  });
+
+  // A profile card needs no site, so asking for one would only add a request
+  // that a failed read could then 404 the whole page on.
+  it("reads no site", async () => {
+    await renderRoster({ title: "Artists" });
+
+    expect(requestedUrls().every((url) => url.includes("/profiles"))).toBe(
+      true,
+    );
+  });
+
+  // A `profileListing` block sends no ordering unless its author picks one.
+  // Sending one here would order the same roster differently on the two
+  // surfaces the shared `ProfilesList` exists to keep identical.
+  it("orders the roster the way a content block does", async () => {
+    await renderRoster({ title: "Artists" });
+
+    const query = new URL(requestedUrls()[0]).searchParams;
+
+    expect(query.get("dir")).toBeNull();
+    expect(query.get("orderBy")).toBeNull();
+  });
+
+  it("renders a body it was handed above the profiles", async () => {
+    profileRecords = [aProfile("An Artist")];
+
+    const column = columnRight(
+      await renderRoster({
+        title: "Artists",
+        children: <p>Roster notes</p>,
+      }),
+    );
+
+    expect(column.indexOf("Roster notes")).toBeGreaterThan(-1);
+    expect(column.indexOf("Roster notes")).toBeLessThan(
+      column.indexOf("An Artist"),
+    );
+  });
+
+  // The heading and the body cost no request of their own, so they sit outside
+  // the boundaries: a roster failure has no business taking an author's prose
+  // or the page's title down with it.
+  it("keeps the title and the body when the roster fails", async () => {
+    profilesReadFails = true;
+
+    const html = await renderRoster({
+      title: "Artists",
+      children: <p>Roster notes</p>,
+    });
+
+    expect(html).toContain("Artists");
+    expect(html).toContain("Roster notes");
+    // And does not pass the failure off as a roster that is merely empty.
+    expect(html).not.toContain("No artists found");
+  });
+});
+
+/**
+ * The roster pages like /archive and /shop: a shared `?page=`, hrefs against
+ * the page's own path, and the reader taken to the top of the new page.
+ *
+ * What it cannot borrow from them is a single piece of arithmetic. `count` is
+ * optional on the profiles response, so the end of the roster is found one of
+ * two ways depending on whether the endpoint volunteered a total.
+ */
+describe("the profile roster's pager", () => {
+  it("asks the endpoint for the page it was given", async () => {
+    profileRecords = aRoster(PROFILES_PER_PAGE);
+
+    await renderRoster({ currentPage: 2 });
+
+    expect(new URL(requestedUrls()[0]).searchParams.get("page")).toBe("2");
+  });
+
+  it("offers no previous page from the first", async () => {
+    profileRecords = aRoster(PROFILES_PER_PAGE);
+    profilesCount = PROFILES_PER_PAGE * 3;
+
+    expect(await renderRoster()).not.toContain("Previous page");
+  });
+
+  // A reader who overshoots the roster — by following the countless case's
+  // speculative next link, or by hand-editing the URL — must not be stranded.
+  it("keeps a way back off an empty page", async () => {
+    profileRecords = [];
+
+    expect(await renderRoster({ currentPage: 2 })).toContain(
+      "/p/roster?page=1",
+    );
+  });
+
+  // Paging the roster must not reset a listing block sitting in the page's
+  // own body, which pages by a param of its own.
+  it("carries the page's other params through", async () => {
+    profileRecords = aRoster(PROFILES_PER_PAGE);
+
+    const html = await renderRoster({
+      searchParams: { page: "0", prf_9k3z1: "3" },
+    });
+
+    expect(html).toContain("prf_9k3z1=3");
+  });
+
+  // A PROFILELIST page can carry several pagers — every listing block in its
+  // body brings one — so the roster's landmark needs a name of its own.
+  it("names its own nav", async () => {
+    profileRecords = aRoster(PROFILES_PER_PAGE);
+
+    expect(await renderRoster()).toContain('aria-label="Artists pagination"');
+  });
+
+  // Nothing to page is nothing to draw: a single-page roster gets no nav of
+  // two dead arrows.
+  it("draws no pager for a roster that fits on one page", async () => {
+    profileRecords = aRoster(3);
+    profilesCount = 3;
+
+    expect(await renderRoster()).not.toContain("Artists pagination");
+  });
+
+  // Given a total, the records already behind the reader plus the ones on this
+  // page settle exactly where the roster ends.
+  describe("given a count", () => {
+    it("links on while records remain beyond this page", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+      profilesCount = PROFILES_PER_PAGE + 1;
+
+      expect(await renderRoster()).toContain("/p/roster?page=1");
+    });
+
+    // The bug a full page alone cannot see: 50 of 50 is the end of the roster,
+    // not the middle of it.
+    it("offers no next page from a full last one", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+      profilesCount = PROFILES_PER_PAGE;
+
+      expect(await renderRoster()).not.toContain("page=1");
+    });
+
+    it("offers no next page from the last of several", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+      profilesCount = PROFILES_PER_PAGE * 2;
+
+      expect(await renderRoster({ currentPage: 1 })).not.toContain("page=2");
+    });
+  });
+
+  // Without one, a page that came back full is the only evidence another may
+  // follow — the same rule the SDK pages a `profileListing` block by, which is
+  // what keeps the two surfaces agreeing about where the roster ends.
+  describe("given no count", () => {
+    it("links on while pages come back full", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE);
+
+      expect(await renderRoster()).toContain("/p/roster?page=1");
+    });
+
+    // The short page is the end of the roster; a next link here walks the
+    // reader onto a page that is empty by construction.
+    it("offers no next page from a short one", async () => {
+      profileRecords = aRoster(PROFILES_PER_PAGE - 1);
+
+      expect(await renderRoster()).not.toContain("page=1");
+    });
+  });
+});

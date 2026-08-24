@@ -36,6 +36,34 @@ import type { ListingPagination } from "@venuecms/sdk-next";
 
 import { PaginationLinks } from "@/components/Pagination";
 
+/**
+ * The class names for a page body rendered through `contentComponents`.
+ *
+ * The readable measure is scoped to the body's *children* rather than the body
+ * itself, so a listing — which marks its root `data-listing` below — fills the
+ * layout the way the hardcoded /shop and /archive listings do, while the prose
+ * around it keeps a line length someone can read.
+ *
+ * It lives here rather than beside the body it styles because it is one half of
+ * a pair: `ListingRoot` is what opts a listing out of that selector, and the two
+ * only make sense read together.
+ */
+export const pageBodyStyles =
+  "flex flex-col gap-6 [&>*:not([data-listing])]:max-w-[42rem]";
+
+/**
+ * What every listing block draws itself into.
+ *
+ * One flex item rather than two, because a pager has to travel with the records
+ * it pages: left as siblings, a body that spaces its children apart would open
+ * the same gap between a listing and its own pager as between two paragraphs.
+ */
+export const ListingRoot = ({ children }: { children: React.ReactNode }) => (
+  <div data-listing className="flex flex-col gap-6">
+    {children}
+  </div>
+);
+
 export const PaginatedListing = ({
   pagination,
   records,
@@ -68,13 +96,13 @@ export const PaginatedListing = ({
     ) : null;
 
   if (!records.length) {
-    return links?.prevHref ? pager : null;
+    return links?.prevHref ? <ListingRoot>{pager}</ListingRoot> : null;
   }
 
   return (
-    <>
+    <ListingRoot>
       {children}
       {pager}
-    </>
+    </ListingRoot>
   );
 };

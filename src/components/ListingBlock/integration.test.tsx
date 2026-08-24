@@ -26,7 +26,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { renderToReadableStream } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { contentComponents } from "./index";
+import { contentComponents, pageBodyStyles } from "./index";
 
 vi.mock("next/server", () => ({ connection: async () => {} }));
 
@@ -107,6 +107,96 @@ const render = async (node: React.ReactNode) => {
 
   return { html: await new Response(stream).text(), errors };
 };
+
+const VOID_TAGS = new Set([
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "source",
+  "track",
+  "wbr",
+]);
+
+/**
+ * How deeply the first `data-listing` element is nested inside the body
+ * container, or -1 if it is not in there at all. 0 means a direct child.
+ *
+ * Walked off the tag stream because there is no DOM implementation installed
+ * and the claim is structural: `pageBodyStyles` exempts listings with
+ * `[&>*:not([data-listing])]`, and `>` matches direct children only.
+ */
+const listingDepthInBody = (html: string) => {
+  // Matched on the part of the selector React does not escape, so this does not
+  // also become a test of HTML entity encoding.
+  const container = html.indexOf(":not([data-listing])]");
+
+  if (container === -1) {
+    return -1;
+  }
+
+  const tag = /<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:"[^"]*"|[^>"])*?)(\/?)>/g;
+  tag.lastIndex = html.indexOf(">", container) + 1;
+
+  let depth = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = tag.exec(html))) {
+    const [, closing, name, attrs, selfClosing] = match;
+
+    if (closing) {
+      // Closing the container itself: the listing was never reached.
+      if (depth === 0) {
+        return -1;
+      }
+
+      depth -= 1;
+      continue;
+    }
+
+    if (attrs.includes("data-listing")) {
+      return depth;
+    }
+
+    if (!selfClosing && !VOID_TAGS.has(name)) {
+      depth += 1;
+    }
+  }
+
+  return -1;
+};
+
+/**
+ * The full-width mechanism rests on something this template does not control:
+ * the SDK rendering a block's `ListingRoot` as a *direct* child of the body it
+ * renders into. If the renderer ever wraps top-level nodes, `>` stops matching,
+ * every listing silently collapses to the prose measure, and no assertion made
+ * against the class string alone would notice.
+ */
+describe("a listing block inside a page body", () => {
+  it("is a direct child of the body, where the measure exempts it", async () => {
+    const { html } = await render(
+      <VenueContent
+        className={pageBodyStyles}
+        content={contentWith(
+          { type: "paragraph", content: [{ type: "text", text: "Notes" }] },
+          eventListing({ limit: 2 }),
+        )}
+        contentStyles={contentComponents}
+        searchParams={{}}
+      />,
+    );
+
+    expect(html).toContain("Notes");
+    expect(listingDepthInBody(html)).toBe(0);
+  });
+});
 
 describe("a listing block, end to end", () => {
   it("renders the endpoint's records through this template's list component", async () => {

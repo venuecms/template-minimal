@@ -1,8 +1,11 @@
+import type { SearchParams } from "@venuecms/sdk-next";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+
+import { buildPageHref } from "@/components/utils/searchParams";
 
 /**
  * The prev/next control itself: two arrows and nothing else.
@@ -87,6 +90,8 @@ interface PaginationProps {
   currentPage: number;
   totalPages: number;
   baseUrl: string;
+  /** Carried through, so paging the page does not reset a listing block in its body. */
+  searchParams?: SearchParams;
   className?: string;
 }
 
@@ -94,13 +99,14 @@ export const Pagination = ({
   currentPage,
   totalPages,
   baseUrl,
+  searchParams = {},
   className,
 }: PaginationProps) => {
   if (totalPages < 1) {
     return null; // Don't render pagination if there's only one page or less
   }
 
-  const pageHref = (page: number) => `${baseUrl}?page=${page}`;
+  const pageHref = (page: number) => buildPageHref(baseUrl, searchParams, page);
 
   return (
     <PaginationLinks

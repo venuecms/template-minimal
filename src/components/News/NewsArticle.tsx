@@ -7,7 +7,9 @@ import {
 import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
 
-import { contentComponents } from "@/components/ListingBlock";
+import { cn } from "@/lib/utils";
+
+import { contentComponents, pageBodyStyles } from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";
@@ -58,7 +60,10 @@ export const NewsArticle = async ({
         {date ? <div className="text-sm text-muted">{date}</div> : null}
         {article.image ? <VenueImage image={article.image} /> : null}
         <VenueContent
-          className="flex max-w-[42rem] flex-col gap-6 text-sm"
+          // The measure sits on the prose, not the body: a listing block draws
+          // the same wide grid /shop does and would otherwise be crushed into
+          // a reading column.
+          className={cn(pageBodyStyles, "text-sm")}
           content={content}
           contentStyles={contentComponents}
           searchParams={searchParams}

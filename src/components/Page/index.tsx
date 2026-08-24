@@ -6,9 +6,10 @@ import {
 } from "@venuecms/sdk-next";
 import { useLocale } from "next-intl";
 
+import { cn } from "@/lib/utils";
 import { PageWithParent } from "@/lib/utils/tree";
 
-import { contentComponents } from "@/components/ListingBlock";
+import { contentComponents, pageBodyStyles } from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { PageTree } from "../PageTree";
@@ -56,7 +57,7 @@ export const Page = ({
 
       <ColumnRight>
         <VenueContent
-          className="flex max-w-[42rem] flex-col gap-6 text-sm"
+          className={cn(pageBodyStyles, "text-sm")}
           content={content}
           contentStyles={contentComponents}
           searchParams={searchParams}

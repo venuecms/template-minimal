@@ -32,12 +32,7 @@ export async function ProductsContent() {
       <div className="grid grid-cols-2 gap-8 pb-20 sm:max-w-full sm:grid-cols-4 xl:grid-cols-4">
         {topProducts?.length
           ? topProducts.map((product) => (
-              <ListProduct
-                key={product.slug}
-                featured={true}
-                product={product}
-                site={site}
-              />
+              <ListProduct key={product.slug} product={product} site={site} />
             ))
           : "No products found"}
       </div>

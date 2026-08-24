@@ -5,7 +5,11 @@ import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 import { Skeleton } from "@/components/ui/Input/Skeleton";
 import { ErrorBoundary } from "@/components/utils/ErrorBoundary";
 
-import { EventsHeading, EventsListContent } from "./EventsListContent";
+import {
+  EventsHeading,
+  EventsHeadingText,
+  EventsListContent,
+} from "./EventsListContent";
 
 function EventsListError() {
   return (
@@ -60,13 +64,26 @@ export function EventsListSection({
   return (
     <TwoColumnLayout>
       <ColumnLeft className="text-sm text-secondary">
-        <p className="pb-8 text-primary">
-          {ownTitle ?? (
-            <Suspense fallback={<Skeleton className="w-32" />}>
+        {ownTitle ? (
+          <EventsHeadingText>{ownTitle}</EventsHeadingText>
+        ) : (
+          // Boundaries of its own, not the records': this read is the only one
+          // the left column makes, and an unreadable title has no business
+          // either waiting on the list or taking the route down with it.
+          <ErrorBoundary
+            fallback={<EventsHeadingText>upcoming events</EventsHeadingText>}
+          >
+            <Suspense
+              fallback={
+                <div className="pb-8">
+                  <Skeleton className="w-32" />
+                </div>
+              }
+            >
               <EventsHeading locale={locale} />
             </Suspense>
-          )}
-        </p>
+          </ErrorBoundary>
+        )}
       </ColumnLeft>
       <ColumnRight>
         {children}

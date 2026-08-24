@@ -57,7 +57,6 @@ export const PageListing = ({
     case "products":
       return (
         <ProductsListSection
-          locale={locale}
           basePath={basePath}
           currentPage={readPage(searchParams)}
           searchParams={searchParams}

@@ -16,18 +16,11 @@ const ProductsPage = async ({
   params: Promise<Params>;
   searchParams: Promise<{ page: string }>;
 }) => {
-  const { locale } = await params;
   await setupSSR({ params });
 
   const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
 
-  return (
-    <ProductsListSection
-      locale={locale}
-      currentPage={currentPage}
-      basePath="/shop"
-    />
-  );
+  return <ProductsListSection currentPage={currentPage} basePath="/shop" />;
 };
 
 export default ProductsPage;

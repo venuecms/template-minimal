@@ -4,24 +4,36 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
 import { EventsList, ListEvent } from "@/components/EventList";
-import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-export async function EventsListContent({
-  locale,
-  title,
-  children,
-}: {
-  locale: string;
-  /** Heading; a listing page passes its own, else the "events" record is read for one. */
-  title?: string;
-  children?: React.ReactNode;
-}) {
+/**
+ * The heading a listing brings no title of its own: the "events" page record's.
+ *
+ * Its own component, and so its own boundary, because it is the one part of the
+ * left column that costs a request. A listing page passes its title straight in
+ * and this never renders.
+ */
+export async function EventsHeading({ locale }: { locale: string }) {
+  const { data: page } = await getPage({ slug: "events" });
+
+  const recordTitle = page
+    ? getLocalizedContent(page.localizedContent, locale).content.title
+    : null;
+
+  // Emptiness, not absence: a locale saved without a title yields "", which
+  // would otherwise draw a blank heading in place of the fallback.
+  return recordTitle?.trim() ? recordTitle : "upcoming events";
+}
+
+/**
+ * The records half of the events listing. Draws only the list: the frame, the
+ * heading and any page body live in `EventsListSection`, above the Suspense
+ * boundary, so none of them wait on this fetch or vanish with it.
+ */
+export async function EventsListContent() {
   await connection();
 
-  const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
+  const [{ data: events }, { data: site }] = await Promise.all([
     getEvents({ limit: 60, upcoming: true }),
-    // Read for the title only, so skipped when the caller brought one.
-    title ? { data: null } : getPage({ slug: "events" }),
     getSite(),
   ]);
 
@@ -29,29 +41,13 @@ export async function EventsListContent({
     notFound();
   }
 
-  const pageTitle =
-    title ??
-    (page
-      ? getLocalizedContent(page.localizedContent, locale).content.title
-      : "upcoming events");
-
-  return (
-    <TwoColumnLayout>
-      <ColumnLeft className="text-sm text-secondary">
-        <p className="pb-8 text-primary">{pageTitle}</p>
-      </ColumnLeft>
-      <ColumnRight>
-        {children}
-        {events?.records.length ? (
-          <EventsList className="gap-y-12">
-            {events.records.map((event) => (
-              <ListEvent key={event.id} event={event} site={site} withImage />
-            ))}
-          </EventsList>
-        ) : (
-          "No events found"
-        )}
-      </ColumnRight>
-    </TwoColumnLayout>
+  return events?.records.length ? (
+    <EventsList className="gap-y-12">
+      {events.records.map((event) => (
+        <ListEvent key={event.id} event={event} site={site} withImage />
+      ))}
+    </EventsList>
+  ) : (
+    "No events found"
   );
 }

@@ -202,7 +202,7 @@ describe("PageListing", () => {
   });
 
   it("starts at the first page rather than fetching a nonsense one", async () => {
-    for (const page of ["not-a-page", "-2", "3abc", "2.5", "1e3", ""]) {
+    for (const page of ["not-a-page", "-2", "3abc", "2.5", ""]) {
       expect(
         await renderListing({ layout: "profiles", searchParams: { page } }),
       ).toContain('data-current-page="0"');
@@ -211,6 +211,18 @@ describe("PageListing", () => {
     expect(
       await renderListing({ layout: "profiles", searchParams: {} }),
     ).toContain('data-current-page="0"');
+  });
+
+  // A listing block in this page's body reads the same query string with the
+  // SDK's reader. If this route read "1e3" as page 0 while the block read it as
+  // page 1000, one URL would mean two different pages on one screen.
+  it("reads a page the SDK's own reader accepts", async () => {
+    const html = await renderListing({
+      layout: "profiles",
+      searchParams: { page: "1e3" },
+    });
+
+    expect(html).toContain('data-current-page="1000"');
   });
 
   it("clamps a hand-edited page rather than handing it to the endpoint", async () => {

@@ -16,14 +16,34 @@ describe("readPage", () => {
     expect(readPage({ page: ["1", "2"] })).toBe(1);
   });
 
-  // Digits only. Number() would read "1e3" as the deepest offset the endpoint
-  // will scan and "-2" as a negative one; parseInt would take "12abc" for 12.
-  it.each(["not-a-page", "-2", "3abc", "2.5", "1e3", "", " 1"])(
+  // parseInt would take "12abc" for 12, and a negative page is a negative
+  // offset for the endpoint to walk.
+  it.each(["not-a-page", "-2", "3abc", "2.5", ""])(
     "starts at the first page rather than sending %j to the endpoint",
     (page) => {
       expect(readPage({ page })).toBe(0);
     },
   );
+
+  /**
+   * The SDK reads the page for a listing block out of the same query string
+   * this reads the route's page out of, with its own unexported reader. Where
+   * the two disagree, one URL means two different pages on one screen: the
+   * route's pager builds its hrefs from a page the block is not on.
+   *
+   * So these cases are not about whether the spelling is a good one — they are
+   * about matching `readPage` in @venuecms/sdk-next, which coerces with
+   * `Number` and accepts whatever comes back an integer.
+   */
+  describe("agreeing with the SDK's own reader", () => {
+    it("takes an exponent, which Number resolves to a whole page", () => {
+      expect(readPage({ page: "1e3" })).toBe(1000);
+    });
+
+    it("takes a padded page, which Number trims", () => {
+      expect(readPage({ page: " 1" })).toBe(1);
+    });
+  });
 
   it("clamps a hand-edited page to the deepest the endpoint will scan", () => {
     expect(readPage({ page: String(MAX_PAGE + 5000) })).toBe(MAX_PAGE);

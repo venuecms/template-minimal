@@ -1,11 +1,11 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { FormEvent, useState, useTransition } from "react";
-
-import { requestPasswordReset } from "@/lib/auth";
+import { FormEvent, useState } from "react";
 
 import { Input } from "../ui/Input";
+import { passwordResetMutationOptions } from "./queries";
 
 /**
  * Asks VenueCMS to email a reset link. Choosing a new password happens on the
@@ -17,43 +17,34 @@ export const ResetPasswordForm = ({ onBack }: { onBack: () => void }) => {
   const t = useTranslations("account");
 
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState<{
-    text: string;
-    isError: boolean;
-  } | null>(null);
-  const [isPending, startTransition] = useTransition();
+
+  const {
+    mutate,
+    isPending,
+    isSuccess: isSent,
+    isError,
+  } = useMutation(passwordResetMutationOptions);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setMessage(null);
 
-    startTransition(async () => {
-      // The reset link has to carry somewhere to come back to. Reading it here
-      // rather than on mount keeps this out of the server render, where there
-      // is no location to read.
-      const accepted = await requestPasswordReset({
-        email,
-        origin: window.location.origin,
-      });
-
-      setMessage(
-        accepted
-          ? { text: t("check_email"), isError: false }
-          : { text: t("reset_failed"), isError: true },
-      );
-    });
+    // The reset link has to carry somewhere to come back to. Reading the origin
+    // on submit rather than on mount keeps this out of the server render, where
+    // there is no location to read.
+    mutate({ email, origin: window.location.origin });
   };
-
-  const isSent = message !== null && !message.isError;
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-      {message ? (
-        <p
-          className={message.isError ? "text-sm text-red-600" : "text-sm"}
-          role={message.isError ? "alert" : "status"}
-        >
-          {message.text}
+      {isSent ? (
+        <p className="text-sm" role="status">
+          {t("check_email")}
+        </p>
+      ) : null}
+
+      {isError ? (
+        <p className="text-sm text-red-600" role="alert">
+          {t("reset_failed")}
         </p>
       ) : null}
 

@@ -1,17 +1,14 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FormEvent, useState, useTransition } from "react";
+import { FormEvent, useState } from "react";
 
 import { Input } from "../ui/Input";
 import { useAccount } from "./provider";
-import {
-  type CredentialsMode,
-  type SubmitMessage,
-  resolveSubmit,
-  submitCredentials,
-} from "./submit";
+import { credentialsMutationOptions } from "./queries";
+import { type CredentialsMode, type SubmitMessage } from "./submit";
 
 /**
  * Log in and sign up ask for the same two fields and differ only in which
@@ -28,16 +25,28 @@ export const CredentialsForm = ({
   onSignedIn: () => void;
 }) => {
   const t = useTranslations("account");
-  const { siteKey, refresh } = useAccount();
+  const { siteKey } = useAccount();
+  const queryClient = useQueryClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRevealed, setPasswordRevealed] = useState(false);
-  const [error, setError] = useState<SubmitMessage | null>(null);
-  const [notice, setNotice] = useState<SubmitMessage | null>(null);
-  const [isPending, startTransition] = useTransition();
+
+  const {
+    mutate,
+    reset,
+    data: view,
+    isPending,
+  } = useMutation(credentialsMutationOptions(queryClient, siteKey));
 
   const isSignup = mode === "signup";
+
+  // Both come off the one resolved view, so the form can never be showing a
+  // rejection and a notice at once.
+  const error: SubmitMessage | null =
+    view?.kind === "error" ? view.message : null;
+  const notice: SubmitMessage | null =
+    view?.kind === "notice" ? view.message : null;
 
   /** The API answers in English; anything the template says is translated. */
   const read = (message: SubmitMessage) =>
@@ -46,35 +55,23 @@ export const CredentialsForm = ({
   // A rejection belongs to the screen that produced it — carrying "Invalid login
   // credentials" over to the sign-up form would read as a rejected signup.
   const changeMode = (next: "login" | "signup" | "reset") => {
-    setError(null);
-    setNotice(null);
+    reset();
     onModeChange(next);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null);
-    setNotice(null);
 
-    startTransition(async () => {
-      const outcome = await submitCredentials(mode, siteKey, {
-        email,
-        password,
-      });
-
-      // Only a signed-in outcome has a session to go looking for.
-      const hasSession =
-        outcome.kind === "signed-in" ? !!(await refresh()) : false;
-      const view = resolveSubmit(outcome, hasSession);
-
-      if (view.kind === "close") {
-        onSignedIn();
-      } else if (view.kind === "notice") {
-        setNotice(view.message);
-      } else {
-        setError(view.message);
-      }
-    });
+    mutate(
+      { mode, credentials: { email, password } },
+      {
+        onSuccess: (result) => {
+          if (result.kind === "close") {
+            onSignedIn();
+          }
+        },
+      },
+    );
   };
 
   if (notice) {

@@ -45,7 +45,6 @@ vi.mock("../Account/provider", () => ({
   useAccount: () => ({
     account: state.account,
     isLoading: state.isLoading,
-    refresh: async () => {},
     siteKey: "sample",
   }),
 }));

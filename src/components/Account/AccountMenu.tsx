@@ -1,47 +1,34 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
-
-import { signOut } from "@/lib/auth";
 
 import { useAccount } from "./provider";
+import { signOutMutationOptions } from "./queries";
 
 /** What a signed-in visitor sees in the dialog. */
 export const AccountMenu = ({ onSignedOut }: { onSignedOut: () => void }) => {
   const t = useTranslations("account");
-  const { account, siteKey, refresh } = useAccount();
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState("");
+  const { account, siteKey } = useAccount();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending, isError } = useMutation(
+    signOutMutationOptions(queryClient, siteKey),
+  );
 
   const handleSignOut = () => {
-    setError("");
-
-    startTransition(async () => {
-      const result = await signOut(siteKey);
-
-      if (!result.ok) {
-        // Closing here would tell the visitor they had signed out while their
-        // session cookie is still live.
-        setError(t("signout_failed"));
-        return;
-      }
-
-      // Close first: re-reading `me` swaps this menu for the log-in form, which
-      // would blink into view on the way out.
-      onSignedOut();
-
-      // The API clears the session cookie on its response; re-reading `me` is
-      // what turns that into a signed-out nav.
-      await refresh();
-    });
+    // Only on the way out: closing on a refusal would tell the visitor they had
+    // signed out while their session cookie is still live. The mutation clears
+    // the cached session itself, so the dialog closes on the same tick the nav
+    // goes back to saying "Log in" rather than a round-trip later.
+    mutate(undefined, { onSuccess: onSignedOut });
   };
 
   return (
     <div className="flex flex-col items-start gap-4">
-      {error ? (
+      {isError ? (
         <p className="text-sm text-red-600" role="alert">
-          {error}
+          {t("signout_failed")}
         </p>
       ) : null}
 

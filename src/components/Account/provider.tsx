@@ -1,27 +1,17 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-} from "react";
+import { PropsWithChildren, createContext, useContext, useMemo } from "react";
 
-import { type Account, getAccount } from "@/lib/auth";
+import type { Account } from "@/lib/auth";
+
+import { accountQueryOptions } from "./queries";
 
 interface AccountContextType {
   /** The signed-in visitor, or null once we know there is no session. */
   account: Account | null;
   /** True until the first `me` answer lands, so the trigger can stay quiet. */
   isLoading: boolean;
-  /**
-   * Re-reads the session after a sign-in or sign-out changes the cookie, and
-   * resolves to what it found — the caller needs that to tell a sign-in that
-   * took from one whose cookie never stuck.
-   */
-  refresh: () => Promise<Account | null>;
   siteKey: string;
 }
 
@@ -39,21 +29,12 @@ export const AccountProvider = ({
    */
   enabled: boolean;
 }>) => {
-  const { data, isPending, refetch } = useQuery({
-    queryKey: ["account", siteKey],
-    queryFn: () => getAccount(siteKey),
+  // Reading only: signing in and out write the new session into this same entry
+  // themselves, so there is nothing here to refresh on their behalf.
+  const { data, isPending } = useQuery({
+    ...accountQueryOptions(siteKey),
     enabled,
-    // Whether there is a session is a property of the visitor's cookie, not of
-    // the site's content, so it must never be served from an earlier visitor's
-    // cached answer the way the content queries are.
-    staleTime: 0,
-    gcTime: 0,
   });
-
-  const refresh = useCallback(async () => {
-    const { data: account } = await refetch();
-    return account ?? null;
-  }, [refetch]);
 
   const contextValue = useMemo(
     () => ({
@@ -61,10 +42,9 @@ export const AccountProvider = ({
       // A disabled query never resolves, which would otherwise read as
       // "loading" forever.
       isLoading: enabled && isPending,
-      refresh,
       siteKey,
     }),
-    [data, enabled, isPending, refresh, siteKey],
+    [data, enabled, isPending, siteKey],
   );
 
   return (

@@ -8,5 +8,28 @@
     "past_events": "Tidligere begivenheder",
     "see_all_upcoming_events": "se alle kommende begivenheder",
     "events": "Begivenheder"
+  },
+  "account": {
+    "account": "Konto",
+    "login": "Log ind",
+    "logout": "Log ud",
+    "signup": "Opret konto",
+    "create_account": "Opret konto",
+    "reset_password": "Nulstil adgangskode",
+    "email": "E-mail",
+    "password": "Adgangskode",
+    "show_password": "Vis adgangskode",
+    "hide_password": "Skjul adgangskode",
+    "close": "Luk",
+    "forgot_password": "Har du glemt din adgangskode?",
+    "no_account": "Har du ikke en konto?",
+    "have_account": "Har du allerede en konto?",
+    "back_to_login": "Tilbage til log ind",
+    "check_email": "Tjek din e-mail for et link til at nulstille din adgangskode.",
+    "reset_failed": "Der opstod et problem med at anmode om nulstilling.",
+    "confirm_email": "Tjek din e-mail for at bekræfte din konto.",
+    "signout_failed": "Kunne ikke logge ud. Prøv igen.",
+    "request_failed": "Noget gik galt. Prøv igen.",
+    "session_failed": "Logget ind, men sessionen kunne ikke gemmes. Tjek, om din browser blokerer cookies."
   }
 }

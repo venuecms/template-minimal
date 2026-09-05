@@ -2,14 +2,17 @@
 
 import { ReactNode } from "react";
 
+import { AccountButton } from "../Account/AccountButton";
 import { SearchInput } from "../Search/SearchInput";
 import { useSearchQuery } from "../Search/provider";
 
 export const NavMenuDesktop = ({
   showSearch,
+  showLogin,
   children,
 }: {
   showSearch: boolean;
+  showLogin: boolean;
   children: ReactNode;
 }) => {
   const { isActive } = useSearchQuery();
@@ -21,7 +24,10 @@ export const NavMenuDesktop = ({
           {children}
         </ol>
       ) : null}
-      {showSearch ? <SearchInput /> : null}
+      <div className="flex items-center gap-6">
+        {showSearch ? <SearchInput /> : null}
+        {showLogin && !isActive ? <AccountButton /> : null}
+      </div>
     </nav>
   );
 };

@@ -4,21 +4,26 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { MenuIcon, SearchIcon, X } from "lucide-react";
 import { ReactNode, useState } from "react";
 
+import { AccountButton } from "../Account/AccountButton";
+
 export const NavMenuMobile = ({
   logo,
   children,
   footer,
+  showLogin,
 }: {
   logo: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
+  showLogin: boolean;
 }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <nav className="flex w-auto items-center justify-between sm:hidden">
-      <div className="flex gap-8">
+      <div className="flex items-center gap-8">
         {/* <SearchIcon className="size-6" /> */}
+        {showLogin ? <AccountButton /> : null}
         <Dialog.Root open={open} onOpenChange={setOpen}>
           <Dialog.Trigger>
             <MenuIcon className="size-6" />

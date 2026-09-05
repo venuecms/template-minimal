@@ -1,4 +1,5 @@
 import { Params } from "@/types";
+import { getSite } from "@venuecms/sdk-next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { Suspense } from "react";
@@ -6,6 +7,7 @@ import { Suspense } from "react";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { VenueProvider } from "@/lib/utils/VenueProvider";
 
+import { AccountProvider } from "@/components/Account/provider";
 import { NavigationProgress } from "@/components/NavigationProgress";
 import { SearchProvider } from "@/components/Search/provider";
 import { SearchResultsLayout } from "@/components/SearchResults";
@@ -27,20 +29,27 @@ const LayoutContent = async ({
   await setupSSR({ params });
   const messages = await getMessages();
 
+  // Sites that do not offer accounts should not pay for the session lookup on
+  // every page view. `getSite` is the same cached call `SiteHeader` makes.
+  const { data: site } = await getSite();
+  const showLogin = !!site?.settings?.publicSite?.template?.config?.showLogin;
+
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <QueryProvider>
         <VenueProvider siteKey={siteKey}>
           <SearchProvider>
-            <Suspense fallback={null}>
-              <NavigationProgress />
-            </Suspense>
-            <Suspense fallback={<Loading />}>
-              <ThemedBody>
-                <SiteHeader />
-                <SearchResultsLayout>{children}</SearchResultsLayout>
-              </ThemedBody>
-            </Suspense>
+            <AccountProvider siteKey={siteKey} enabled={showLogin}>
+              <Suspense fallback={null}>
+                <NavigationProgress />
+              </Suspense>
+              <Suspense fallback={<Loading />}>
+                <ThemedBody>
+                  <SiteHeader />
+                  <SearchResultsLayout>{children}</SearchResultsLayout>
+                </ThemedBody>
+              </Suspense>
+            </AccountProvider>
           </SearchProvider>
         </VenueProvider>
       </QueryProvider>

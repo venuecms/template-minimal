@@ -8,5 +8,28 @@
     "past_events": "Eventos Pasados",
     "see_all_upcoming_events": "ver todos los próximos eventos",
     "events": "Eventos"
+  },
+  "account": {
+    "account": "Cuenta",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "signup": "Registrarse",
+    "create_account": "Crear cuenta",
+    "reset_password": "Restablecer contraseña",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "show_password": "Mostrar contraseña",
+    "hide_password": "Ocultar contraseña",
+    "close": "Cerrar",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "no_account": "¿No tienes una cuenta?",
+    "have_account": "¿Ya tienes una cuenta?",
+    "back_to_login": "Volver al inicio de sesión",
+    "check_email": "Revisa tu correo electrónico para ver el enlace de restablecimiento.",
+    "reset_failed": "Hubo un problema al solicitar el restablecimiento.",
+    "confirm_email": "Revisa tu correo electrónico para confirmar tu cuenta.",
+    "signout_failed": "No se pudo cerrar sesión. Inténtalo de nuevo.",
+    "request_failed": "Algo salió mal. Inténtalo de nuevo.",
+    "session_failed": "Sesión iniciada, pero no se pudo conservar. Comprueba si tu navegador bloquea las cookies."
   }
 }

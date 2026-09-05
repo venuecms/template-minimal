@@ -159,7 +159,7 @@ export const ThemedBody = async ({ children }: { children: ReactNode }) => {
     typeof templateConfig.fontName === "string"
       ? templateConfig.fontName
       : "default";
-  const colorOverrideCss = buildThemeColorOverrideCss(templateConfig);
+  const colorOverrideCss = buildThemeColorOverrideCss(templateConfig, themeId);
 
   return (
     <ThemeProvider attribute="class" forcedTheme={themeId}>

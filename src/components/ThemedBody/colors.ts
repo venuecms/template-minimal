@@ -22,6 +22,28 @@ export const THEME_COLOR_VARIABLES = {
 
 export type ThemeColorKey = keyof typeof THEME_COLOR_VARIABLES;
 
+export type ThemeColorVariable = (typeof THEME_COLOR_VARIABLES)[ThemeColorKey];
+
+/**
+ * The `default` theme's light-scheme palette, mirrored from globals.css.
+ *
+ * `default` is the one theme whose colors flip with `prefers-color-scheme`, and
+ * an override outranks both branches. Left alone, a site that overrode only
+ * some of them would pair its choices with whichever scheme the visitor is in
+ * — a chosen white background against the dark branch's near-white text, say.
+ * So when a default-theme site overrides anything, the rest of the palette is
+ * pinned to the light branch and the page stays coherent in both schemes.
+ *
+ * `colors.test.ts` pins these values to globals.css so the two cannot drift.
+ */
+export const DEFAULT_THEME_LIGHT_COLORS: Record<ThemeColorVariable, string> = {
+  "--background": "52, 32%, 94%, 1",
+  "--primary": "50, 1%, 10%, 1",
+  "--secondary": "0, 0%, 25%, 1",
+  "--muted": "120, 4%, 33%, 0.6",
+  "--nav": "0, 0%, 25%, 1",
+};
+
 /** #rgb, #rgba, #rrggbb and #rrggbbaa — what a color input produces. */
 const HEX_COLOR = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
@@ -96,20 +118,22 @@ export const hexToHslaComponents = (hex: string): string | null => {
  * the document. Only keys the site actually set are emitted — everything else
  * keeps falling through to the theme.
  *
- * That includes outranking the `prefers-color-scheme: dark` block nested in
- * `html.default`, so an override holds in both schemes while the colors left
- * unset still flip with the OS. Overriding only part of the default theme's
- * palette can therefore pair a chosen color with the opposite scheme's; the
- * schema says as much on every field.
+ * The exception is the `default` theme, whose palette flips with
+ * `prefers-color-scheme`. There the unset colors are filled in from
+ * DEFAULT_THEME_LIGHT_COLORS rather than left to the OS, so a site never gets
+ * half its own palette and half the opposite scheme's. Pinning the scheme also
+ * pins the header logo's inversion, which is otherwise light-mode only: it
+ * gives a dark-mode visitor exactly the rendering a light-mode one sees.
  *
  * Values are hex-validated above and variable names come from a fixed map, so
  * nothing author-controlled reaches the CSS text verbatim.
  */
 export const buildThemeColorOverrideCss = (
   config: Record<string, unknown>,
+  themeId: string,
 ): string | null => {
-  const declarations = Object.entries(THEME_COLOR_VARIABLES).flatMap(
-    ([key, variable]) => {
+  const chosen = new Map(
+    Object.entries(THEME_COLOR_VARIABLES).flatMap(([key, variable]) => {
       const value = config[key];
 
       if (typeof value !== "string") {
@@ -118,11 +142,32 @@ export const buildThemeColorOverrideCss = (
 
       const components = hexToHslaComponents(value.trim());
 
+      return components ? [[variable, components] as const] : [];
+    }),
+  );
+
+  if (chosen.size === 0) {
+    return null;
+  }
+
+  const pinsLightScheme = themeId === "default";
+
+  const declarations = Object.values(THEME_COLOR_VARIABLES).flatMap(
+    (variable) => {
+      const components =
+        chosen.get(variable) ??
+        (pinsLightScheme ? DEFAULT_THEME_LIGHT_COLORS[variable] : undefined);
+
       return components ? [`${variable}: ${components};`] : [];
     },
   );
 
-  return declarations.length
-    ? `:root:root { ${declarations.join(" ")} }`
-    : null;
+  const palette = `:root:root { ${declarations.join(" ")} }`;
+
+  // globals.css inverts the header logo through a `prefers-color-scheme: light`
+  // query, so without this the pinned-light page would drop the inversion for a
+  // dark-mode visitor and render a light logo against a light background.
+  return pinsLightScheme
+    ? `${palette} :root:root header img { filter: invert(1); }`
+    : palette;
 };

@@ -89,6 +89,18 @@ describe("ThemedBody", () => {
     expect(html).not.toContain("--secondary");
   });
 
+  it("pins the default theme's remaining colors to its light palette", async () => {
+    // The default theme is the one that flips with the OS, so a lone override
+    // would pair the site's background with the dark palette's text.
+    const html = await renderWithConfig({
+      themeId: "default",
+      colorBackground: "#ffffff",
+    });
+
+    expect(html).toContain("--background: 0, 0%, 100%, 1;");
+    expect(html).toContain("--primary: 50, 1%, 10%, 1;");
+  });
+
   it("renders no stylesheet when the site chose no colors", async () => {
     // An empty rule is still a rule; with nothing overridden the theme has to
     // be the only source of color.

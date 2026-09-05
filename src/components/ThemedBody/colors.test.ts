@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
+  DEFAULT_THEME_LIGHT_COLORS,
   THEME_COLOR_VARIABLES,
   buildThemeColorOverrideCss,
   hexToHslaComponents,
@@ -56,14 +57,20 @@ describe("hexToHslaComponents", () => {
 
 describe("buildThemeColorOverrideCss", () => {
   it("returns null when the site set no colors, leaving the theme alone", () => {
-    expect(buildThemeColorOverrideCss({})).toBeNull();
+    expect(buildThemeColorOverrideCss({}, "space")).toBeNull();
     expect(
-      buildThemeColorOverrideCss({ themeId: "space", fontName: "jost" }),
+      buildThemeColorOverrideCss(
+        { themeId: "space", fontName: "jost" },
+        "space",
+      ),
     ).toBeNull();
   });
 
   it("emits only the variables the site actually chose", () => {
-    const css = buildThemeColorOverrideCss({ colorBackground: "#ffffff" });
+    const css = buildThemeColorOverrideCss(
+      { colorBackground: "#ffffff" },
+      "space",
+    );
 
     expect(css).toBe(":root:root { --background: 0, 0%, 100%, 1; }");
     // An unset color must not be emitted at all — an empty declaration would
@@ -76,6 +83,7 @@ describe("buildThemeColorOverrideCss", () => {
       Object.fromEntries(
         Object.keys(THEME_COLOR_VARIABLES).map((key) => [key, "#123456"]),
       ),
+      "space",
     );
 
     for (const variable of Object.values(THEME_COLOR_VARIABLES)) {
@@ -87,33 +95,88 @@ describe("buildThemeColorOverrideCss", () => {
     // Themes score (0,1,1); the doubled :root scores (0,2,0) and so wins
     // wherever the stylesheet ends up in the document. Weakening this
     // selector silently reverts every override to the theme's color.
-    expect(buildThemeColorOverrideCss({ colorNav: "#123456" })).toMatch(
-      /^:root:root /,
-    );
+    expect(
+      buildThemeColorOverrideCss({ colorNav: "#123456" }, "space"),
+    ).toMatch(/^:root:root /);
   });
 
   it("skips values that are not strings", () => {
     expect(
-      buildThemeColorOverrideCss({ colorBackground: 16711680 }),
+      buildThemeColorOverrideCss({ colorBackground: 16711680 }, "space"),
     ).toBeNull();
-    expect(buildThemeColorOverrideCss({ colorBackground: null })).toBeNull();
+    expect(
+      buildThemeColorOverrideCss({ colorBackground: null }, "space"),
+    ).toBeNull();
   });
 
   it("tolerates surrounding whitespace", () => {
-    expect(buildThemeColorOverrideCss({ colorBackground: " #ffffff " })).toBe(
-      ":root:root { --background: 0, 0%, 100%, 1; }",
-    );
+    expect(
+      buildThemeColorOverrideCss({ colorBackground: " #ffffff " }, "space"),
+    ).toBe(":root:root { --background: 0, 0%, 100%, 1; }");
   });
 
   it("never lets a config value reach the stylesheet verbatim", () => {
     // This string is interpolated into a <style> element, whose text React does
     // not escape, so a value that escaped validation could close the tag.
-    const css = buildThemeColorOverrideCss({
-      colorBackground: "#fff</style><script>alert(1)</script>",
-      colorPrimary: "red; } :root:root { --background: #000",
-    });
+    const css = buildThemeColorOverrideCss(
+      {
+        colorBackground: "#fff</style><script>alert(1)</script>",
+        colorPrimary: "red; } :root:root { --background: #000",
+      },
+      "space",
+    );
 
     expect(css).toBeNull();
+  });
+});
+
+describe("buildThemeColorOverrideCss on the default theme", () => {
+  it("fills in the colors the site left alone", () => {
+    // `default` is the only theme whose palette flips with the OS, and the
+    // override outranks both branches. Emitting the chosen background on its
+    // own would leave a dark-mode visitor reading the dark branch's near-white
+    // text against it.
+    const css = buildThemeColorOverrideCss(
+      { colorBackground: "#ffffff" },
+      "default",
+    );
+
+    expect(css).toContain("--background: 0, 0%, 100%, 1;");
+
+    for (const [variable, components] of Object.entries(
+      DEFAULT_THEME_LIGHT_COLORS,
+    )) {
+      if (variable !== "--background") {
+        expect(css).toContain(`${variable}: ${components};`);
+      }
+    }
+  });
+
+  it("pins the header logo's inversion along with the scheme", () => {
+    // globals.css inverts it under `prefers-color-scheme: light` only, so the
+    // pinned-light page would otherwise hand a dark-mode visitor an uninverted
+    // logo against a light background.
+    expect(
+      buildThemeColorOverrideCss({ colorBackground: "#ffffff" }, "default"),
+    ).toContain(":root:root header img { filter: invert(1); }");
+  });
+
+  it("still defers entirely to the theme when no color was chosen", () => {
+    // Pinning is a consequence of overriding something; on its own it would
+    // freeze the scheme for every default-theme site.
+    expect(buildThemeColorOverrideCss({}, "default")).toBeNull();
+  });
+
+  it("leaves the fixed-palette themes alone", () => {
+    // Every other theme declares one palette for both schemes, so there is
+    // nothing to pin and the unset colors keep coming from the theme.
+    const css = buildThemeColorOverrideCss(
+      { colorBackground: "#ffffff" },
+      "space",
+    );
+
+    expect(css).not.toContain("--primary");
+    expect(css).not.toContain("invert");
   });
 });
 
@@ -169,6 +232,25 @@ describe("the config schema and the theme variables", () => {
       expect(pattern.test("#00000080")).toBe(true);
       expect(pattern.test("red")).toBe(false);
       expect(pattern.test("#12345")).toBe(false);
+    }
+  });
+
+  it("mirrors the default theme's light palette exactly", () => {
+    // These values are a copy of globals.css. If the theme is restyled and the
+    // map is not, a default-theme site that overrides one color silently gets
+    // the old palette for the rest.
+    const block = globalsCss.slice(globalsCss.indexOf("html.default {"));
+    const lightBranch = block.slice(0, block.indexOf("@media"));
+    const declared = Object.fromEntries(
+      [...lightBranch.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map(
+        ([, name, value]) => [name, value.trim()],
+      ),
+    );
+
+    for (const [variable, components] of Object.entries(
+      DEFAULT_THEME_LIGHT_COLORS,
+    )) {
+      expect(declared[variable]).toBe(components);
     }
   });
 

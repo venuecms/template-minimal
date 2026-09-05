@@ -21,6 +21,8 @@ import {
 } from "next/font/google";
 import { ReactNode } from "react";
 
+import { buildThemeColorOverrideCss } from "./colors";
+
 const WorkSans = Work_Sans({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -147,13 +149,27 @@ const ThemeFonts = {
 export const ThemedBody = async ({ children }: { children: ReactNode }) => {
   const { data: site } = await getSite();
 
-  const templateSettings = (site?.settings?.publicSite?.template?.config ??
-    {}) as { themeId: string; fontName: string };
+  const templateConfig = site?.settings?.publicSite?.template?.config ?? {};
 
-  const { themeId = "default", fontName = "default" } = templateSettings;
+  const themeId =
+    typeof templateConfig.themeId === "string"
+      ? templateConfig.themeId
+      : "default";
+  const fontName =
+    typeof templateConfig.fontName === "string"
+      ? templateConfig.fontName
+      : "default";
+  const colorOverrideCss = buildThemeColorOverrideCss(templateConfig);
 
   return (
     <ThemeProvider attribute="class" forcedTheme={themeId}>
+      {/* Hoisted into <head> by React so the site's colors land with the rest
+          of the stylesheets rather than flashing in mid-body. */}
+      {colorOverrideCss && (
+        <style href="venue-theme-colors" precedence="high">
+          {colorOverrideCss}
+        </style>
+      )}
       <div
         className="flex min-h-screen flex-col"
         style={

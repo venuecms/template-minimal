@@ -47,7 +47,7 @@ export const Profile = ({
 
       <ColumnRight className="max-w-5xl">
         <VenueContent
-          className="flex flex-col gap-6 sm:pr-32"
+          className="flex flex-col gap-6"
           content={content}
           contentStyles={contentComponents}
           searchParams={searchParams}

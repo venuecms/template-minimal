@@ -27,7 +27,7 @@ export default function Loading() {
       </ColumnLeft>
 
       <ColumnRight className="max-w-4xl">
-        <div className="flex flex-col gap-6 sm:pr-32">
+        <div className="flex flex-col gap-6">
           <Skeleton />
           <Skeleton />
           <Skeleton className="w-3/4" />

@@ -82,7 +82,7 @@ export const Event = ({
 
       <ColumnRight className="max-w-4xl">
         <VenueContent
-          className="flex flex-col gap-6 sm:pr-32"
+          className="flex flex-col gap-6"
           content={content}
           contentStyles={contentComponents}
           searchParams={searchParams}

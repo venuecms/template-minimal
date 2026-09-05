@@ -16,7 +16,7 @@ import removeMarkdown from "remove-markdown";
  * excess-property checking is exempt in both.
  */
 export const renderedStyles: ContentStyles = {
-  p: "text-primary text-sm",
+  p: "text-primary text-sm max-w-[72ch]",
   h2: "text-xl text-secondary",
   h3: "text-sm text-secondary",
   ol: "list-decimal pl-8",

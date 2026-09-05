@@ -83,6 +83,41 @@
       "default": false,
       "description": "Removes the opacity overlay",
       "title": "Remove Hero Opacity Overlay"
+    },
+    "colorBackground": {
+      "type": "string",
+      "format": "color",
+      "pattern": "^$|^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+      "description": "Overrides the theme's page background color, in both light and dark mode. Leave empty to keep the theme's own color.",
+      "title": "Background Color"
+    },
+    "colorPrimary": {
+      "type": "string",
+      "format": "color",
+      "pattern": "^$|^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+      "description": "Overrides the theme's main text color, in both light and dark mode. Leave empty to keep the theme's own color.",
+      "title": "Primary Color"
+    },
+    "colorSecondary": {
+      "type": "string",
+      "format": "color",
+      "pattern": "^$|^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+      "description": "Overrides the theme's secondary text color, in both light and dark mode. Leave empty to keep the theme's own color.",
+      "title": "Secondary Color"
+    },
+    "colorMuted": {
+      "type": "string",
+      "format": "color",
+      "pattern": "^$|^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+      "description": "Overrides the theme's muted text color, in both light and dark mode. Add two extra hex digits for transparency, e.g. #00000066. Leave empty to keep the theme's own color.",
+      "title": "Muted Color"
+    },
+    "colorNav": {
+      "type": "string",
+      "format": "color",
+      "pattern": "^$|^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+      "description": "Overrides the theme's navigation color, in both light and dark mode. Leave empty to keep the theme's own color.",
+      "title": "Navigation Color"
     }
   }
 }

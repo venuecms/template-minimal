@@ -8,5 +8,28 @@
     "past_events": "Tidigare evenemang",
     "see_all_upcoming_events": "se alla kommande evenemang",
     "events": "Evenemang"
+  },
+  "account": {
+    "account": "Konto",
+    "login": "Logga in",
+    "logout": "Logga ut",
+    "signup": "Skapa konto",
+    "create_account": "Skapa konto",
+    "reset_password": "Återställ lösenord",
+    "email": "E-post",
+    "password": "Lösenord",
+    "show_password": "Visa lösenord",
+    "hide_password": "Dölj lösenord",
+    "close": "Stäng",
+    "forgot_password": "Har du glömt ditt lösenord?",
+    "no_account": "Har du inget konto?",
+    "have_account": "Har du redan ett konto?",
+    "back_to_login": "Tillbaka till inloggning",
+    "check_email": "Kolla din e-post för en länk för att återställa ditt lösenord.",
+    "reset_failed": "Det gick inte att begära en återställning.",
+    "confirm_email": "Kolla din e-post för att bekräfta ditt konto.",
+    "signout_failed": "Kunde inte logga ut. Försök igen.",
+    "request_failed": "Något gick fel. Försök igen.",
+    "session_failed": "Inloggad, men sessionen kunde inte sparas. Kontrollera om din webbläsare blockerar cookies."
   }
 }

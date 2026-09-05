@@ -8,5 +8,28 @@
     "past_events": "Vergangene Veranstaltungen",
     "see_all_upcoming_events": "alle kommenden Veranstaltungen anzeigen",
     "events": "Veranstaltungen"
+  },
+  "account": {
+    "account": "Konto",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "signup": "Registrieren",
+    "create_account": "Konto erstellen",
+    "reset_password": "Passwort zurücksetzen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "show_password": "Passwort anzeigen",
+    "hide_password": "Passwort verbergen",
+    "close": "Schließen",
+    "forgot_password": "Passwort vergessen?",
+    "no_account": "Noch kein Konto?",
+    "have_account": "Hast du bereits ein Konto?",
+    "back_to_login": "Zurück zur Anmeldung",
+    "check_email": "Prüfe deine E-Mails für einen Link zum Zurücksetzen deines Passworts.",
+    "reset_failed": "Beim Zurücksetzen ist ein Fehler aufgetreten.",
+    "confirm_email": "Prüfe deine E-Mails, um dein Konto zu bestätigen.",
+    "signout_failed": "Abmelden fehlgeschlagen. Bitte versuche es erneut.",
+    "request_failed": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "session_failed": "Angemeldet, aber die Sitzung konnte nicht gespeichert werden. Prüfe, ob dein Browser Cookies blockiert."
   }
 }

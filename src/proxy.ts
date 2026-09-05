@@ -3,6 +3,7 @@ import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
 import { i18nConfig, routing } from "./lib/i18n";
+import { VENUE_APP_URL } from "./lib/venue";
 
 const handleI18nRouting = createMiddleware(routing);
 
@@ -18,7 +19,7 @@ export default async function proxy(request: NextRequest) {
 
   // ensure that all API requests carry this site's API key. You don't need this unless you are using client-side API calls.
   if (url.pathname.startsWith("/api/")) {
-    let destination = `https://app.venuecms.com${url.pathname}`;
+    let destination = `${VENUE_APP_URL}${url.pathname}`;
 
     const query = url.searchParams.toString();
     if (query) {

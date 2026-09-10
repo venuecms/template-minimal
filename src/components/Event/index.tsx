@@ -5,7 +5,7 @@ import {
   type Event as VenueEvent,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -41,6 +41,7 @@ export const Event = ({
   searchParams: SearchParams;
 }) => {
   const locale = useLocale();
+  const t = useTranslations("events");
   const { location, artists } = event;
 
   const { content } = getLocalizedContent(event?.localizedContent, locale);
@@ -70,7 +71,7 @@ export const Event = ({
               {location ? <LocationLink location={location} /> : null}
             </div>
             {isCancelled ? (
-              <div className="text-secondary">Cancelled</div>
+              <div className="text-secondary">{t("cancelled")}</div>
             ) : null}
             {!isCancelled && event.tickets ? (
               <TicketList tickets={event.tickets} />

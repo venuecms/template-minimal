@@ -2,6 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { MenuIcon, SearchIcon, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ReactNode, useState } from "react";
 
 export const NavMenuMobile = ({
@@ -13,6 +14,7 @@ export const NavMenuMobile = ({
   children: ReactNode;
   footer?: ReactNode;
 }) => {
+  const t = useTranslations("menu");
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,7 +29,7 @@ export const NavMenuMobile = ({
           <Dialog.Portal>
             <Dialog.Overlay className="fixed left-0 top-0 flex h-screen w-screen overflow-y-auto bg-background">
               <Dialog.Content className="flex w-full flex-col p-6">
-                <Dialog.Title className="hidden">Menu</Dialog.Title>
+                <Dialog.Title className="hidden">{t("menu")}</Dialog.Title>
 
                 <header className="flex items-center justify-between pb-6 text-nav">
                   {logo}

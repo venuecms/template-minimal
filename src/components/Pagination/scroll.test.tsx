@@ -14,9 +14,12 @@
  * what made paging a block feel like a page reload.
  */
 import type { ListingPagination } from "@venuecms/sdk-next";
+import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
+
+import messages from "@/lib/i18n/dictionaries/en.json";
 
 import { PaginatedListing } from "@/components/ListingBlock/ListingPager";
 
@@ -39,7 +42,11 @@ vi.mock("@/lib/i18n", () => ({
 }));
 
 const render = async (node: ReactNode) => {
-  const stream = await renderToReadableStream(node);
+  const stream = await renderToReadableStream(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {node}
+    </NextIntlClientProvider>,
+  );
   await stream.allReady;
   return new Response(stream).text();
 };

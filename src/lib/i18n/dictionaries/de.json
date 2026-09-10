@@ -1,12 +1,56 @@
 {
   "menu": {
     "search": "Suchen",
-    "menu": "Menü"
+    "menu": "Menü",
+    "pages": "Seiten"
   },
   "events": {
     "upcoming_events": "Kommende Veranstaltungen",
     "past_events": "Vergangene Veranstaltungen",
     "see_all_upcoming_events": "alle kommenden Veranstaltungen anzeigen",
-    "events": "Veranstaltungen"
+    "events": "Veranstaltungen",
+    "archive": "Archiv",
+    "cancelled": "Abgesagt",
+    "no_events_found": "Keine Veranstaltungen gefunden",
+    "load_error": "Veranstaltungen konnten nicht geladen werden. Bitte laden Sie die Seite neu."
+  },
+  "shop": {
+    "shop": "Shop",
+    "works": "Werke",
+    "see_all_works": "alle Werke anzeigen",
+    "no_products_found": "Keine Produkte gefunden",
+    "free": "Kostenlos",
+    "buy": "Kaufen"
+  },
+  "tickets": {
+    "free": "kostenlos"
+  },
+  "news": {
+    "news": "Neuigkeiten",
+    "pagination": "Neuigkeiten-Navigation",
+    "newer_article": "Neuerer Beitrag",
+    "older_article": "Älterer Beitrag",
+    "show_newer": "Neuere Neuigkeiten anzeigen",
+    "show_older": "Ältere Neuigkeiten anzeigen"
+  },
+  "pagination": {
+    "pagination": "Seitennavigation",
+    "previous_page": "Vorherige Seite",
+    "next_page": "Nächste Seite",
+    "listing_pagination": "Seitennavigation für {label}"
+  },
+  "listings": {
+    "events": "Veranstaltungen",
+    "news": "Neuigkeiten",
+    "products": "Produkte",
+    "profiles": "Profile"
+  },
+  "search": {
+    "filter": "Filter",
+    "events": "Veranstaltungen",
+    "profiles": "Profile",
+    "pages": "Seiten",
+    "shop": "Shop",
+    "error": "Bei der Suche ist etwas schiefgelaufen... erneut versuchen?"
   }
 }

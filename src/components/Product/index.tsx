@@ -6,7 +6,7 @@ import {
   Product as VenueProduct,
   getLocalizedContent,
 } from "@venuecms/sdk-next";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -98,12 +98,13 @@ const VariantPrice = ({
   variant: ProductVariant;
   site: Site;
 }) => {
+  const t = useTranslations("shop");
   const displayPrice =
     variant.price > 0
       ? `${variant.price} ${variant.currency || site.settings?.defaults?.currency || ""}`
       : variant.price < 0
-        ? "Free"
-        : "Buy";
+        ? t("free")
+        : t("buy");
   return variant.price > 0 || variant.externalLink ? (
     <div
       key={variant.productType?.type + "price"}

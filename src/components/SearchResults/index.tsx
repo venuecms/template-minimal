@@ -1,7 +1,7 @@
 "use client";
 
 import { LocalizedContent, getLocalizedContent } from "@venuecms/sdk-next";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Dispatch,
   PropsWithChildren,
@@ -42,6 +42,7 @@ export const SearchResultsLayout = ({ children }: PropsWithChildren) => {
 
 export const SearchResults = ({ children }: PropsWithChildren) => {
   const locale = useLocale();
+  const t = useTranslations("search");
 
   const { reset } = useSearchQuery();
   const { isQueryEnabled, results } = useSearchResults();
@@ -53,7 +54,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
     <TwoColumnLayout>
       <ColumnLeft>
         <div className="flex flex-col gap-12">
-          <div>filter</div>
+          <div>{t("filter")}</div>
           <ul className="flex flex-col gap-7">
             <FilterSelect
               setFilter={setCurrentFilter}
@@ -61,7 +62,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
               currentValue={currentFilter}
               results={results}
             >
-              events
+              {t("events")}
             </FilterSelect>
 
             <FilterSelect
@@ -70,7 +71,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
               currentValue={currentFilter}
               results={results}
             >
-              profiles
+              {t("profiles")}
             </FilterSelect>
 
             <FilterSelect
@@ -79,7 +80,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
               currentValue={currentFilter}
               results={results}
             >
-              pages
+              {t("pages")}
             </FilterSelect>
 
             <FilterSelect
@@ -88,7 +89,7 @@ export const SearchResults = ({ children }: PropsWithChildren) => {
               currentValue={currentFilter}
               results={results}
             >
-              shop
+              {t("shop")}
             </FilterSelect>
           </ul>
         </div>
@@ -169,12 +170,12 @@ export const SearchResultsSkeleton = () => {
 };
 
 const ErrorResults = () => {
+  const t = useTranslations("search");
+
   return (
     <TwoColumnLayout>
       <ColumnLeft></ColumnLeft>
-      <ColumnRight>
-        Something went wrong while searching... try again?
-      </ColumnRight>
+      <ColumnRight>{t("error")}</ColumnRight>
     </TwoColumnLayout>
   );
 };

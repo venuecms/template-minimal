@@ -1,4 +1,5 @@
 import { SearchIcon, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
@@ -7,6 +8,7 @@ import { Input } from "../ui/Input";
 import { useSearchQuery } from "./provider";
 
 export const SearchInput = ({ className }: { className?: string }) => {
+  const t = useTranslations("menu");
   const { query, setQuery, reset, isActive, setActive } = useSearchQuery();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,7 +37,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
         )}
       >
         <label className="sr-only" htmlFor="nav-search">
-          Search
+          {t("search")}
         </label>
         <Input
           id="nav-search"

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Link } from "@/lib/i18n";
@@ -40,6 +41,7 @@ export const NewsSidebarList = ({
   initialPage: number;
   pageSize: number;
 }) => {
+  const t = useTranslations("news");
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
   const [page, setPage] = useState(Math.min(initialPage, totalPages - 1));
 
@@ -52,7 +54,7 @@ export const NewsSidebarList = ({
     <nav className="flex flex-col items-center gap-4 text-sm lg:items-start">
       {hasNewer ? (
         <PagerButton
-          label="Show newer news"
+          label={t("show_newer")}
           glyph="↑"
           onClick={() => setPage((p) => Math.max(0, p - 1))}
         />
@@ -73,7 +75,7 @@ export const NewsSidebarList = ({
 
       {hasOlder ? (
         <PagerButton
-          label="Show older news"
+          label={t("show_older")}
           glyph="↓"
           onClick={() => setPage((p) => p + 1)}
         />

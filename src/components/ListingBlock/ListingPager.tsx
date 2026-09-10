@@ -33,6 +33,7 @@
  * only a genuinely empty listing renders nothing.
  */
 import type { ListingPagination } from "@venuecms/sdk-next";
+import { useTranslations } from "next-intl";
 
 import { PaginationLinks } from "@/components/Pagination";
 
@@ -52,6 +53,7 @@ export const PaginatedListing = ({
   label: string;
   children: React.ReactNode;
 }) => {
+  const t = useTranslations("pagination");
   const links = pagination?.links;
 
   const pager =
@@ -59,7 +61,7 @@ export const PaginatedListing = ({
       <PaginationLinks
         prevHref={links.prevHref}
         nextHref={links.nextHref}
-        label={`${label} pagination`}
+        label={t("listing_pagination", { label })}
         // A block is a few records inside an article, so paging it must leave
         // the reader where they were. Next scrolls to the top on navigation by
         // default, which reads as the whole page having reloaded.

@@ -1,0 +1,56 @@
+{
+  "menu": {
+    "search": "Hľadať",
+    "menu": "Menu",
+    "pages": "Stránky"
+  },
+  "events": {
+    "upcoming_events": "Nadchádzajúce podujatia",
+    "past_events": "Uplynulé podujatia",
+    "see_all_upcoming_events": "zobraziť všetky nadchádzajúce podujatia",
+    "events": "Podujatia",
+    "archive": "Archív",
+    "cancelled": "Zrušené",
+    "no_events_found": "Nenašli sa žiadne podujatia",
+    "load_error": "Podujatia sa nepodarilo načítať. Skúste obnoviť stránku."
+  },
+  "shop": {
+    "shop": "Obchod",
+    "works": "Diela",
+    "see_all_works": "zobraziť všetky diela",
+    "no_products_found": "Nenašli sa žiadne produkty",
+    "free": "Zadarmo",
+    "buy": "Kúpiť"
+  },
+  "tickets": {
+    "free": "zadarmo"
+  },
+  "news": {
+    "news": "Novinky",
+    "pagination": "Stránkovanie noviniek",
+    "newer_article": "Novší článok",
+    "older_article": "Starší článok",
+    "show_newer": "Zobraziť novšie novinky",
+    "show_older": "Zobraziť staršie novinky"
+  },
+  "pagination": {
+    "pagination": "Stránkovanie",
+    "previous_page": "Predchádzajúca strana",
+    "next_page": "Ďalšia strana",
+    "listing_pagination": "Stránkovanie: {label}"
+  },
+  "listings": {
+    "events": "Podujatia",
+    "news": "Novinky",
+    "products": "Produkty",
+    "profiles": "Profily"
+  },
+  "search": {
+    "filter": "filter",
+    "events": "podujatia",
+    "profiles": "profily",
+    "pages": "stránky",
+    "shop": "obchod",
+    "error": "Pri vyhľadávaní sa niečo pokazilo... skúsiť znova?"
+  }
+}

@@ -18,6 +18,8 @@ import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
+import messages from "@/lib/i18n/dictionaries/en.json";
+
 import {
   EventListingBlock,
   NewsListingBlock,
@@ -133,7 +135,7 @@ const pagination = (
 // the blocks themselves render synchronously.
 const render = async (block: ReactNode) => {
   const stream = await renderToReadableStream(
-    <NextIntlClientProvider locale="en" messages={{}}>
+    <NextIntlClientProvider locale="en" messages={messages}>
       {block}
     </NextIntlClientProvider>,
   );

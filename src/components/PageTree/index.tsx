@@ -2,7 +2,7 @@
 
 import { Page, getLocalizedContent } from "@venuecms/sdk-next";
 import { ChevronRight } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import TreeView, { INode, flattenTree } from "react-accessible-treeview";
 import { IFlatMetadata } from "react-accessible-treeview/dist/TreeView/utils";
@@ -22,6 +22,7 @@ type NodeFlatMetadata = INode<IFlatMetadata> & { id: string };
 export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
   const { slug } = useParams();
   const locale = useLocale();
+  const t = useTranslations("menu");
   const pageTree = buildTree(pages);
 
   const currentPage = pages.find((page) => page.slug === slug);
@@ -51,7 +52,7 @@ export function PageTree({ pages }: { pages: Array<PageWithParent> }) {
     <div>
       <TreeView
         data={flatPageTree}
-        aria-label="Pages"
+        aria-label={t("pages")}
         className="[&_li:first-child]:pt-4 [&_li]:pb-4"
         defaultExpandedIds={ancestorsOfCurrentpage}
         nodeRenderer={({

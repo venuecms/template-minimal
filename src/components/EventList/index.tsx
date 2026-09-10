@@ -1,5 +1,5 @@
 import { type Event, type Site, getLocalizedContent } from "@venuecms/sdk-next";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
@@ -45,6 +45,7 @@ export const ListEvent = ({
   className?: string;
 }) => {
   const locale = useLocale();
+  const t = useTranslations("events");
   const { artists } = event;
   const { content } = getLocalizedContent(event.localizedContent, locale);
   const isCancelled = event.publishState === "CANCELLED";
@@ -92,7 +93,7 @@ export const ListEvent = ({
         {event.location && !event.location.isDefault ? (
           <LocationLink location={event.location} />
         ) : null}
-        {isCancelled ? <div className="">Cancelled</div> : null}
+        {isCancelled ? <div className="">{t("cancelled")}</div> : null}
       </div>
     </div>
   );

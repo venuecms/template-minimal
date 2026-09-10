@@ -1,5 +1,6 @@
 import { getLocalizedContent } from "@venuecms/sdk-next";
 import { getEvents, getPage, getSite } from "@venuecms/sdk-next";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
@@ -9,11 +10,13 @@ import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 export async function EventsListContent({ locale }: { locale: string }) {
   await connection();
 
-  const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
-    getEvents({ limit: 60, upcoming: true }),
-    getPage({ slug: "events" }),
-    getSite(),
-  ]);
+  const [{ data: events }, { data: page }, { data: site }, t] =
+    await Promise.all([
+      getEvents({ limit: 60, upcoming: true }),
+      getPage({ slug: "events" }),
+      getSite(),
+      getTranslations("events"),
+    ]);
 
   if (!site) {
     notFound();
@@ -21,7 +24,7 @@ export async function EventsListContent({ locale }: { locale: string }) {
 
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
-    : "upcoming events";
+    : t("upcoming_events");
 
   return (
     <TwoColumnLayout>
@@ -36,7 +39,7 @@ export async function EventsListContent({ locale }: { locale: string }) {
             ))}
           </EventsList>
         ) : (
-          "No events found"
+          t("no_events_found")
         )}
       </ColumnRight>
     </TwoColumnLayout>

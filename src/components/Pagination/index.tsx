@@ -1,4 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 
 import { Link } from "@/lib/i18n";
@@ -20,7 +21,7 @@ import { cn } from "@/lib/utils";
 export const PaginationLinks = ({
   prevHref,
   nextHref,
-  label = "Pagination",
+  label,
   scroll = true,
   className,
 }: {
@@ -29,10 +30,10 @@ export const PaginationLinks = ({
   /**
    * The nav landmark's accessible name.
    *
-   * Defaulted rather than fixed because a page can now carry several pagers —
+   * Optional rather than fixed because a page can now carry several pagers —
    * one per listing block in the content — and landmarks that all announce
    * "Pagination" leave a screen-reader user no way to tell which listing each
-   * one moves.
+   * one moves. Omitted, it falls back to the generic translated label.
    */
   label?: string;
   /**
@@ -47,6 +48,8 @@ export const PaginationLinks = ({
   scroll?: boolean;
   className?: string;
 }) => {
+  const t = useTranslations("pagination");
+
   const renderLink = (
     href: string | null,
     children: ReactNode,
@@ -74,11 +77,15 @@ export const PaginationLinks = ({
 
   return (
     <nav
-      aria-label={label}
+      aria-label={label ?? t("pagination")}
       className={cn("mt-8 flex items-center justify-between gap-4", className)}
     >
-      {renderLink(prevHref, <ArrowLeft className="size-6" />, "Previous page")}
-      {renderLink(nextHref, <ArrowRight className="size-6" />, "Next page")}
+      {renderLink(
+        prevHref,
+        <ArrowLeft className="size-6" />,
+        t("previous_page"),
+      )}
+      {renderLink(nextHref, <ArrowRight className="size-6" />, t("next_page"))}
     </nav>
   );
 };

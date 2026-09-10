@@ -2,6 +2,7 @@ import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import { getLocalizedContent } from "@venuecms/sdk-next";
 import { getEvents, getPage, getSite } from "@venuecms/sdk-next";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { EventsList, ListEvent } from "@/components/EventList";
@@ -32,16 +33,18 @@ const ArchivePage = async ({
   now.setSeconds(0, 0);
   const nowRoundedToMinute = now.getTime();
 
-  const [{ data: events }, { data: page }, { data: site }] = await Promise.all([
-    getEvents({
-      page: currentPage,
-      limit: ITEMS_PER_PAGE,
-      lt: nowRoundedToMinute,
-      dir: "desc",
-    }),
-    getPage({ slug: "archive" }),
-    getSite(),
-  ]);
+  const [{ data: events }, { data: page }, { data: site }, t] =
+    await Promise.all([
+      getEvents({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        lt: nowRoundedToMinute,
+        dir: "desc",
+      }),
+      getPage({ slug: "archive" }),
+      getSite(),
+      getTranslations("events"),
+    ]);
 
   if (!site) {
     notFound();
@@ -49,7 +52,7 @@ const ArchivePage = async ({
 
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
-    : "archive";
+    : t("archive");
 
   // Calculate total pages
   const totalPages = events?.count
@@ -75,7 +78,7 @@ const ArchivePage = async ({
             ))}
           </EventsList>
         ) : (
-          "No events found"
+          t("no_events_found")
         )}
         {events?.records.length && totalPages > 1 ? (
           <Pagination

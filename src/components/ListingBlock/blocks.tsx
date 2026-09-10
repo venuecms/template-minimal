@@ -26,6 +26,7 @@
  * so it is the one block that keeps its pager in that case.
  */
 import type { ListingProps } from "@venuecms/sdk-next";
+import { useTranslations } from "next-intl";
 
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ListProduct } from "@/components/ListProduct";
@@ -48,12 +49,18 @@ export const EventListingBlock = ({
   // data rather than throwing, so nothing catches it. Gating on it is the only
   // thing keeping a siteless record off a list component that types it
   // non-null.
+  const t = useTranslations("listings");
+
   if (!site) {
     return null;
   }
 
   return (
-    <PaginatedListing pagination={pagination} records={records} label="Events">
+    <PaginatedListing
+      pagination={pagination}
+      records={records}
+      label={t("events")}
+    >
       <EventsList className="gap-y-12 py-4">
         {records.map((event) => (
           <ListEvent key={event.id} event={event} site={site} withImage />
@@ -68,12 +75,18 @@ export const NewsListingBlock = ({
   site,
   pagination,
 }: ListingProps<"newsListing">) => {
+  const t = useTranslations("listings");
+
   if (!site) {
     return null;
   }
 
   return (
-    <PaginatedListing pagination={pagination} records={records} label="News">
+    <PaginatedListing
+      pagination={pagination}
+      records={records}
+      label={t("news")}
+    >
       <PagesList className="py-4">
         {records.map((article) => (
           <ListPage
@@ -121,6 +134,8 @@ export const ProductListingBlock = ({
   site,
   pagination,
 }: ListingProps<"productListing">) => {
+  const t = useTranslations("listings");
+
   if (!site) {
     return null;
   }
@@ -129,7 +144,7 @@ export const ProductListingBlock = ({
     <PaginatedListing
       pagination={pagination}
       records={records}
-      label="Products"
+      label={t("products")}
     >
       <div className="grid gap-8 py-4 sm:grid-cols-2 lg:grid-cols-3">
         {records.map((product) => (
@@ -153,12 +168,20 @@ export const ProductListingBlock = ({
 export const ProfileListingBlock = ({
   records,
   pagination,
-}: ListingProps<"profileListing">) => (
-  <PaginatedListing pagination={pagination} records={records} label="Profiles">
-    <TwoSubColumnLayout className="py-4">
-      {records.map((profile) => (
-        <ProfileCompact key={profile.slug} profile={profile} />
-      ))}
-    </TwoSubColumnLayout>
-  </PaginatedListing>
-);
+}: ListingProps<"profileListing">) => {
+  const t = useTranslations("listings");
+
+  return (
+    <PaginatedListing
+      pagination={pagination}
+      records={records}
+      label={t("profiles")}
+    >
+      <TwoSubColumnLayout className="py-4">
+        {records.map((profile) => (
+          <ProfileCompact key={profile.slug} profile={profile} />
+        ))}
+      </TwoSubColumnLayout>
+    </PaginatedListing>
+  );
+};

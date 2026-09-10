@@ -1,12 +1,56 @@
 {
   "menu": {
     "search": "Sök",
-    "menu": "Meny"
+    "menu": "Meny",
+    "pages": "Sidor"
   },
   "events": {
     "upcoming_events": "Kommande evenemang",
     "past_events": "Tidigare evenemang",
     "see_all_upcoming_events": "se alla kommande evenemang",
-    "events": "Evenemang"
+    "events": "Evenemang",
+    "archive": "Arkiv",
+    "cancelled": "Inställt",
+    "no_events_found": "Inga evenemang hittades",
+    "load_error": "Det gick inte att ladda evenemangen. Försök att uppdatera sidan."
+  },
+  "shop": {
+    "shop": "Butik",
+    "works": "Verk",
+    "see_all_works": "se alla verk",
+    "no_products_found": "Inga produkter hittades",
+    "free": "Gratis",
+    "buy": "Köp"
+  },
+  "tickets": {
+    "free": "gratis"
+  },
+  "news": {
+    "news": "Nyheter",
+    "pagination": "Nyhetsnavigering",
+    "newer_article": "Nyare artikel",
+    "older_article": "Äldre artikel",
+    "show_newer": "Visa nyare nyheter",
+    "show_older": "Visa äldre nyheter"
+  },
+  "pagination": {
+    "pagination": "Paginering",
+    "previous_page": "Föregående sida",
+    "next_page": "Nästa sida",
+    "listing_pagination": "Paginering för {label}"
+  },
+  "listings": {
+    "events": "Evenemang",
+    "news": "Nyheter",
+    "products": "Produkter",
+    "profiles": "Profiler"
+  },
+  "search": {
+    "filter": "filter",
+    "events": "evenemang",
+    "profiles": "profiler",
+    "pages": "sidor",
+    "shop": "butik",
+    "error": "Något gick fel vid sökningen... försök igen?"
   }
 }

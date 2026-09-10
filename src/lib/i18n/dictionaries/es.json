@@ -1,12 +1,56 @@
 {
   "menu": {
     "search": "Buscar",
-    "menu": "Menú"
+    "menu": "Menú",
+    "pages": "Páginas"
   },
   "events": {
     "upcoming_events": "Próximos Eventos",
     "past_events": "Eventos Pasados",
     "see_all_upcoming_events": "ver todos los próximos eventos",
-    "events": "Eventos"
+    "events": "Eventos",
+    "archive": "Archivo",
+    "cancelled": "Cancelado",
+    "no_events_found": "No se encontraron eventos",
+    "load_error": "No se pudieron cargar los eventos. Intenta actualizar la página."
+  },
+  "shop": {
+    "shop": "Tienda",
+    "works": "Obras",
+    "see_all_works": "ver todas las obras",
+    "no_products_found": "No se encontraron productos",
+    "free": "Gratis",
+    "buy": "Comprar"
+  },
+  "tickets": {
+    "free": "gratis"
+  },
+  "news": {
+    "news": "Noticias",
+    "pagination": "Paginación de noticias",
+    "newer_article": "Artículo más reciente",
+    "older_article": "Artículo anterior",
+    "show_newer": "Mostrar noticias más recientes",
+    "show_older": "Mostrar noticias anteriores"
+  },
+  "pagination": {
+    "pagination": "Paginación",
+    "previous_page": "Página anterior",
+    "next_page": "Página siguiente",
+    "listing_pagination": "Paginación de {label}"
+  },
+  "listings": {
+    "events": "Eventos",
+    "news": "Noticias",
+    "products": "Productos",
+    "profiles": "Perfiles"
+  },
+  "search": {
+    "filter": "filtro",
+    "events": "eventos",
+    "profiles": "perfiles",
+    "pages": "páginas",
+    "shop": "tienda",
+    "error": "Algo salió mal durante la búsqueda... ¿intentar de nuevo?"
   }
 }

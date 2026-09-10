@@ -1,16 +1,21 @@
 import { TicketOnEvent } from "@venuecms/sdk-next";
-import { useFormatter } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 import { Link } from "@/lib/i18n";
 
 export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
+  const t = useTranslations("tickets");
+
   return (
     <div className="flex flex-wrap gap-8">
       {tickets.map((ticket) => {
-        const ticketText =
-          ticket.price > 0
-            ? formatCurrency(ticket.price, ticket.currency!)
-            : "free";
+        // Tracked as a flag rather than compared against the rendered text: the
+        // free label is translated, so `ticketText === "free"` only held in
+        // English.
+        const isFree = ticket.price <= 0;
+        const ticketText = isFree
+          ? t("free")
+          : formatCurrency(ticket.price, ticket.currency!);
 
         return ticket.externalLink ? (
           <Link
@@ -24,7 +29,7 @@ export const TicketList = ({ tickets }: { tickets: Array<TicketOnEvent> }) => {
           <div key={ticket.name}>
             {ticketText}{" "}
             {ticket.name.toLowerCase() !== "regular" &&
-            !(ticketText === "free" && tickets.length === 1)
+            !(isFree && tickets.length === 1)
               ? ticket.name.toLowerCase()
               : ""}
           </div>

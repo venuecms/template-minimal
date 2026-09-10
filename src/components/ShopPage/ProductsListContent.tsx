@@ -1,5 +1,6 @@
 import { getLocalizedContent } from "@venuecms/sdk-next";
 import { getPage, getProducts, getSite } from "@venuecms/sdk-next";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
@@ -17,7 +18,7 @@ export async function ProductsListContent({
 }) {
   await connection();
 
-  const [{ data: products }, { data: page }, { data: site }] =
+  const [{ data: products }, { data: page }, { data: site }, t] =
     await Promise.all([
       getProducts({
         page: currentPage,
@@ -25,6 +26,7 @@ export async function ProductsListContent({
       }),
       getPage({ slug: "shop" }),
       getSite(),
+      getTranslations("shop"),
     ]);
 
   if (!site) {
@@ -38,7 +40,7 @@ export async function ProductsListContent({
 
   const pageTitle = page
     ? getLocalizedContent(page.localizedContent, locale).content.title
-    : "Shop";
+    : t("shop");
 
   const topProducts = products?.records.slice(0, 4);
   const moreProducts = products?.records.slice(4);
@@ -55,7 +57,7 @@ export async function ProductsListContent({
                 site={site}
               />
             ))
-          : "No products found"}
+          : t("no_products_found")}
       </div>
       {moreProducts?.length ? (
         <div className="grid grid-cols-2 gap-8 sm:max-w-full lg:grid-cols-[repeat(4,minmax(1rem,32rem))] xl:grid-cols-[repeat(6,minmax(1rem,32rem))]">

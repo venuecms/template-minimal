@@ -1,12 +1,56 @@
 {
   "menu": {
     "search": "Search",
-    "menu": "Menu"
+    "menu": "Menu",
+    "pages": "Pages"
   },
   "events": {
     "upcoming_events": "Upcoming Events",
     "past_events": "Past Events",
     "see_all_upcoming_events": "see all upcoming events",
-    "events": "Events"
+    "events": "Events",
+    "archive": "Archive",
+    "cancelled": "Cancelled",
+    "no_events_found": "No events found",
+    "load_error": "Unable to load events. Please try refreshing the page."
+  },
+  "shop": {
+    "shop": "Shop",
+    "works": "Works",
+    "see_all_works": "see all works",
+    "no_products_found": "No products found",
+    "free": "Free",
+    "buy": "Buy"
+  },
+  "tickets": {
+    "free": "free"
+  },
+  "news": {
+    "news": "News",
+    "pagination": "News pagination",
+    "newer_article": "Newer article",
+    "older_article": "Older article",
+    "show_newer": "Show newer news",
+    "show_older": "Show older news"
+  },
+  "pagination": {
+    "pagination": "Pagination",
+    "previous_page": "Previous page",
+    "next_page": "Next page",
+    "listing_pagination": "{label} pagination"
+  },
+  "listings": {
+    "events": "Events",
+    "news": "News",
+    "products": "Products",
+    "profiles": "Profiles"
+  },
+  "search": {
+    "filter": "filter",
+    "events": "events",
+    "profiles": "profiles",
+    "pages": "pages",
+    "shop": "shop",
+    "error": "Something went wrong while searching... try again?"
   }
 }

@@ -4,11 +4,11 @@ import { setConfig } from "@venuecms/sdk-next";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
-import { routing } from "@/lib/i18n";
+import { isSupportedLocale } from "@/lib/i18n";
 
 export const setupSSR = async ({ params }: { params: Promise<Params> }) => {
   const { siteKey, locale } = await params;
-  if (!routing.locales.includes(locale)) {
+  if (!isSupportedLocale(locale)) {
     notFound();
   }
 

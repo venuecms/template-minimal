@@ -1,12 +1,56 @@
 {
   "menu": {
     "search": "Søg",
-    "menu": "Menu"
+    "menu": "Menu",
+    "pages": "Sider"
   },
   "events": {
     "upcoming_events": "Kommende begivenheder",
     "past_events": "Tidligere begivenheder",
     "see_all_upcoming_events": "se alle kommende begivenheder",
-    "events": "Begivenheder"
+    "events": "Begivenheder",
+    "archive": "Arkiv",
+    "cancelled": "Aflyst",
+    "no_events_found": "Ingen begivenheder fundet",
+    "load_error": "Begivenhederne kunne ikke indlæses. Prøv at opdatere siden."
+  },
+  "shop": {
+    "shop": "Butik",
+    "works": "Værker",
+    "see_all_works": "se alle værker",
+    "no_products_found": "Ingen produkter fundet",
+    "free": "Gratis",
+    "buy": "Køb"
+  },
+  "tickets": {
+    "free": "gratis"
+  },
+  "news": {
+    "news": "Nyheder",
+    "pagination": "Nyhedsnavigation",
+    "newer_article": "Nyere artikel",
+    "older_article": "Ældre artikel",
+    "show_newer": "Vis nyere nyheder",
+    "show_older": "Vis ældre nyheder"
+  },
+  "pagination": {
+    "pagination": "Paginering",
+    "previous_page": "Forrige side",
+    "next_page": "Næste side",
+    "listing_pagination": "Paginering for {label}"
+  },
+  "listings": {
+    "events": "Begivenheder",
+    "news": "Nyheder",
+    "products": "Produkter",
+    "profiles": "Profiler"
+  },
+  "search": {
+    "filter": "filter",
+    "events": "begivenheder",
+    "profiles": "profiler",
+    "pages": "sider",
+    "shop": "butik",
+    "error": "Noget gik galt under søgningen... prøv igen?"
   }
 }

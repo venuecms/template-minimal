@@ -26,6 +26,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { renderToReadableStream } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import messages from "@/lib/i18n/dictionaries/en.json";
+
 import { contentComponents } from "./index";
 
 vi.mock("next/server", () => ({ connection: async () => {} }));
@@ -94,7 +96,7 @@ afterEach(() => {
 const render = async (node: React.ReactNode) => {
   const errors: string[] = [];
   const stream = await renderToReadableStream(
-    <NextIntlClientProvider locale="en" messages={{}}>
+    <NextIntlClientProvider locale="en" messages={messages}>
       {node}
     </NextIntlClientProvider>,
     {

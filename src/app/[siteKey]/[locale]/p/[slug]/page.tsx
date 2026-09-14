@@ -1,4 +1,4 @@
-import { NewsView, Page } from "@/components";
+import { Page } from "@/components";
 import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import { type SearchParams, getLocalizedContent } from "@venuecms/sdk-next";
@@ -7,7 +7,9 @@ import { notFound } from "next/navigation";
 
 import { PageWithParent } from "@/lib/utils/tree";
 
+import { PageListing } from "@/components/PageListing";
 import { setupSSR } from "@/components/utils";
+import { resolvePageListingLayout } from "@/components/utils/pageLayout";
 
 export const generateMetadata = getGenerateMetadata(getPage);
 
@@ -23,9 +25,9 @@ const PagePage = async ({
   const { slug, locale } = await params;
   await setupSSR({ params });
 
-  // Awaited out here, alongside `params`, rather than at the two call sites
-  // below: the catch turns anything thrown into a 404, and a dynamic-rendering
-  // bailout thrown by reading the URL has to reach the framework, not become a
+  // Awaited out here, alongside `params`, rather than at the call sites below:
+  // the catch turns anything thrown into a 404, and a dynamic-rendering bailout
+  // thrown by reading the URL has to reach the framework, not become a
   // not-found page.
   const resolvedSearchParams = await searchParams;
 
@@ -33,18 +35,30 @@ const PagePage = async ({
     const { data: page } = await getPage({ slug });
     const { data: pages } = await getPages();
 
-    if (!page || !pages) {
+    if (!page) {
       notFound();
     }
 
-    if (page.type === "NEWS" || page.type === "NEWSLIST") {
+    // Resolved before the `pages` guard: a listing draws from its own body, so
+    // an unreadable page tree is no reason to 404 it.
+    const listingLayout = resolvePageListingLayout(page.type);
+
+    if (listingLayout) {
       const { content } = getLocalizedContent(page.localizedContent, locale);
+
       return (
-        <NewsView
+        <PageListing
+          layout={listingLayout}
           title={content.title ?? undefined}
+          content={content}
           searchParams={resolvedSearchParams}
         />
       );
+    }
+
+    // Only the page layout draws the subpage tree.
+    if (!pages) {
+      notFound();
     }
 
     return (

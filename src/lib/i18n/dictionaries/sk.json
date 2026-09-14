@@ -22,6 +22,10 @@
     "free": "Zadarmo",
     "buy": "Kúpiť"
   },
+  "profiles": {
+    "profiles": "Umelci",
+    "no_profiles_found": "Nenašli sa žiadni umelci"
+  },
   "tickets": {
     "free": "zadarmo"
   },

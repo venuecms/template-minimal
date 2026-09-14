@@ -22,6 +22,12 @@ import {
   ProfileListingBlock,
 } from "./blocks";
 
+/**
+ * The class names for a page body rendered through `contentComponents`, shared
+ * by every layout that draws one so they cannot drift apart.
+ */
+export const pageBodyStyles = "flex flex-col gap-6 text-sm";
+
 // Annotated with AllListingComponents as well, so a listing type added to the
 // contract fails to compile here until this template can render it — rather
 // than being dropped from published content with a console warning.

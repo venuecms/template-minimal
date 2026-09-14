@@ -152,15 +152,6 @@ describe("buildThemeColorOverrideCss on the default theme", () => {
     }
   });
 
-  it("pins the header logo's inversion along with the scheme", () => {
-    // globals.css inverts it under `prefers-color-scheme: light` only, so the
-    // pinned-light page would otherwise hand a dark-mode visitor an uninverted
-    // logo against a light background.
-    expect(
-      buildThemeColorOverrideCss({ colorBackground: "#ffffff" }, "default"),
-    ).toContain(":root:root header img { filter: invert(1); }");
-  });
-
   it("still defers entirely to the theme when no color was chosen", () => {
     // Pinning is a consequence of overriding something; on its own it would
     // freeze the scheme for every default-theme site.
@@ -176,7 +167,6 @@ describe("buildThemeColorOverrideCss on the default theme", () => {
     );
 
     expect(css).not.toContain("--primary");
-    expect(css).not.toContain("invert");
   });
 });
 

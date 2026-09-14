@@ -16,10 +16,11 @@ export const VenueProvider = ({
   const [instance, setInstance] = useState<Site | undefined>();
 
   useEffect(() => {
-    setConfig({
-      siteKey,
-      options: { baseUrl: "/", next: { revalidate: 60 } },
-    });
+    // `baseUrl` still matters: `searchSite` is the one read the SDK leaves
+    // uncached, so it alone still fetches from the browser and has to go
+    // through this origin. Every other read is a "use cache" server reference
+    // now and fetches server-side, whatever this says.
+    setConfig({ siteKey, options: { baseUrl: "/" } });
 
     getSite().then(({ data }) => setInstance(data));
   }, [siteKey]);

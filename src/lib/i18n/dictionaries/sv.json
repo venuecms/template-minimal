@@ -22,6 +22,10 @@
     "free": "Gratis",
     "buy": "Köp"
   },
+  "profiles": {
+    "profiles": "Artister",
+    "no_profiles_found": "Inga artister hittades"
+  },
   "tickets": {
     "free": "gratis"
   },

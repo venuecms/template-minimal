@@ -11,6 +11,9 @@ export default defineConfig({
       "next/navigation": fileURLToPath(
         new URL("./test/stubs/next-navigation.ts", import.meta.url),
       ),
+      "next/cache": fileURLToPath(
+        new URL("./test/stubs/next-cache.ts", import.meta.url),
+      ),
     },
   },
   test: {

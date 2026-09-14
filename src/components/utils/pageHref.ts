@@ -8,7 +8,7 @@ import type { Page as VenuePage } from "@venuecms/sdk-next";
  * Only reserved at the root: a nested page is free to be slugged "shop", and
  * /p/shop is where it lives.
  */
-const StaticRootSlugs = ["events", "archive", "shop"];
+const StaticRootSlugs = ["artists", "events", "archive", "shop"];
 
 // `type` and `parentId` are optional because the page tree reads its records
 // out of a loosely typed tree-view metadata bag.

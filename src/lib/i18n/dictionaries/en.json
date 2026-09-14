@@ -22,6 +22,10 @@
     "free": "Free",
     "buy": "Buy"
   },
+  "profiles": {
+    "profiles": "Artists",
+    "no_profiles_found": "No artists found"
+  },
   "tickets": {
     "free": "free"
   },

@@ -23,14 +23,7 @@ const ArtistsPage = async ({
 
   const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
 
-  return (
-    <ProfilesListSection
-      locale={locale}
-      currentPage={currentPage}
-      slug="artists"
-      baseUrl="/artists"
-    />
-  );
+  return <ProfilesListSection locale={locale} currentPage={currentPage} />;
 };
 
 export default ArtistsPage;

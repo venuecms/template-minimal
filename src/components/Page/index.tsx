@@ -8,7 +8,7 @@ import { useLocale } from "next-intl";
 
 import { PageWithParent } from "@/lib/utils/tree";
 
-import { contentComponents } from "@/components/ListingBlock";
+import { contentComponents, pageBodyStyles } from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { PageTree } from "../PageTree";
@@ -56,7 +56,7 @@ export const Page = ({
 
       <ColumnRight>
         <VenueContent
-          className="flex flex-col gap-6 text-sm"
+          className={pageBodyStyles}
           content={content}
           contentStyles={contentComponents}
           searchParams={searchParams}

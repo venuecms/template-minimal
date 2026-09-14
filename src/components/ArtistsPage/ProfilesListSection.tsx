@@ -42,32 +42,18 @@ function ProfilesListSkeleton() {
   );
 }
 
-/**
- * The canonical profile listing: the artist grid with its skeleton and error
- * states. Shared by the /artists route and any page with type "PROFILELIST".
- */
+/** The artist grid behind /artists, with its skeleton and error states. */
 export function ProfilesListSection({
   locale,
   currentPage,
-  slug,
-  baseUrl,
 }: {
   locale: string;
   currentPage: number;
-  /** The page record backing this listing, for its title. */
-  slug: string;
-  /** The route this listing is mounted at, for the pager's hrefs. */
-  baseUrl: string;
 }) {
   return (
     <ErrorBoundary fallback={<ProfilesListError />}>
       <Suspense fallback={<ProfilesListSkeleton />}>
-        <ProfilesListContent
-          locale={locale}
-          currentPage={currentPage}
-          slug={slug}
-          baseUrl={baseUrl}
-        />
+        <ProfilesListContent locale={locale} currentPage={currentPage} />
       </Suspense>
     </ErrorBoundary>
   );

@@ -12,22 +12,9 @@ const ITEMS_PER_PAGE = 50;
 export async function ProductsListContent({
   locale,
   currentPage,
-  slug,
-  baseUrl,
 }: {
   locale: string;
   currentPage: number;
-  /**
-   * The page record backing this listing. Fetched for its title, which nothing
-   * renders today — both this and /shop show a bare grid with no heading.
-   */
-  slug: string;
-  /**
-   * The route this listing is mounted at, for the pager's hrefs. Passed rather
-   * than derived from `slug` because the two callers sit at unrelated paths:
-   * the shop route is `/shop`, a PRODUCTLIST page is `/p/<slug>`.
-   */
-  baseUrl: string;
 }) {
   await connection();
 
@@ -37,7 +24,7 @@ export async function ProductsListContent({
         page: currentPage,
         limit: ITEMS_PER_PAGE,
       }),
-      getPage({ slug }),
+      getPage({ slug: "shop" }),
       getSite(),
       getTranslations("shop"),
     ]);
@@ -83,7 +70,7 @@ export async function ProductsListContent({
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages - 1}
-          baseUrl={baseUrl}
+          baseUrl={`/shop`}
         />
       ) : null}
     </section>

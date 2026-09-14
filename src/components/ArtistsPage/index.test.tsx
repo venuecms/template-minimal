@@ -1,14 +1,9 @@
 /**
- * The profile listing mounted somewhere other than /artists.
+ * The artist grid behind /artists, and in particular where its pager stops.
  *
- * A page whose type is PROFILELIST renders this same listing from /p/<slug>, so
- * the page it titles itself from and the URL its pager counts against both come
- * from props. A regression in either is invisible on /artists, where the
- * hardcoded values would happen to be right.
- *
- * Also pins the pager's end condition. The profiles endpoint only sometimes
- * returns a count, and the listing this was modelled on answers a missing one
- * by assuming 100 pages — which is what the "next" link here must not do.
+ * The profiles endpoint only sometimes returns a count, and the listing this
+ * was modelled on answers a missing one by assuming 100 pages — which is what
+ * the "next" link here must not do.
  *
  * `connection()` is stubbed because the listing calls it to opt out of the
  * prerender, and outside a Next request scope it throws. `getTranslations` is
@@ -65,7 +60,7 @@ beforeEach(() => {
       : url.includes("/pages/")
         ? {
             id: "page-id",
-            slug: "roster",
+            slug: "artists",
             type: "PROFILELIST",
             localizedContent: [
               { siteId: "site-id", locale: "en", title: "Our Roster" },
@@ -96,35 +91,26 @@ const render = async (node: React.ReactNode) => {
 };
 
 const listing = (currentPage = 1) => (
-  <ProfilesListContent
-    locale="en"
-    currentPage={currentPage}
-    slug="roster"
-    baseUrl="/p/roster"
-  />
+  <ProfilesListContent locale="en" currentPage={currentPage} />
 );
 
 // Hrefs carry the locale because these render through the i18n `Link`.
-describe("the profile listing away from /artists", () => {
-  it("pages against the URL it was mounted at, not /artists", async () => {
+describe("the profile listing", () => {
+  it("pages against /artists", async () => {
     const html = await render(listing());
 
-    expect(html).toContain('href="/en/p/roster?page=0"');
-    expect(html).toContain('href="/en/p/roster?page=2"');
-    expect(html).not.toContain("/artists?page=");
+    expect(html).toContain('href="/en/artists?page=0"');
+    expect(html).toContain('href="/en/artists?page=2"');
   });
 
-  it("titles itself from the page it was given", async () => {
+  it("titles itself from the artists page record", async () => {
     const html = await render(listing());
 
     expect(html).toContain("Our Roster");
-    expect(requested.some((url) => url.includes("/pages/roster"))).toBe(true);
-    expect(requested.some((url) => url.includes("/pages/artists"))).toBe(false);
+    expect(requested.some((url) => url.includes("/pages/artists"))).toBe(true);
   });
 
-  it("still sends a profile's link to its detail route under /artists", async () => {
-    // The listing moves; the artists themselves do not. /artists/<slug> is the
-    // only route that renders one.
+  it("sends a profile's link to its detail route", async () => {
     const html = await render(listing());
 
     expect(html).toContain('href="/en/artists/a0"');
@@ -135,7 +121,7 @@ describe("the profile listing away from /artists", () => {
 
     const html = await render(listing());
 
-    expect(html).toContain('href="/en/p/roster?page=0"');
+    expect(html).toContain('href="/en/artists?page=0"');
     expect(html).not.toContain("page=2");
   });
 
@@ -151,6 +137,6 @@ describe("the profile listing away from /artists", () => {
     const html = await render(listing(0));
 
     expect(html).not.toContain("page=-1");
-    expect(html).toContain('href="/en/p/roster?page=1"');
+    expect(html).toContain('href="/en/artists?page=1"');
   });
 });

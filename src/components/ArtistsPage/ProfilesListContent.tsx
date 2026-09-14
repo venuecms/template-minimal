@@ -18,30 +18,16 @@ const ITEMS_PER_PAGE = 24;
 export async function ProfilesListContent({
   locale,
   currentPage,
-  slug,
-  baseUrl,
 }: {
   locale: string;
   currentPage: number;
-  /**
-   * The page record this listing titles itself from. Passed rather than fixed
-   * at "artists" because the listing has two mounts: the /artists route, and
-   * any page whose type is PROFILELIST, which lives at /p/<slug>.
-   */
-  slug: string;
-  /**
-   * The route this listing is mounted at, for the pager's hrefs. Passed rather
-   * than derived from `slug` because the two callers sit at unrelated paths:
-   * the artists route is `/artists`, a PROFILELIST page is `/p/<slug>`.
-   */
-  baseUrl: string;
 }) {
   await connection();
 
   const [{ data: profiles }, { data: page }, { data: site }, t] =
     await Promise.all([
       getProfiles({ page: currentPage, limit: ITEMS_PER_PAGE }),
-      getPage({ slug }),
+      getPage({ slug: "artists" }),
       getSite(),
       getTranslations("profiles"),
     ]);
@@ -81,9 +67,9 @@ export async function ProfilesListContent({
         )}
         <PaginationLinks
           prevHref={
-            currentPage <= 0 ? null : `${baseUrl}?page=${currentPage - 1}`
+            currentPage <= 0 ? null : `/artists?page=${currentPage - 1}`
           }
-          nextHref={hasNext ? `${baseUrl}?page=${currentPage + 1}` : null}
+          nextHref={hasNext ? `/artists?page=${currentPage + 1}` : null}
         />
       </ColumnRight>
     </TwoColumnLayout>

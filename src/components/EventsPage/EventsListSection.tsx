@@ -46,22 +46,11 @@ function EventsListSkeleton() {
   );
 }
 
-/**
- * The canonical event listing: the upcoming-events column with its skeleton and
- * error states. Shared by the /events route and any page with type "EVENTLIST".
- */
-export function EventsListSection({
-  locale,
-  slug,
-}: {
-  locale: string;
-  /** The page record backing this listing, for its title. */
-  slug: string;
-}) {
+export function EventsListSection({ locale }: { locale: string }) {
   return (
     <ErrorBoundary fallback={<EventsListError />}>
       <Suspense fallback={<EventsListSkeleton />}>
-        <EventsListContent locale={locale} slug={slug} />
+        <EventsListContent locale={locale} />
       </Suspense>
     </ErrorBoundary>
   );

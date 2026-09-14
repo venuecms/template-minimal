@@ -13,7 +13,7 @@ const EventsPage = async ({ params }: { params: Promise<Params> }) => {
   const { locale } = await params;
   await setupSSR({ params });
 
-  return <EventsListSection locale={locale} />;
+  return <EventsListSection locale={locale} slug="events" />;
 };
 
 export default EventsPage;

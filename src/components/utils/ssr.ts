@@ -12,11 +12,10 @@ export const setupSSR = async ({ params }: { params: Promise<Params> }) => {
     notFound();
   }
 
-  // Set VenueCMS config
-  setConfig({
-    siteKey,
-    options: { next: { revalidate: 60 } },
-  });
+  // Set VenueCMS config. No fetch options: the SDK pins `revalidate: 60` on
+  // its own fetches, and since 2.0 the lifetime that actually governs a render
+  // is the `cacheLife` on its "use cache" reads, not anything passed here.
+  setConfig({ siteKey });
 
   // Set server-side next-intl locale
   setRequestLocale(locale);

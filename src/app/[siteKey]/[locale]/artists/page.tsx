@@ -2,18 +2,20 @@ import { getGenerateMetadata } from "@/lib";
 import { Params } from "@/types";
 import { getPage } from "@venuecms/sdk-next";
 
-import { ProductsListSection } from "@/components/ShopPage";
+import { ProfilesListSection } from "@/components/ArtistsPage";
 import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(() =>
-  getPage({ slug: "shop" }),
+  getPage({ slug: "artists" }),
 );
 
-const ProductsPage = async ({
+const ArtistsPage = async ({
   params,
   searchParams,
 }: {
   params: Promise<Params>;
+  // Read here and handed down because only a route segment can: the listing
+  // sits below a Suspense boundary and cannot ask for the URL it is paged by.
   searchParams: Promise<{ page: string }>;
 }) => {
   const { locale } = await params;
@@ -22,13 +24,13 @@ const ProductsPage = async ({
   const currentPage = parseInt((await searchParams)?.page as string, 10) || 0;
 
   return (
-    <ProductsListSection
+    <ProfilesListSection
       locale={locale}
       currentPage={currentPage}
-      slug="shop"
-      baseUrl="/shop"
+      slug="artists"
+      baseUrl="/artists"
     />
   );
 };
 
-export default ProductsPage;
+export default ArtistsPage;

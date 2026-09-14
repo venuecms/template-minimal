@@ -33,17 +33,32 @@ function ProductsListSkeleton() {
   );
 }
 
+/**
+ * The canonical product listing: the grid with its skeleton and error states.
+ * Shared by the /shop route and any page with type "PRODUCTLIST".
+ */
 export function ProductsListSection({
   locale,
   currentPage,
+  slug,
+  baseUrl,
 }: {
   locale: string;
   currentPage: number;
+  /** The page record backing this listing, for its title. */
+  slug: string;
+  /** The route this listing is mounted at, for the pager's hrefs. */
+  baseUrl: string;
 }) {
   return (
     <ErrorBoundary fallback={<ProductsListError />}>
       <Suspense fallback={<ProductsListSkeleton />}>
-        <ProductsListContent locale={locale} currentPage={currentPage} />
+        <ProductsListContent
+          locale={locale}
+          currentPage={currentPage}
+          slug={slug}
+          baseUrl={baseUrl}
+        />
       </Suspense>
     </ErrorBoundary>
   );

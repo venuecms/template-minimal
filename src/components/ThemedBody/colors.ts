@@ -121,9 +121,7 @@ export const hexToHslaComponents = (hex: string): string | null => {
  * The exception is the `default` theme, whose palette flips with
  * `prefers-color-scheme`. There the unset colors are filled in from
  * DEFAULT_THEME_LIGHT_COLORS rather than left to the OS, so a site never gets
- * half its own palette and half the opposite scheme's. Pinning the scheme also
- * pins the header logo's inversion, which is otherwise light-mode only: it
- * gives a dark-mode visitor exactly the rendering a light-mode one sees.
+ * half its own palette and half the opposite scheme's.
  *
  * Values are hex-validated above and variable names come from a fixed map, so
  * nothing author-controlled reaches the CSS text verbatim.
@@ -162,12 +160,5 @@ export const buildThemeColorOverrideCss = (
     },
   );
 
-  const palette = `:root:root { ${declarations.join(" ")} }`;
-
-  // globals.css inverts the header logo through a `prefers-color-scheme: light`
-  // query, so without this the pinned-light page would drop the inversion for a
-  // dark-mode visitor and render a light logo against a light background.
-  return pinsLightScheme
-    ? `${palette} :root:root header img { filter: invert(1); }`
-    : palette;
+  return `:root:root { ${declarations.join(" ")} }`;
 };

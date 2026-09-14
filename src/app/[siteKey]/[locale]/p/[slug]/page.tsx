@@ -7,6 +7,9 @@ import { notFound } from "next/navigation";
 
 import { PageWithParent } from "@/lib/utils/tree";
 
+import { ProfilesListSection } from "@/components/ArtistsPage";
+import { EventsListSection } from "@/components/EventsPage";
+import { ProductsListSection } from "@/components/ShopPage";
 import { setupSSR } from "@/components/utils";
 
 export const generateMetadata = getGenerateMetadata(getPage);
@@ -43,6 +46,39 @@ const PagePage = async ({
         <NewsView
           title={content.title ?? undefined}
           searchParams={resolvedSearchParams}
+        />
+      );
+    }
+
+    // The listing page types render the same listings their own routes do —
+    // /shop, /events and /artists — titled from this page's record and, where
+    // they page, paged against this page's URL rather than the static route's.
+    const baseUrl = `/p/${slug}`;
+    const currentPage = parseInt(resolvedSearchParams.page as string, 10) || 0;
+
+    if (page.type === "PRODUCTLIST") {
+      return (
+        <ProductsListSection
+          locale={locale}
+          currentPage={currentPage}
+          slug={slug}
+          baseUrl={baseUrl}
+        />
+      );
+    }
+
+    if (page.type === "EVENTLIST") {
+      // No pager: this listing takes the next 60 upcoming events and stops.
+      return <EventsListSection locale={locale} slug={slug} />;
+    }
+
+    if (page.type === "PROFILELIST") {
+      return (
+        <ProfilesListSection
+          locale={locale}
+          currentPage={currentPage}
+          slug={slug}
+          baseUrl={baseUrl}
         />
       );
     }

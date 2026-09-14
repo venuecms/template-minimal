@@ -22,8 +22,8 @@ importers:
         specifier: ^5.101.4
         version: 5.101.4(react@19.2.4)
       '@venuecms/sdk-next':
-        specifier: ^1.13.0
-        version: 1.13.0(@swc/core@1.16.0)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.26)(react@19.2.4)(yaml@2.9.0)
+        specifier: ^2.1.0
+        version: 2.1.0(@swc/core@1.16.0)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.26)(react@19.2.4)(yaml@2.9.0)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1243,14 +1243,14 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
-  '@venuecms/sdk-next@1.13.0':
-    resolution: {integrity: sha512-d8szexqH7zh1/JH68uKcAd6+fJH1pq9fVKSwwdz1mjfRYGtEaaPG23W+9jf+/JJFXITMv+NsOOrbO7GPbk2/Lw==}
+  '@venuecms/sdk-next@2.1.0':
+    resolution: {integrity: sha512-UYMfZqcKp5FXYtg/iDN17KWDHIxWjr4j0USlRH0VSgV1ZaSUhIaSepLTWUuew55dQ8muGgAMDOVTxldDFXVHeA==}
     peerDependencies:
-      next: '>=15'
+      next: '>=16'
       react: '>=19'
 
-  '@venuecms/sdk@1.8.1':
-    resolution: {integrity: sha512-wyfD6VMBUNwcj+OjB67MzwSdSAvIE5Us31ZDJ8DH2dvXTiAjcJh84x4kQ1jzteZe9G7pBwZw2w60BPAqd7J3/Q==}
+  '@venuecms/sdk@1.11.0':
+    resolution: {integrity: sha512-Z0kHZhQx+60ytR4RQWdz4wRtE1A+/gs+nptgTHa3C/8GyAo6FsXjxT0kvyO89Tp6TiyRMe9ejZEiDXImH0bRXQ==}
 
   '@vitest/expect@3.2.7':
     resolution: {integrity: sha512-E8eBXaKibuvH2pSZErOjdVb5vF4PbKYcrnluBTYxEk1l/VhhwZg1kZQsdtjq+CsF5CFydf2Rdkz7jDHKSisi3w==}
@@ -3048,10 +3048,10 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@venuecms/sdk-next@1.13.0(@swc/core@1.16.0)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.26)(react@19.2.4)(yaml@2.9.0)':
+  '@venuecms/sdk-next@2.1.0(@swc/core@1.16.0)(jiti@1.21.7)(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(postcss@8.5.26)(react@19.2.4)(yaml@2.9.0)':
     dependencies:
       '@types/react': 19.2.14
-      '@venuecms/sdk': 1.8.1
+      '@venuecms/sdk': 1.11.0
       clsx: 2.1.1
       markdown-to-jsx: 7.7.17(react@19.2.4)
       next: 16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3072,7 +3072,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@venuecms/sdk@1.8.1':
+  '@venuecms/sdk@1.11.0':
     dependencies:
       '@hey-api/client-fetch': 0.5.7
       zod: 3.25.76

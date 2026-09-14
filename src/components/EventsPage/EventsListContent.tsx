@@ -7,13 +7,25 @@ import { connection } from "next/server";
 import { EventsList, ListEvent } from "@/components/EventList";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-export async function EventsListContent({ locale }: { locale: string }) {
+export async function EventsListContent({
+  locale,
+  slug,
+}: {
+  locale: string;
+  /**
+   * The page record this listing titles itself from. Passed rather than fixed
+   * at "events" because the listing has two mounts: the /events route, and any
+   * page whose type is EVENTLIST, which lives at /p/<slug> and carries its own
+   * title.
+   */
+  slug: string;
+}) {
   await connection();
 
   const [{ data: events }, { data: page }, { data: site }, t] =
     await Promise.all([
       getEvents({ limit: 60, upcoming: true }),
-      getPage({ slug: "events" }),
+      getPage({ slug }),
       getSite(),
       getTranslations("events"),
     ]);

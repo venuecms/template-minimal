@@ -29,12 +29,6 @@ html.default {
     --nav: 120, 25%, 90%, 1;
     --overlay: 0, 0%, 50%, 0.4;
   }
-
-  @media (prefers-color-scheme: light) {
-    & header img {
-      @apply invert;
-    }
-  }
 }
 
 html.space {

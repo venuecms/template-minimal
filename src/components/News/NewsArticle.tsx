@@ -7,7 +7,7 @@ import {
 import { format } from "date-fns";
 import { getLocale } from "next-intl/server";
 
-import { contentComponents } from "@/components/ListingBlock";
+import { contentComponents, contentHandlers } from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";
@@ -61,6 +61,7 @@ export const NewsArticle = async ({
           className="flex flex-col gap-6 text-sm"
           content={content}
           contentStyles={contentComponents}
+          components={contentHandlers}
           searchParams={searchParams}
         />
         <div className="flex flex-col gap-2">

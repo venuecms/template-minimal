@@ -10,7 +10,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import { contentComponents } from "@/components/ListingBlock";
+import { contentComponents, contentHandlers } from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ProfileCompact } from "../ProfileCompact";
@@ -79,6 +79,7 @@ export const Product = ({
           className="flex flex-col gap-6"
           content={content}
           contentStyles={contentComponents}
+          components={contentHandlers}
           searchParams={searchParams}
         />
         <TwoSubColumnLayout>

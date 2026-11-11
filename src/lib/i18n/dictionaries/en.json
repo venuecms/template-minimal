@@ -56,5 +56,17 @@
     "pages": "pages",
     "shop": "shop",
     "error": "Something went wrong while searching... try again?"
+  },
+  "signup": {
+    "label": "Sign up for our newsletter",
+    "placeholder": "Email address",
+    "submit": "Subscribe",
+    "submitting": "Subscribing…",
+    "success": "Thanks for signing up!",
+    "invalid": "Please enter a valid email address.",
+    "disabled": "Newsletter signups are not currently available.",
+    "rate_limited": "Too many attempts. Please try again later.",
+    "rate_limited_seconds": "Too many attempts. Please try again in {seconds} seconds.",
+    "error": "Something went wrong. Please try again."
   }
 }

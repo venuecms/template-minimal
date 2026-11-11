@@ -56,5 +56,17 @@
     "pages": "páginas",
     "shop": "tienda",
     "error": "Algo salió mal durante la búsqueda... ¿intentar de nuevo?"
+  },
+  "signup": {
+    "label": "Suscríbete a nuestro boletín",
+    "placeholder": "Correo electrónico",
+    "submit": "Suscribirse",
+    "submitting": "Enviando…",
+    "success": "¡Gracias por suscribirte!",
+    "invalid": "Introduce una dirección de correo electrónico válida.",
+    "disabled": "La suscripción al boletín no está disponible en este momento.",
+    "rate_limited": "Demasiados intentos. Inténtalo de nuevo más tarde.",
+    "rate_limited_seconds": "Demasiados intentos. Inténtalo de nuevo en {seconds} segundos.",
+    "error": "Algo salió mal. Inténtalo de nuevo."
   }
 }

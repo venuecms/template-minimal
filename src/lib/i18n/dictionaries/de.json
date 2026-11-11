@@ -56,5 +56,17 @@
     "pages": "Seiten",
     "shop": "Shop",
     "error": "Bei der Suche ist etwas schiefgelaufen... erneut versuchen?"
+  },
+  "signup": {
+    "label": "Melde dich für unseren Newsletter an",
+    "placeholder": "E-Mail-Adresse",
+    "submit": "Abonnieren",
+    "submitting": "Wird gesendet…",
+    "success": "Danke für deine Anmeldung!",
+    "invalid": "Bitte gib eine gültige E-Mail-Adresse ein.",
+    "disabled": "Die Newsletter-Anmeldung ist derzeit nicht verfügbar.",
+    "rate_limited": "Zu viele Versuche. Bitte versuche es später erneut.",
+    "rate_limited_seconds": "Zu viele Versuche. Bitte versuche es in {seconds} Sekunden erneut.",
+    "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
   }
 }

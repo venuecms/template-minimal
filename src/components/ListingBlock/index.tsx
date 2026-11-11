@@ -10,8 +10,13 @@
  * rendered. Content nested inside a listing passes plain `renderedStyles`
  * instead — without the listing entries, a listing cannot recurse into itself.
  */
-import type { AllListingComponents, ContentEntries } from "@venuecms/sdk-next";
+import type {
+  AllListingComponents,
+  ContentEntries,
+  NodeHandlers,
+} from "@venuecms/sdk-next";
 
+import { EmailListSignupBlock } from "@/components/EmailSignup";
 import { renderedStyles } from "@/components/utils/styles";
 
 import {
@@ -39,4 +44,15 @@ export const contentComponents: ContentEntries & AllListingComponents = {
   pageListing: PageListingBlock,
   productListing: ProductListingBlock,
   profileListing: ProfileListingBlock,
+};
+
+/**
+ * Handlers for content nodes the SDK's renderer does not draw itself.
+ *
+ * Without one, the renderer drops the node and leaves a gap where the author
+ * put it. Pass this to VenueContent's `components` wherever `contentComponents`
+ * goes to `contentStyles`, so a page body renders the same blocks everywhere.
+ */
+export const contentHandlers: NodeHandlers = {
+  emailListSignup: EmailListSignupBlock,
 };

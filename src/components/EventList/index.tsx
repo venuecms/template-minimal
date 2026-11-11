@@ -32,7 +32,7 @@ export const EventsList = ({
 export const ListEvent = ({
   event,
   site,
-  withImage,
+  withImage = true,
   withTime = true,
   dateTemplate,
   className,

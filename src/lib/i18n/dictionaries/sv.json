@@ -56,5 +56,17 @@
     "pages": "sidor",
     "shop": "butik",
     "error": "Något gick fel vid sökningen... försök igen?"
+  },
+  "signup": {
+    "label": "Prenumerera på vårt nyhetsbrev",
+    "placeholder": "E-postadress",
+    "submit": "Prenumerera",
+    "submitting": "Skickar…",
+    "success": "Tack för din anmälan!",
+    "invalid": "Ange en giltig e-postadress.",
+    "disabled": "Anmälan till nyhetsbrevet är inte tillgänglig just nu.",
+    "rate_limited": "För många försök. Försök igen senare.",
+    "rate_limited_seconds": "För många försök. Försök igen om {seconds} sekunder.",
+    "error": "Något gick fel. Försök igen."
   }
 }

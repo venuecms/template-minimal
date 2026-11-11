@@ -11,7 +11,7 @@ import { connection } from "next/server";
 import { Link } from "@/lib/i18n";
 
 import { EventsList, ListEvent } from "@/components/EventList";
-import { contentComponents } from "@/components/ListingBlock";
+import { contentComponents, contentHandlers } from "@/components/ListingBlock";
 import { TranslatedText } from "@/components/TranslatedText";
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
@@ -55,6 +55,7 @@ export async function EventsContent({
             className="flex flex-col gap-6"
             content={siteContent}
             contentStyles={contentComponents}
+            components={contentHandlers}
             searchParams={resolvedSearchParams}
           />
         ) : null}
@@ -91,6 +92,7 @@ export async function EventsContent({
               className="flex flex-col gap-6"
               content={siteContent}
               contentStyles={contentComponents}
+              components={contentHandlers}
               searchParams={resolvedSearchParams}
             />
           </div>

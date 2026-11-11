@@ -8,7 +8,11 @@ import { useLocale } from "next-intl";
 
 import { PageWithParent } from "@/lib/utils/tree";
 
-import { contentComponents, pageBodyStyles } from "@/components/ListingBlock";
+import {
+  contentComponents,
+  contentHandlers,
+  pageBodyStyles,
+} from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { PageTree } from "../PageTree";
@@ -59,6 +63,7 @@ export const Page = ({
           className={pageBodyStyles}
           content={content}
           contentStyles={contentComponents}
+          components={contentHandlers}
           searchParams={searchParams}
         />
         <TwoSubColumnLayout>

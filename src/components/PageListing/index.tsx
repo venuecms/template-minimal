@@ -3,7 +3,11 @@ import { VenueContent } from "@venuecms/sdk-next";
 
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "@/components/layout";
 
-import { contentComponents, pageBodyStyles } from "../ListingBlock";
+import {
+  contentComponents,
+  contentHandlers,
+  pageBodyStyles,
+} from "../ListingBlock";
 import { NewsView } from "../News";
 import { hasRenderableContent } from "../utils/pageContent";
 import type { PageListingLayout } from "../utils/pageLayout";
@@ -47,6 +51,7 @@ export const PageListing = ({
       className={pageBodyStyles}
       content={content}
       contentStyles={contentComponents}
+      components={contentHandlers}
       searchParams={searchParams}
     />
   );

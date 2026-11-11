@@ -56,5 +56,17 @@
     "pages": "sider",
     "shop": "butik",
     "error": "Noget gik galt under søgningen... prøv igen?"
+  },
+  "signup": {
+    "label": "Tilmeld dig vores nyhedsbrev",
+    "placeholder": "E-mailadresse",
+    "submit": "Tilmeld",
+    "submitting": "Tilmelder…",
+    "success": "Tak for din tilmelding!",
+    "invalid": "Indtast en gyldig e-mailadresse.",
+    "disabled": "Tilmelding til nyhedsbrevet er ikke tilgængelig i øjeblikket.",
+    "rate_limited": "For mange forsøg. Prøv igen senere.",
+    "rate_limited_seconds": "For mange forsøg. Prøv igen om {seconds} sekunder.",
+    "error": "Noget gik galt. Prøv igen."
   }
 }

@@ -7,7 +7,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { Suspense } from "react";
 
-import { contentComponents } from "@/components/ListingBlock";
+import { contentComponents, contentHandlers } from "@/components/ListingBlock";
 import { VenueImage } from "@/components/VenueImage";
 
 import { ColumnLeft, ColumnRight, TwoColumnLayout } from "../layout";
@@ -50,6 +50,7 @@ export const Profile = ({
           className="flex flex-col gap-6"
           content={content}
           contentStyles={contentComponents}
+          components={contentHandlers}
           searchParams={searchParams}
         />
         <ErrorBoundary fallback={null}>

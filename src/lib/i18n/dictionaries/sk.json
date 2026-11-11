@@ -56,5 +56,17 @@
     "pages": "stránky",
     "shop": "obchod",
     "error": "Pri vyhľadávaní sa niečo pokazilo... skúsiť znova?"
+  },
+  "signup": {
+    "label": "Prihláste sa na odber nášho newslettera",
+    "placeholder": "E-mailová adresa",
+    "submit": "Prihlásiť sa",
+    "submitting": "Odosiela sa…",
+    "success": "Ďakujeme za prihlásenie!",
+    "invalid": "Zadajte platnú e-mailovú adresu.",
+    "disabled": "Prihlásenie na odber newslettera momentálne nie je dostupné.",
+    "rate_limited": "Príliš veľa pokusov. Skúste to znova neskôr.",
+    "rate_limited_seconds": "Príliš veľa pokusov. Skúste to znova o {seconds} sekúnd.",
+    "error": "Niečo sa pokazilo. Skúste to znova."
   }
 }
